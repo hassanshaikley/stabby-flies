@@ -10,6 +10,9 @@ Still really early, feel free to contribute in any capacity as I am ultimately d
 
 ## Issues / To-Do
 
+- Handle disconnect properly
+- Render player names
+- Get deployment working! There's some sort of strange bug.
 - Currently a players name to uniquely identify them when it should be a socket id or something of the sort
 - Write tests...
 

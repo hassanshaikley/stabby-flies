@@ -6,7 +6,8 @@ defmodule AotbWeb.RoomChannel do
 
   @messages ["You are cool", "You suck"]
 
-  def join("room:lobby", payload, socket) do
+  def join("room:game", payload, socket) do
+    Logger.debug "Joined Lobby"
     socket = socket 
       |> assign(:message, Enum.random(@messages))
       |> assign(:albums, [])
@@ -15,18 +16,21 @@ defmodule AotbWeb.RoomChannel do
   end
 
   # It is also common to receive messages from the client and
-  # broadcast to everyone in the current topic (room:lobby).
-  def handle_in("shout", payload, socket) do
-    Aotb.Message.changeset(%Aotb.Message{}, payload) |> Aotb.Repo.insert  
-    broadcast socket, "shout", payload
+  # broadcast to everyone in the current topic (room:game).
+  def handle_in("shout", payload, socket) do\
+    # Disabled until input is sanitized
+    # Aotb.Message.changeset(%Aotb.Message{}, payload) |> Aotb.Repo.insert  
+    # broadcast socket, "shout", payload
     {:noreply, socket}
   end
 
   def handle_in("connect", payload, socket) do
+    Logger.debug "Connect"
     {:noreply, socket}
   end
 
   def handle_in("disconnect", payload, socket) do
+    Logger.debug "Disconnect"
     Game.remove_player_by_socket_id(socket.id)
     broadcast socket, "disconnect", %{id: socket.id}
 

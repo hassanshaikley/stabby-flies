@@ -35,7 +35,7 @@ defmodule Aotb.Game do
 
       IO.inspect player[:moving]
       if (player[:moving][:down] or player[:moving][:left] or player[:moving][:right]  or player[:moving][:up] ) do
-        AotbWeb.Endpoint.broadcast("room:lobby", "update_player", player)
+        AotbWeb.Endpoint.broadcast("room:game", "update_player", player)
       end
 
     end

@@ -16,11 +16,5 @@ import css from '../css/app.css';
 import "phoenix_html";
 
 import * as PIXI from "pixi.js";
-
-// Import local files
-//
-// Local files can be imported directly using relative
-// paths "./socket" or full ones "web/static/js/socket".
-
 import socket from "./socket";
 import { Game } from "./game";

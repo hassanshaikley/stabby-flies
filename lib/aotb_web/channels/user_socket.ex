@@ -5,7 +5,7 @@ defmodule AotbWeb.UserSocket do
 
   ## Channels
   # channel "room:*", AotbWeb.RoomChannel
-  channel "room:lobby", AotbWeb.RoomChannel
+  channel "room:game", AotbWeb.RoomChannel
 
 
   # Socket params are passed from the client and can

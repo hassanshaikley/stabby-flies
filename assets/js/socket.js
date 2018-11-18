@@ -12,7 +12,7 @@ let socket = new Socket("/socket", { params: { token: window.userToken } });
 
 /* Begin Add */
 
-var channel = socket.channel("room:lobby", {}); // connect to chat "room"
+var channel = socket.channel("room:game", {}); // connect to chat "room"
 
 channel.on("shout", function(payload) {
   // listen to the 'shout' event
@@ -23,7 +23,7 @@ channel.on("shout", function(payload) {
 });
 
 channel.on("connect", function(payload) {
-  console.log("Someone connected! ", payload)
+  console.log("connect", payload)
   const {players, new_player} = payload // New Player is me : )
   // listen to the 'shout' event
   var li = document.createElement("li"); // creaet new list item DOM element
@@ -38,7 +38,7 @@ channel.on("connect", function(payload) {
 });
 
 channel.on("disconnect", function(payload) {
-  console.log("someone disconnected! ", payload)
+  console.log("disconnect", payload)
   game.removePlayerById(payload.id)
 })
 
@@ -156,19 +156,16 @@ channel.push("connect", {
 });
 
 channel.on("initialize", function(payload) {
+  console.log("Initialize ", payload)
   // listen to the 'shout' event
   const {new_player} = payload
   const local_player_id = new_player.socket_id;
-
-
-
-
   game.setLocalPlayer(local_player_id)
 
 });
 
 channel.on("update_player", function(payload) {
-  console.log("PLAYER UPDATED ", payload)
+  console.log("update_player", payload)
   const {socket_id, x, y} = payload
   game.updatePlayer({
     id: socket_id,
