@@ -1,3 +1,32 @@
 /* This file is for your main application css. */
 
-@import "./phoenix.css";
+#chat {
+  width: 250px;
+  margin-left: 10px;
+}
+
+.container {
+  display: none;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: 80% auto;
+}
+
+#game-container {
+  background-color: #ddd;
+  font-size: 50px;
+  font-family: monospace;
+}
+
+#game-container-grid {
+  grid-template-rows: repeat(auto, 5) ;
+  grid-template-columns: repeat(auto, 5);
+
+}
+
+body {
+  margin: 0px;
+  overflow-y: hidden;
+}

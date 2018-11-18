@@ -1,14 +1,183 @@
-// NOTE: The contents of this file will only be executed if
-// you uncomment its entry in "assets/js/app.js".
+import { Socket } from "phoenix";
+import { Game } from "./game";
 
-// To use Phoenix channels, the first step is to import Socket,
-// and connect at the socket path in "lib/web/endpoint.ex".
-//
-// Pass the token on params as below. Or remove it
-// from the params if you are not using authentication.
-import {Socket} from "phoenix"
+const keypresses = {
 
-let socket = new Socket("/socket", {params: {token: window.userToken}})
+}
+
+
+let game = new Game();
+
+let socket = new Socket("/socket", { params: { token: window.userToken } });
+
+/* Begin Add */
+
+var channel = socket.channel("room:lobby", {}); // connect to chat "room"
+
+channel.on("shout", function(payload) {
+  // listen to the 'shout' event
+  var li = document.createElement("li"); // creaet new list item DOM element
+  var { name, message } = payload; // get name from payload or set default
+  li.innerHTML = "<b>" + name + "</b>: " + message; // set li contents
+  ul.appendChild(li); // append to list
+});
+
+channel.on("connect", function(payload) {
+  console.log("Someone connected! ", payload)
+  const {players, new_player} = payload // New Player is me : )
+  // listen to the 'shout' event
+  var li = document.createElement("li"); // creaet new list item DOM element
+  var name = payload.name || "guest"; // get name from payload or set default
+
+  // li.innerHTML = "<b> SOMEONE CONNECTED</b>"; // set li contents
+  // ul.appendChild(li); // append to list
+  // console.log(players)
+  (players).forEach((player) => {
+    game.addPlayer(player);
+  })
+});
+
+channel.on("disconnect", function(payload) {
+  console.log("someone disconnected! ", payload)
+  game.removePlayerById(payload.id)
+})
+
+channel.join(); // join the channel.
+
+var ul = document.getElementById("msg-list"); // list of messages.
+var msg = document.getElementById("msg"); // message input field
+
+window.onbeforeunload = onPageClose;
+function onPageClose(){
+  channel.push("disconnect", {
+  });
+}
+
+document.addEventListener("keydown", function(event) {
+  const down = true
+
+  const {key} = event
+  if (keypresses[key]) return;
+
+
+  switch (key) {
+
+  case "d":
+  keypresses["d"] = true
+  channel.push("move", {
+    direction: "right",
+    down
+  });
+  break;
+case "a":
+  keypresses["a"] = true
+  channel.push("move", {
+    direction: "left",
+    down
+  });
+  break;
+case "w":
+  keypresses["w"] = true
+  channel.push("move", {
+    direction: "up",
+    down
+  });
+  break;
+case "s":
+  keypresses["s"] = true
+  channel.push("move", {
+    direction: "down",
+    down
+  });
+  break;
+}
+})
+
+document.addEventListener("keyup", function(event) {
+  const down = false
+
+  const {key} = event;
+  if (keypresses[key]) {
+    keypresses[key] = false
+  }
+
+  switch (event.key) {
+
+  case "d":
+  channel.push("move", {
+    direction: "right",
+    down
+  });
+  break;
+case "a":
+  channel.push("move", {
+    direction: "left",
+    down
+  });
+  break;
+case "w":
+  channel.push("move", {
+    direction: "up",
+    down
+  });
+  break;
+case "s":
+  channel.push("move", {
+    direction: "down",
+    down
+  });
+  break;
+}
+})
+
+// "listen" for the [Enter] keypress event to send a message:
+document.addEventListener("keypress", function(event) {
+  switch (event.key) {
+    case "Enter":
+      if (msg.value.length > 0) {
+        // don't sent empty msg.
+        channel.push("shout", {
+          // send the message to the server on "shout" channel
+          name: "Guest", // get value of "name" of person sending the message
+          message: msg.value // get message text (value) from msg input field.
+        });
+        msg.value = ""; // reset the message input field for next message.
+      }
+
+      break;
+
+  }
+});
+
+channel.push("connect", {
+  // send the message to the server on "shout" channel
+  // name: 'Admin',     // get value of "name" of person sending the message
+  // message: 'Someone joined the server'    // get message text (value) from msg input field.
+});
+
+channel.on("initialize", function(payload) {
+  // listen to the 'shout' event
+  const {new_player} = payload
+  const local_player_id = new_player.socket_id;
+
+
+
+
+  game.setLocalPlayer(local_player_id)
+
+});
+
+channel.on("update_player", function(payload) {
+  console.log("PLAYER UPDATED ", payload)
+  const {socket_id, x, y} = payload
+  game.updatePlayer({
+    id: socket_id,
+    x,
+    y
+  })
+})
+
+/* End Add */
 
 // When you connect, you'll often need to authenticate the client.
 // For example, imagine you have an authentication plug, `MyAuth`,
@@ -38,10 +207,10 @@ let socket = new Socket("/socket", {params: {token: window.userToken}})
 //
 //     <script>window.userToken = "<%= assigns[:user_token] %>";</script>
 //
-// You will need to verify the user token in the "connect/3" function
+// You will need to verify the user token in the "connect/2" function
 // in "lib/web/channels/user_socket.ex":
 //
-//     def connect(%{"token" => token}, socket, _connect_info) do
+//     def connect(%{"token" => token}, socket) do
 //       # max_age: 1209600 is equivalent to two weeks in seconds
 //       case Phoenix.Token.verify(socket, "user socket", token, max_age: 1209600) do
 //         {:ok, user_id} ->
@@ -51,13 +220,15 @@ let socket = new Socket("/socket", {params: {token: window.userToken}})
 //       end
 //     end
 //
-// Finally, connect to the socket:
-socket.connect()
+// Finally, pass the token on connect as below. Or remove it
+// from connect if you don't care about authentication.
+
+socket.connect();
 
 // Now that you are connected, you can join channels with a topic:
-let channel = socket.channel("topic:subtopic", {})
-channel.join()
-  .receive("ok", resp => { console.log("Joined successfully", resp) })
-  .receive("error", resp => { console.log("Unable to join", resp) })
+// let channel = socket.channel("topic:subtopic", {})
+// channel.join()
+//   .receive("ok", resp => { console.log("Joined successfully", resp) })
+//   .receive("error", resp => { console.log("Unable to join", resp) })
 
-export default socket
+export default socket;
