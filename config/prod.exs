@@ -89,4 +89,4 @@ config :aotb, Aotb.Repo,
   ssl: true,
   database: "aotb",
   hostname: "localhost",
-  pool_size: 4
+  pool_size: 2

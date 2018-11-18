@@ -12,7 +12,7 @@ defmodule Aotb.Game do
 
   def start_link do
     Agent.start_link(fn -> %{ "players": [] } end, name: __MODULE__)
-    {:ok, _} = :timer.apply_interval(50, __MODULE__, :loop, []) 
+    {:ok, _} = :timer.apply_interval(500, __MODULE__, :loop, []) 
   end
 
   def loop do
