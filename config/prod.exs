@@ -87,6 +87,5 @@ config :aotb, Aotb.Repo,
   adapter: Ecto.Adapters.Postgres,
   url: "${DATABASE_URL}",
   ssl: true,
-  database: "aotb",
-  hostname: "localhost",
+  # database: "",
   pool_size: 2
