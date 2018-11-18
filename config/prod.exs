@@ -10,9 +10,21 @@ use Mix.Config
 # which you should run after static files are built and
 # before starting your production server.
 config :aotb, AotbWeb.Endpoint,
-  http: [:inet6, port: System.get_env("PORT") || 4000],
-  url: [host: "example.com", port: 80],
-  cache_static_manifest: "priv/static/cache_manifest.json"
+  load_from_system_env: true,
+  http: [port: {:system, "PORT"}],
+  server: true,
+  secret_key_base: "${SECRET_KEY_BASE}",
+  url: [host: "https://meaty-spiffy-hermitcrab.gigalixirapp.com/", port: 80],
+  check_origin: ["https://meaty-spiffy-hermitcrab.gigalixirapp.com/"],
+  cache_static_manifest: "priv/static/cache_manifest.json",
+  # render_errors: [view: AotbWeb.ErrorView, accepts: ~w(html json)],
+  pubsub: [name: Aotb.PubSub, adapter: Phoenix.PubSub.PG2] # Not certain we need this!
+
+# config :aotb, AotbWeb.Endpoint,
+#   http: [:inet6, port: System.get_env("PORT") || 4000],
+#   url: [host: "example.com", port: 80],
+#   cache_static_manifest: "priv/static/cache_manifest.json",
+#   check_origin: ["https://example.com"
 
 # Do not print debug messages in production
 config :logger, level: :info
@@ -69,15 +81,7 @@ config :logger, level: :info
 # Finally import the config/prod.secret.exs which should be versioned
 # separately.
 
-config :aotb, AotbWeb.Endpoint,
-  load_from_system_env: true,
-  http: [port: {:system, "PORT"}],
-  server: true,
-  secret_key_base: "${SECRET_KEY_BASE}",
-  url: [host: "example.com", port: 80],
-  cache_static_manifest: "priv/static/cache_manifest.json",
-  # render_errors: [view: AotbWeb.ErrorView, accepts: ~w(html json)],
-  pubsub: [name: Aotb.PubSub, adapter: Phoenix.PubSub.PG2] # Not certain we need this!
+
 
 config :aotb, Aotb.Repo,
   adapter: Ecto.Adapters.Postgres,
