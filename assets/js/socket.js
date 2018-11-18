@@ -205,8 +205,6 @@ channel.on("update_player", function(payload) {
 // Now you need to pass this token to JavaScript. You can do so
 // inside a script tag in "lib/web/templates/layout/app.html.eex":
 //
-//     <script>window.userToken = "<%= assigns[:user_token] %>";</script>
-//
 // You will need to verify the user token in the "connect/2" function
 // in "lib/web/channels/user_socket.ex":
 //

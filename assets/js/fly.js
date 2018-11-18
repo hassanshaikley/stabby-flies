@@ -18,6 +18,6 @@ export default class Fly extends Player {
     mc.play()
     mc.animationSpeed = .1
     this.addChild(mc)
-    window.k = this
+    window.last_added_fly = this
   }
 }

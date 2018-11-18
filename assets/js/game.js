@@ -92,7 +92,7 @@ export class Game {
         _player.filters = [ new OutlineFilter(3, 0x101010)]
       })
       
-      this.viewport.follow(player, {speed: 4})
+      this.viewport.follow(player, {speed: 6})
       this.viewport.fit(player, 500, 500)
       player.filters = [ new OutlineFilter(3, 0x101010)];
 
@@ -128,10 +128,6 @@ export class Game {
     rectangle.drawRect(0, 300, 5000, window.innerHeight);
     rectangle.endFill();
     this.viewport.addChild(rectangle);
-    window.r = rectangle
-
-    // window
-
     floor.y = 200
     
 
@@ -184,7 +180,6 @@ export class Game {
   }
 
   drawPlayer(player)  {
-    window.ok = player
     this.viewport.addChild(player);    
   }
 }
