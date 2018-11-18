@@ -78,7 +78,7 @@ defmodule Aotb.Game do
   end
 
   def add_player(name, socket_id) do
-    x = Enum.random(600..2000)
+    x = Enum.random(0..3000)
     y = 150 # Enum.random(0..n)
     player = %{name: name, x: x, y: y, socket_id: socket_id, moving: %{left: false, up: false, down: false, right: false}}
 
