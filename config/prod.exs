@@ -75,7 +75,7 @@ config :aotb, AotbWeb.Endpoint,
   server: true,
   secret_key_base: "${SECRET_KEY_BASE}",
   url: [host: "example.com", port: 80],
-  cache_static_manifest: "priv/static/cache_manifest.json"
+  cache_static_manifest: "priv/static/cache_manifest.json",
   # render_errors: [view: AotbWeb.ErrorView, accepts: ~w(html json)],
   pubsub: [name: Aotb.PubSub, adapter: Phoenix.PubSub.PG2] # Not certain we need this!
 
