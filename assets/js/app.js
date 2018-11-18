@@ -11,6 +11,8 @@
 //
 // If you no longer want to use a dependency, remember
 // to also remove its path from "config.paths.watched".
+import css from '../css/app.css';
+
 import "phoenix_html";
 
 import * as PIXI from "pixi.js";

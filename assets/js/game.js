@@ -41,9 +41,13 @@ export class Game {
       screenHeight: window.innerHeight,
       worldWidth: 3000,
       worldHeight: 1000,
-      interaction: this.app.renderer.interaction // the interaction module is important for wheel() to work properly when renderer.view is placed or scaled
+      interaction: this.app.renderer.interaction, // the interaction module is important for wheel() to work properly when renderer.view is placed or scaled,
+      x: 1500
 
     });
+    console.log(this.viewport, this.viewport.position)
+
+    this.viewport.fit()
 
   this.viewport
     .wheel({percent: .03})
@@ -53,13 +57,18 @@ export class Game {
       bottom: 400,
       top: -150
     })
-    .zoomPercent(.9)
+    // .zoomPercent(1.5)
     .decelerate();
+
+
+    this.viewport.position.set(1500, 200)
+
+    this.viewport.emit( new Event('moved-end', {}))
 
     this.viewport.filters = [new CRTFilter({vignetting: .5})];
 
 
-  this.app.stage.addChild(this.viewport);
+    this.app.stage.addChild(this.viewport);
 
 
     PIXI.loader
@@ -78,12 +87,13 @@ export class Game {
         setTimeout(this.setLocalPlayer.bind(this, id), 5)
         return;
       }
-      console.log('pla',player )
+
       this.players.forEach((_player) => {
         _player.filters = [ new OutlineFilter(3, 0x101010)]
       })
       
       this.viewport.follow(player, {speed: 4})
+      this.viewport.fit(player, 500, 500)
       player.filters = [ new OutlineFilter(3, 0x101010)];
 
       player.localPlayer = true;
@@ -107,8 +117,6 @@ export class Game {
       cloud.x = x;
       cloud.y = y;
       this.viewport.addChild(cloud);
-
-
     }
 
 
