@@ -78,7 +78,7 @@ export class Game {
   }
 
   setLocalPlayer(id) {
-
+    console.log("setLocalPlayer", id)
 
       const player = this.players.find((player)=> {
         return player.id == id

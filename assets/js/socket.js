@@ -149,6 +149,7 @@ document.addEventListener("keypress", function(event) {
   }
 });
 
+console.log("attempting connection")
 channel.push("connect", {
   // send the message to the server on "shout" channel
   // name: 'Admin',     // get value of "name" of person sending the message
