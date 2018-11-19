@@ -47,11 +47,11 @@ channel.join(); // join the channel.
 var ul = document.getElementById("msg-list"); // list of messages.
 var msg = document.getElementById("msg"); // message input field
 
-window.onbeforeunload = onPageClose;
-function onPageClose(){
-  channel.push("disconnect", {
-  });
-}
+// window.onbeforeunload = onPageClose;
+// function onPageClose(){
+//   channel.push("disconnect", {
+//   });
+// }
 
 document.addEventListener("keydown", function(event) {
   const down = true

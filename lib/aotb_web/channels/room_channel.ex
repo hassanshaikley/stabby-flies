@@ -29,13 +29,13 @@ defmodule AotbWeb.RoomChannel do
     {:noreply, socket}
   end
 
-  def handle_in("disconnect", payload, socket) do
-    Logger.debug "Disconnect"
-    Game.remove_player_by_socket_id(socket.id)
-    broadcast socket, "disconnect", %{id: socket.id}
+  # def handle_in("disconnect", payload, socket) do
+  #   Logger.debug "Disconnect"
+  #   Game.remove_player_by_socket_id(socket.id)
+  #   broadcast socket, "disconnect", %{id: socket.id}
 
-    {:noreply, socket}
-  end
+  #   {:noreply, socket}
+  # end
 
   def handle_in("move", payload, socket) do
     player = Game.set_player_moving(socket.id, String.to_atom(payload["direction"]), payload["down"])
@@ -75,10 +75,6 @@ defmodule AotbWeb.RoomChannel do
     {:reply, {:ok, payload}, socket}
   end
 
-  def handle_in("diconnect", payload, socket) do
-    Logger.debug "DISCONNECT"
-    {:noreply, socket}
-  end
 
 
 end

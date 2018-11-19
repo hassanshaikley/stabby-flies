@@ -65,7 +65,7 @@ export class Game {
 
     this.viewport.emit( new Event('moved-end', {}))
 
-    this.viewport.filters = [new CRTFilter({vignetting: .5})];
+    this.viewport.filters = [];
 
 
     this.app.stage.addChild(this.viewport);
