@@ -44,6 +44,13 @@ defmodule AotbWeb.RoomChannel do
     {:reply, {:ok, payload}, socket}
   end
 
+  def terminate(reason, socket) do
+    Logger.debug("#{@name} > leave #{inspect(reason)}")
+    broadcast socket, "disconnect", %{id: socket.id}
+    Game.remove_player_by_socket_id(socket.id)
+  end
+
+
 
   def handle_info(:after_join, socket) do
     name = ["Bessy", "Borkbork", "Borb", "Bob", "Babylon", "Babina", "Bamboon"] |> Enum.shuffle |> hd
