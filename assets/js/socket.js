@@ -39,6 +39,11 @@ channel.on('disconnect', function (payload) {
   game.removePlayerById(payload.id)
 })
 
+channel.on('explosion', function (payload) {
+  console.log('explosion AT', payload)
+  game.createExplosion(payload)
+})
+
 channel.join() // join the channel.
 
 var ul = document.getElementById('msg-list') // list of messages.
@@ -51,6 +56,7 @@ var msg = document.getElementById('msg') // message input field
 // }
 
 window.createExplosion = position => {
+  console.log('creat eexplosion ', position)
   channel.push('explosion', {
     position: position
   })

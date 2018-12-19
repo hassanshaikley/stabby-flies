@@ -27,6 +27,8 @@ export class Game {
 
     this.players = []
 
+    this.gameObjects = []
+
     this.app = new PIXI.Application({
       width: window.innerWidth,
       height: window.innerHeight
@@ -46,7 +48,6 @@ export class Game {
     })
 
     this.viewport.on('clicked', event => {
-      console.log('clicked! ', event)
       const { x, y } = event.world
       window.createExplosion({ x, y })
     })
@@ -76,6 +77,15 @@ export class Game {
     PIXI.loader
       .add('/images/spritesheet.json')
       .load(this.spritesLoaded.bind(this))
+  }
+
+  createExplosion (position) {
+    // this.viewpo
+    console.log('Creating explosion at position', position)
+
+    const explosion = new Explosion(position)
+    this.viewport.addChild(explosion)
+    this.gameObjects.push(explosion)
   }
 
   setLocalPlayer (id) {
@@ -140,13 +150,17 @@ export class Game {
     this.viewport.addChild(floor)
     this.loaded = true
 
-    this.explosion = new Explosion({ container: this.viewport })
-
     requestAnimationFrame(this.animate.bind(this))
   }
 
   animate () {
-    this.explosion.update()
+    // this.explosion.update()
+    this.gameObjects.forEach((gameObject, index) => {
+      gameObject.update()
+      if (gameObject.children.length === 0) {
+        this.gameObjects.splice(index, 1)
+      }
+    })
     requestAnimationFrame(this.animate.bind(this))
   }
 
