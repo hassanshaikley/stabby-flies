@@ -11,10 +11,11 @@
 //
 // If you no longer want to use a dependency, remember
 // to also remove its path from "config.paths.watched".
-import css from '../css/app.css';
+import css from '../css/app.css'
 
-import "phoenix_html";
+import 'phoenix_html'
 
-import * as PIXI from "pixi.js";
-import socket from "./socket";
-import { Game } from "./game";
+import * as PIXI from 'pixi.js'
+
+import socket from './socket'
+import { Game } from './game'

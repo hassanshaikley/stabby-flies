@@ -1,51 +1,48 @@
-import { Socket } from "phoenix";
-import { Game } from "./game";
+import { Socket } from 'phoenix'
+import { Game } from './game'
 
-const keypresses = {
+const keypresses = {}
 
-}
+let game = new Game()
 
-
-let game = new Game();
-
-let socket = new Socket("/socket", { params: { token: window.userToken } });
+let socket = new Socket('/socket', { params: { token: window.userToken } })
 
 /* Begin Add */
 
-var channel = socket.channel("room:game", {}); // connect to chat "room"
+var channel = socket.channel('room:game', {}) // connect to chat "room"
 
-channel.on("shout", function(payload) {
+channel.on('shout', function (payload) {
   // listen to the 'shout' event
-  var li = document.createElement("li"); // creaet new list item DOM element
-  var { name, message } = payload; // get name from payload or set default
-  li.innerHTML = "<b>" + name + "</b>: " + message; // set li contents
-  ul.appendChild(li); // append to list
-});
+  var li = document.createElement('li') // creaet new list item DOM element
+  var { name, message } = payload // get name from payload or set default
+  li.innerHTML = '<b>' + name + '</b>: ' + message // set li contents
+  ul.appendChild(li) // append to list
+})
 
-channel.on("connect", function(payload) {
-  console.log("connect", payload)
-  const {players, new_player} = payload // New Player is me : )
+channel.on('connect', function (payload) {
+  console.log('connect', payload)
+  const { players, new_player } = payload // New Player is me : )
   // listen to the 'shout' event
-  var li = document.createElement("li"); // creaet new list item DOM element
-  var name = payload.name || "guest"; // get name from payload or set default
+  var li = document.createElement('li') // creaet new list item DOM element
+  var name = payload.name || 'guest' // get name from payload or set default
 
   // li.innerHTML = "<b> SOMEONE CONNECTED</b>"; // set li contents
   // ul.appendChild(li); // append to list
   // console.log(players)
-  (players).forEach((player) => {
-    game.addPlayer(player);
+  players.forEach(player => {
+    game.addPlayer(player)
   })
-});
+})
 
-channel.on("disconnect", function(payload) {
-  console.log("disconnect", payload)
+channel.on('disconnect', function (payload) {
+  console.log('disconnect', payload)
   game.removePlayerById(payload.id)
 })
 
-channel.join(); // join the channel.
+channel.join() // join the channel.
 
-var ul = document.getElementById("msg-list"); // list of messages.
-var msg = document.getElementById("msg"); // message input field
+var ul = document.getElementById('msg-list') // list of messages.
+var msg = document.getElementById('msg') // message input field
 
 // window.onbeforeunload = onPageClose;
 // function onPageClose(){
@@ -230,7 +227,7 @@ channel.on('update_player', function (payload) {
 // Finally, pass the token on connect as below. Or remove it
 // from connect if you don't care about authentication.
 
-socket.connect();
+socket.connect()
 
 // Now that you are connected, you can join channels with a topic:
 // let channel = socket.channel("topic:subtopic", {})
@@ -238,4 +235,4 @@ socket.connect();
 //   .receive("ok", resp => { console.log("Joined successfully", resp) })
 //   .receive("error", resp => { console.log("Unable to join", resp) })
 
-export default socket;
+export default socket
