@@ -29,6 +29,12 @@ defmodule AotbWeb.RoomChannel do
     {:noreply, socket}
   end
 
+  def handle_in("explosion", payload, socket) do
+    Logger.debug "Explosion"
+    IO.inspect payload
+    {:noreply, socket}
+  end
+
   # def handle_in("disconnect", payload, socket) do
   #   Logger.debug "Disconnect"
   #   Game.remove_player_by_socket_id(socket.id)

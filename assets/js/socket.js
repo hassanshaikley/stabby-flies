@@ -53,121 +53,132 @@ var msg = document.getElementById("msg"); // message input field
 //   });
 // }
 
-document.addEventListener("keydown", function(event) {
+window.createExplosion = position => {
+  channel.push('explosion', {
+    position: position
+  })
+}
+
+document.addEventListener('keydown', function (event) {
   const down = true
 
-  const {key} = event
-  if (keypresses[key]) return;
-
+  const { key } = event
+  if (keypresses[key]) return
 
   switch (key) {
-
-  case "d":
-  keypresses["d"] = true
-  channel.push("move", {
-    direction: "right",
-    down
-  });
-  break;
-case "a":
-  keypresses["a"] = true
-  channel.push("move", {
-    direction: "left",
-    down
-  });
-  break;
-case "w":
-  keypresses["w"] = true
-  channel.push("move", {
-    direction: "up",
-    down
-  });
-  break;
-case "s":
-  keypresses["s"] = true
-  channel.push("move", {
-    direction: "down",
-    down
-  });
-  break;
-}
+    case 'd':
+      keypresses['d'] = true
+      channel.push('move', {
+        direction: 'right',
+        down
+      })
+      break
+    case 'a':
+      keypresses['a'] = true
+      channel.push('move', {
+        direction: 'left',
+        down
+      })
+      break
+    case 'w':
+      keypresses['w'] = true
+      channel.push('move', {
+        direction: 'up',
+        down
+      })
+      break
+    case 's':
+      keypresses['s'] = true
+      channel.push('move', {
+        direction: 'down',
+        down
+      })
+      break
+  }
 })
 
-document.addEventListener("keyup", function(event) {
+document.addEventListener('keyup', function (event) {
   const down = false
 
-  const {key} = event;
+  const { key } = event
   if (keypresses[key]) {
     keypresses[key] = false
   }
 
   switch (event.key) {
-
-  case "d":
-  channel.push("move", {
-    direction: "right",
-    down
-  });
-  break;
-case "a":
-  channel.push("move", {
-    direction: "left",
-    down
-  });
-  break;
-case "w":
-  channel.push("move", {
-    direction: "up",
-    down
-  });
-  break;
-case "s":
-  channel.push("move", {
-    direction: "down",
-    down
-  });
-  break;
-}
+    case 'd':
+      channel.push('move', {
+        direction: 'right',
+        down
+      })
+      break
+    case 'a':
+      channel.push('move', {
+        direction: 'left',
+        down
+      })
+      break
+    case 'w':
+      channel.push('move', {
+        direction: 'up',
+        down
+      })
+      break
+    case 's':
+      channel.push('move', {
+        direction: 'down',
+        down
+      })
+      break
+  }
 })
 
 // "listen" for the [Enter] keypress event to send a message:
-document.addEventListener("keypress", function(event) {
+document.addEventListener('keypress', function (event) {
   switch (event.key) {
-    case "Enter":
+    case 'Enter':
       if (msg.value.length > 0) {
         // don't sent empty msg.
-        channel.push("shout", {
+        channel.push('shout', {
           // send the message to the server on "shout" channel
-          name: "Guest", // get value of "name" of person sending the message
+          name: 'Guest', // get value of "name" of person sending the message
           message: msg.value // get message text (value) from msg input field.
-        });
-        msg.value = ""; // reset the message input field for next message.
+        })
+        msg.value = '' // reset the message input field for next message.
       }
 
-      break;
-
+      break
   }
-});
+})
 
-console.log("attempting connection")
-channel.push("connect", {
+// document.addEventListener("click", function(event) {
+//   console.log(event)
+//   if (event.type !== "click") {
+//     return
+//   }
+//   const x = event.screenX
+//   const y = event.screenY
+
+// });
+
+console.log('attempting connection')
+channel.push('connect', {
   // send the message to the server on "shout" channel
   // name: 'Admin',     // get value of "name" of person sending the message
   // message: 'Someone joined the server'    // get message text (value) from msg input field.
-});
+})
 
-channel.on("initialize", function(payload) {
-  console.log("Initialize ", payload)
+channel.on('initialize', function (payload) {
+  console.log('Initialize ', payload)
   // listen to the 'shout' event
-  const {new_player} = payload
-  const local_player_id = new_player.socket_id;
+  const { new_player } = payload
+  const local_player_id = new_player.socket_id
   game.setLocalPlayer(local_player_id)
+})
 
-});
-
-channel.on("update_player", function(payload) {
-  console.log("update_player", payload)
-  const {socket_id, x, y} = payload
+channel.on('update_player', function (payload) {
+  console.log('update_player', payload)
+  const { socket_id, x, y } = payload
   game.updatePlayer({
     id: socket_id,
     x,
