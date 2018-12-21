@@ -76,11 +76,31 @@ defmodule Aotb.Game do
     end)
   end
 
+  def rotate_player_sword(id, amount) do
+    Logger.debug "Rotating Sword #{id} #{amount}"
+    player = get_player_by_socket_id(id)
+    Agent.update(__MODULE__, fn(state) ->
+      current_rotation = player[:sword_rotation]
+      Logger.debug current_rotation
+      updated_player = put_in(player[:sword_rotation], current_rotation + amount)
+      IO.inspect updated_player
+      removed_player = List.delete(state.players, player)
+      Map.put(state, :players, [updated_player | removed_player] )
+    end)
+  end
+
   def add_player(name, socket_id) do
     # x = Enum.random(0..3000)
     x = 100
     y = 150 # Enum.random(0..n)
-    player = %{name: name, x: x, y: y, socket_id: socket_id, moving: %{left: false, up: false, down: false, right: false}}
+    player = %{
+      name: name,
+      x: x, 
+      y: y, 
+      socket_id: socket_id, 
+      moving: %{left: false, up: false, down: false, right: false},
+      sword_rotation: 0
+    }
 
     Agent.update(__MODULE__, fn(state) -> 
       Map.put(state, :players, [player | state.players] )

@@ -88,9 +88,15 @@ export class Game {
     this.gameObjects.push(explosion)
   }
 
-  setLocalPlayer (id) {
-    console.log('setLocalPlayer', id)
+  playerRotates (id) {
+    const player = this.players.find(player => {
+      return player.id == id
+    })
 
+    player.rotateSword()
+  }
+
+  setLocalPlayer (id) {
     const player = this.players.find(player => {
       return player.id == id
     })
@@ -181,7 +187,8 @@ export class Game {
       x: obj.x,
       y: obj.y,
       name: obj.name,
-      id: obj.socket_id
+      id: obj.socket_id,
+      sword_rotation: obj.sword_rotation
     })
 
     this.players.push(player)

@@ -14,22 +14,31 @@ export default class Fly extends Player {
     }
     let mc = new PIXI.extras.AnimatedSprite(textureArray)
 
-    let shield = new PIXI.Sprite(PIXI.Texture.fromImage('images/shield.png'))
-    let sword = new PIXI.Sprite(PIXI.Texture.fromImage('images/sword.png'))
+    this.shield = new PIXI.Sprite(PIXI.Texture.fromImage('images/shield.png'))
+    this.sword = new PIXI.Sprite(PIXI.Texture.fromImage('images/sword.png'))
 
-    shield.x -= 5
-    shield.y -= 2
+    this.shield.x -= 5
+    this.shield.y -= 2
+    this.sword.anchor.y = 0.62
+    this.sword.anchor.x = 0.5
+    window.sword = this.sword
+    this.sword.rotation = props.sword_rotation
 
-    sword.x -= 25
-    sword.y -= 30
+    this.sword.x -= 15
+    this.sword.y += 5
 
     mc.anchor.x = mc.anchor.y = 0.5
     mc.play()
     mc.animationSpeed = 0.1
     this.addChild(mc)
-    this.addChild(shield)
-    this.addChild(sword)
+    this.addChild(this.shield)
+    this.addChild(this.sword)
 
     window.last_added_fly = this
+  }
+
+  rotateSword () {
+    console.log(' iam doing an rotateSword fren')
+    this.sword.rotation += window.ROTATION_VALUE
   }
 }

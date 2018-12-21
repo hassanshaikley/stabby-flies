@@ -34,6 +34,10 @@ channel.on('connect', function (payload) {
   })
 })
 
+channel.on('fly-rotate', function (payload) {
+  console.log('Fly rotates! ', payload)
+  game.playerRotates(payload.id)
+})
 channel.on('disconnect', function (payload) {
   console.log('disconnect', payload)
   game.removePlayerById(payload.id)
@@ -244,6 +248,9 @@ socket.connect()
 export default socket
 
 document.oncontextmenu = evt => {
-  console.log('hi')
+  console.log('sneding fly rotate')
+  channel.push('fly-rotate', {
+    amount: window.ROTATION_VALUE
+  })
   evt.preventDefault()
 }

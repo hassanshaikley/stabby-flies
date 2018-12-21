@@ -17,12 +17,21 @@ defmodule AotbWeb.RoomChannel do
 
   # It is also common to receive messages from the client and
   # broadcast to everyone in the current topic (room:game).
-  def handle_in("shout", payload, socket) do\
+  def handle_in("shout", payload, socket) do
     # Disabled until input is sanitized
     # Aotb.Message.changeset(%Aotb.Message{}, payload) |> Aotb.Repo.insert  
     # broadcast socket, "shout", payload
     {:noreply, socket}
   end
+
+  def handle_in("fly-rotate", payload, socket) do
+
+    Game.rotate_player_sword(socket.id, payload["amount"])
+
+    broadcast socket, "fly-rotate", %{id: socket.id}
+    {:noreply, socket}
+  end
+
 
   def handle_in("connect", payload, socket) do
     Logger.debug "Connect"
@@ -37,13 +46,6 @@ defmodule AotbWeb.RoomChannel do
     {:noreply, socket}
   end
 
-  # def handle_in("disconnect", payload, socket) do
-  #   Logger.debug "Disconnect"
-  #   Game.remove_player_by_socket_id(socket.id)
-  #   broadcast socket, "disconnect", %{id: socket.id}
-
-  #   {:noreply, socket}
-  # end
 
   def handle_in("move", payload, socket) do
     player = Game.set_player_moving(socket.id, String.to_atom(payload["direction"]), payload["down"])
