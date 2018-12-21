@@ -242,3 +242,8 @@ socket.connect()
 //   .receive("error", resp => { console.log("Unable to join", resp) })
 
 export default socket
+
+document.oncontextmenu = evt => {
+  console.log('hi')
+  evt.preventDefault()
+}
