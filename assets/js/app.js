@@ -20,4 +20,4 @@ import * as PIXI from 'pixi.js'
 import socket from './socket'
 import { Game } from './game'
 
-window.ROTATION_VALUE = 1
+window.ROTATION_VALUE = 0.785398

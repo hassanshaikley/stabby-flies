@@ -74,9 +74,10 @@ window.stab = () => {
   channel.push('stab', {})
 }
 
-document.addEventListener('keydown', function (event) {
+window.addEventListener('keydown', function (event) {
   const down = true
 
+  console.log('KEY DOWN ', event, keypresses)
   const { key } = event
   if (keypresses[key]) return
 
@@ -112,7 +113,7 @@ document.addEventListener('keydown', function (event) {
   }
 })
 
-document.addEventListener('keyup', function (event) {
+window.addEventListener('keyup', function (event) {
   const down = false
 
   const { key } = event
@@ -149,7 +150,7 @@ document.addEventListener('keyup', function (event) {
 })
 
 // "listen" for the [Enter] keypress event to send a message:
-document.addEventListener('keypress', function (event) {
+window.addEventListener('keypress', function (event) {
   switch (event.key) {
     case 'Enter':
       if (msg.value.length > 0) {
@@ -166,7 +167,7 @@ document.addEventListener('keypress', function (event) {
   }
 })
 
-// document.addEventListener("click", function(event) {
+// window.addEventListener("click", function(event) {
 //   console.log(event)
 //   if (event.type !== "click") {
 //     return

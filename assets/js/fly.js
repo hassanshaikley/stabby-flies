@@ -43,6 +43,9 @@ export default class Fly extends Player {
   }
 
   stab () {
+    if (this.stabbing) return
+    this.stabbing = true
+
     const prevx = this.sword.x
     const prevy = this.sword.y
 
@@ -53,6 +56,7 @@ export default class Fly extends Player {
     this.sword.x += x
 
     setTimeout(() => {
+      this.stabbing = false
       this.sword.y = prevy
       this.sword.x = prevx
     }, 200)

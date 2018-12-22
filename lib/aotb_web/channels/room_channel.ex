@@ -53,9 +53,10 @@ defmodule AotbWeb.RoomChannel do
 
 
   def handle_in("move", payload, socket) do
+    Logger.debug("--in move--")
+    IO.inspect(payload)
     player = Game.set_player_moving(socket.id, String.to_atom(payload["direction"]), payload["down"])
-    # broadcast socket, "update_player", player
-
+    IO.inspect(player)
     {:reply, {:ok, payload}, socket}
   end
 
@@ -64,8 +65,6 @@ defmodule AotbWeb.RoomChannel do
     broadcast socket, "disconnect", %{id: socket.id}
     Game.remove_player_by_socket_id(socket.id)
   end
-
-
 
   def handle_info(:after_join, socket) do
     name = ["Bessy", "Borkbork", "Borb", "Bob", "Babylon", "Babina", "Bamboon"] |> Enum.shuffle |> hd
@@ -88,15 +87,4 @@ defmodule AotbWeb.RoomChannel do
 
     {:noreply, socket} # :noreply
   end
-
-
-
-  def handle_in("keydown", payload, socket) do
-    Logger.debug "keydown #{payload["key"]}" 
-
-    {:reply, {:ok, payload}, socket}
-  end
-
-
-
 end

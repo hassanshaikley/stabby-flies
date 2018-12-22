@@ -67,8 +67,9 @@ defmodule Aotb.Game do
   end
 
   def set_player_moving(id, direction, moving) do
+    Logger.debug("Player moving")
     player = get_player_by_socket_id(id)
-
+    IO.inspect player
     Agent.update(__MODULE__, fn(state) ->
       updated_player = put_in(player[:moving][direction], moving)
       removed_player = List.delete(state.players, player)
