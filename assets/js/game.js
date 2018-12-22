@@ -53,7 +53,6 @@ export class Game {
       const { x, y } = event.world
       window.stab()
     })
-    console.log(this.viewport, this.viewport.position)
 
     this.viewport.fit()
 
@@ -95,8 +94,6 @@ export class Game {
 
   createExplosion (position) {
     // this.viewpo
-    console.log('Creating explosion at position', position)
-
     const explosion = new Explosion(position)
     this.viewport.addChild(explosion)
     this.gameObjects.push(explosion)

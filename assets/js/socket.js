@@ -35,11 +35,9 @@ channel.on('connect', function (payload) {
 })
 
 channel.on('fly-rotate', function (payload) {
-  console.log('Fly rotates! ', payload)
   game.playerRotates(payload.id)
 })
 channel.on('stab', function (payload) {
-  console.log('Fly stabs! ', payload)
   game.playerStabs(payload.id)
 })
 channel.on('disconnect', function (payload) {
@@ -70,7 +68,6 @@ var msg = document.getElementById('msg') // message input field
 // }
 
 window.stab = () => {
-  console.log('Sending Stab.')
   channel.push('stab', {})
 }
 
