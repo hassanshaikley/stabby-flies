@@ -100,7 +100,8 @@ defmodule Aotb.Game do
       y: y, 
       socket_id: socket_id, 
       moving: %{left: false, up: false, down: false, right: false},
-      sword_rotation: 0
+      sword_rotation: 0,
+      hp: 10
     }
 
     Agent.update(__MODULE__, fn(state) -> 

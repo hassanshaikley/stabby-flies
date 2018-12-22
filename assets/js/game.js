@@ -18,6 +18,8 @@ export class Game {
     this.engine = undefined
     this.loaded = false
 
+    window.__game = this
+
     this.state = {
       camera: {
         x: 5,
@@ -49,7 +51,6 @@ export class Game {
 
     this.viewport.on('clicked', event => {
       const { x, y } = event.world
-      window.createExplosion({ x, y })
       window.stab()
     })
     console.log(this.viewport, this.viewport.position)
@@ -78,6 +79,18 @@ export class Game {
     PIXI.loader
       .add('/images/spritesheet.json')
       .load(this.spritesLoaded.bind(this))
+  }
+
+  playerIsHit (id, damage) {
+    const player = this.players.find(player => {
+      return player.id == id
+    })
+
+    this.createExplosion({
+      x: player.x,
+      y: player.y
+    })
+    player && player.takeDamage(damage)
   }
 
   createExplosion (position) {
@@ -197,7 +210,8 @@ export class Game {
       y: obj.y,
       name: obj.name,
       id: obj.socket_id,
-      sword_rotation: obj.sword_rotation
+      sword_rotation: obj.sword_rotation,
+      hp: obj.hp
     })
 
     this.players.push(player)

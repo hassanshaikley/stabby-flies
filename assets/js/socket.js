@@ -63,11 +63,11 @@ var msg = document.getElementById('msg') // message input field
 //   });
 // }
 
-window.createExplosion = position => {
-  channel.push('explosion', {
-    position: position
-  })
-}
+// window.createExplosion = position => {
+//   channel.push('explosion', {
+//     position: position
+//   })
+// }
 
 window.stab = () => {
   console.log('Sending Stab.')

@@ -43,13 +43,13 @@ defmodule AotbWeb.RoomChannel do
     {:noreply, socket}
   end
 
-  def handle_in("explosion", payload, socket) do
-    Logger.debug "Explosion"
-    IO.inspect payload["position"]
-    broadcast socket, "explosion", %{x: payload["position"]["x"], y: payload["position"]["y"]}
+  # def handle_in("explosion", payload, socket) do
+  #   Logger.debug "Explosion"
+  #   IO.inspect payload["position"]
+  #   broadcast socket, "explosion", %{x: payload["position"]["x"], y: payload["position"]["y"]}
 
-    {:noreply, socket}
-  end
+  #   {:noreply, socket}
+  # end
 
 
   def handle_in("move", payload, socket) do
