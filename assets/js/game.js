@@ -107,7 +107,7 @@ export class Game {
       return player.id == id
     })
 
-    player && player.stab()
+    player && player.stab(this.players)
   }
 
   playerRotates (id) {

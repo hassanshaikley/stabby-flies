@@ -54,7 +54,6 @@ export default class Fly extends Player {
     this.addChild(this.healthBar)
 
     window.last_added_fly = this
-    window.poo = this
   }
 
   rotateSword () {
@@ -71,7 +70,7 @@ export default class Fly extends Player {
     // this.healthGreen.x = (-25 * (this.hp / this.maxHp)) / 2
   }
 
-  stab () {
+  stab (players) {
     if (this.stabbing) return
     this.stabbing = true
 
@@ -83,6 +82,10 @@ export default class Fly extends Player {
 
     this.sword.y += y
     this.sword.x += x
+
+    players.forEach(player => {
+      console.log(player)
+    })
 
     setTimeout(() => {
       this.stabbing = false

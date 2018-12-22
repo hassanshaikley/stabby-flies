@@ -204,6 +204,11 @@ defmodule Aotb.Game do
     end)
   end
 
+  def player_says_stab_hit(id, hit_id) do
+    
+  end
+
+
   # def start do
   #   {:ok, pid} = Chat.Game.start_link
     

@@ -33,7 +33,12 @@ defmodule AotbWeb.RoomChannel do
   def handle_in("stab", payload, socket) do
     Logger.debug "Sending down stab"
     broadcast socket, "stab", %{id: socket.id}
+    {:noreply, socket}
+  end
 
+  def handle_in("stab_hit", payload, socket) do
+    Logger.debug "Stab hit"
+    Game.player_says_stab_hit(socket.id, payload["id"])
     {:noreply, socket}
   end
 
