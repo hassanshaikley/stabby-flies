@@ -38,6 +38,10 @@ channel.on('fly-rotate', function (payload) {
   console.log('Fly rotates! ', payload)
   game.playerRotates(payload.id)
 })
+channel.on('stab', function (payload) {
+  console.log('Fly stabs! ', payload)
+  game.playerStabs(payload.id)
+})
 channel.on('disconnect', function (payload) {
   console.log('disconnect', payload)
   game.removePlayerById(payload.id)
@@ -60,10 +64,14 @@ var msg = document.getElementById('msg') // message input field
 // }
 
 window.createExplosion = position => {
-  console.log('creat eexplosion ', position)
   channel.push('explosion', {
     position: position
   })
+}
+
+window.stab = () => {
+  console.log('Sending Stab.')
+  channel.push('stab', {})
 }
 
 document.addEventListener('keydown', function (event) {
@@ -184,7 +192,6 @@ channel.on('initialize', function (payload) {
 })
 
 channel.on('update_player', function (payload) {
-  console.log('update_player', payload)
   const { socket_id, x, y } = payload
   game.updatePlayer({
     id: socket_id,

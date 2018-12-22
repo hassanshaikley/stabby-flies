@@ -21,7 +21,6 @@ defmodule AotbWeb.UserSocket do
   # performing token verification on connect.
   def connect(_params, socket, _connect_info) do
     id = Aotb.SocketIdGen.gen_id
-
     {:ok, assign(socket, :user_id, id)}
   end
 

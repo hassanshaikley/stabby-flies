@@ -25,10 +25,15 @@ defmodule AotbWeb.RoomChannel do
   end
 
   def handle_in("fly-rotate", payload, socket) do
-
     Game.rotate_player_sword(socket.id, payload["amount"])
-
     broadcast socket, "fly-rotate", %{id: socket.id}
+    {:noreply, socket}
+  end
+
+  def handle_in("stab", payload, socket) do
+    Logger.debug "Sending down stab"
+    broadcast socket, "stab", %{id: socket.id}
+
     {:noreply, socket}
   end
 

@@ -50,6 +50,7 @@ export class Game {
     this.viewport.on('clicked', event => {
       const { x, y } = event.world
       window.createExplosion({ x, y })
+      window.stab()
     })
     console.log(this.viewport, this.viewport.position)
 
@@ -88,12 +89,20 @@ export class Game {
     this.gameObjects.push(explosion)
   }
 
+  playerStabs (id) {
+    const player = this.players.find(player => {
+      return player.id == id
+    })
+
+    player && player.stab()
+  }
+
   playerRotates (id) {
     const player = this.players.find(player => {
       return player.id == id
     })
 
-    player.rotateSword()
+    player && player.rotateSword()
   }
 
   setLocalPlayer (id) {

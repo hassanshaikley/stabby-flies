@@ -41,4 +41,20 @@ export default class Fly extends Player {
     console.log(' iam doing an rotateSword fren')
     this.sword.rotation += window.ROTATION_VALUE
   }
+
+  stab () {
+    const prevx = this.sword.x
+    const prevy = this.sword.y
+
+    const x = Math.sin(this.sword.rotation) * 20
+    const y = -Math.cos(this.sword.rotation) * 20
+
+    this.sword.y += y
+    this.sword.x += x
+
+    setTimeout(() => {
+      this.sword.y = prevy
+      this.sword.x = prevx
+    }, 200)
+  }
 }
