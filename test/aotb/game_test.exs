@@ -17,14 +17,28 @@ defmodule Aotb.GameTest do
     #   end
 
     test "adds p" do 
-        player_one = Aotb.Game.add_player("playerone", 0)
+        player_one = Aotb.Game.add_player("player1", 1)
         assert Aotb.Game.get_players |> length == 1
     end
 
     test "removes p" do 
-      player_one = Aotb.Game.remove_player_by_socket_id(0)
-      assert Aotb.Game.get_players |> length == 0
+      players_length = Aotb.Game.get_players |> length
+      Aotb.Game.add_player("player2", 2)
+      Aotb.Game.remove_player_by_socket_id(2)
+
+      assert Aotb.Game.get_players |> length == players_length
     end
+
+
+    test "moves p" do 
+      player_three = Aotb.Game.add_player("player3", 3)
+      old_x = player_three[:x]
+      # Aotb.Game.set_player_moving(3, "left", true)
+      Aotb.Game.move_player_by_socket_id(3, "left")
+      # Aotb.Game.loop
+      assert Aotb.Game.get_player_by_socket_id(3)[:x] != old_x
+    end
+
 
   end
   
