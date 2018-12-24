@@ -123,16 +123,20 @@ export class Game {
       setTimeout(this.setLocalPlayer.bind(this, id), 5)
       return
     }
-
-    this.players.forEach(_player => {
-      _player.filters = [new OutlineFilter(3, 0x101010)]
-    })
+    this.setPlayerFilters()
 
     this.viewport.follow(player, { speed: 60 })
     this.viewport.fit(player, 500, 500)
     player.filters = [new OutlineFilter(3, 0x101010)]
 
     player.localPlayer = true
+  }
+
+  setPlayerFilters () {
+    this.players.forEach(_player => {
+      !_player.localPlayer &&
+        (_player.filters = [new OutlineFilter(3, 0xbb2222)])
+    })
   }
 
   spritesLoaded (obj) {
@@ -213,6 +217,7 @@ export class Game {
 
     this.players.push(player)
     this.drawPlayer(player)
+    this.setPlayerFilters()
   }
   updatePlayer (obj) {
     const { id, x, y } = obj
