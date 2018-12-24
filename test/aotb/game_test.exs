@@ -33,9 +33,7 @@ defmodule Aotb.GameTest do
     test "moves p" do 
       player_three = Aotb.Game.add_player("player3", 3)
       old_x = player_three[:x]
-      # Aotb.Game.set_player_moving(3, "left", true)
       Aotb.Game.move_player_by_socket_id(3, "left")
-      # Aotb.Game.loop
       assert Aotb.Game.get_player_by_socket_id(3)[:x] != old_x
     end
 

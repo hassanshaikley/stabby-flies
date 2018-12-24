@@ -38,34 +38,7 @@ defmodule Aotb.Game do
       if (player[:moving][:down] or player[:moving][:left] or player[:moving][:right]  or player[:moving][:up] ) do
         AotbWeb.Endpoint.broadcast("room:game", "update_player", player)
       end
-
     end
-
-    # Enum.each players, fn player -> 
-      # updated_player = case player[:moving][:left] do
-      #   true -> %{player | x: update_x(player.x, -speed)
-      #   false -> player
-      # end
-    #   updated_player = case player[:moving][:right] do
-    #     true -> %{player | x: update_x(player.x, speed)}
-    #     false -> player
-    #   end
-
-    #   Agent.update(__MODULE__, fn(state) ->
-
-  
-    #     removed_player = List.delete(state.players, player)
-    #     Map.put(state, :players, [updated_player | removed_player] )
-    #   end)
-
-
-      # updated_player = case direction do
-      #   "left" -> }
-      #   "right" ->
-      #   "up" -> %{player | y: update_y(player.y, -speed)}
-      #   "down" -> %{player | y: update_y(player.y, speed)}
-      # end
-    # end
   end
 
   def set_player_moving(id, direction, moving) do
@@ -130,15 +103,6 @@ defmodule Aotb.Game do
     get_players() |> Enum.find([], fn x -> x[:socket_id] == socket_id end )
   end
 
-  # def move_player(name, direction) do
-  #   Agent.update(__MODULE__, fn(state) -> 
-  #     player = get_player_by_name(name)
-
-  #     Map.replace(state, player, count + 1)
-  #   end)
-  # end
-
-
   defp update_x(x, speed) do
     cond do 
       (x + speed) < 0 -> 0
@@ -179,14 +143,6 @@ defmodule Aotb.Game do
     Agent.update(__MODULE__, fn(state) ->
       removed_player = List.delete(state.players, player)
       Map.put(state, :players, removed_player )
-    end)
-  end
-
-
-  def watch(player) do
-    Agent.update(__MODULE__, fn(state) -> 
-      count = Map.get(state, player)
-      Map.replace(state, player, count + 1)
     end)
   end
 
