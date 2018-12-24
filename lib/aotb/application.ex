@@ -20,7 +20,7 @@ defmodule Aotb.Application do
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: Aotb.Supervisor]
     Supervisor.start_link(children, opts)
-    Aotb.Game.start_link
+    Aotb.Game.start_link(1)
     Aotb.SocketIdGen.start_link
   end
 

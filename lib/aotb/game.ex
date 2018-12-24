@@ -1,5 +1,7 @@
 defmodule Aotb.Game do
   require Logger
+  use Agent
+
 
   @background [
     ["1", "~", "~", "~"],
@@ -10,7 +12,7 @@ defmodule Aotb.Game do
     @background
   end
 
-  def start_link do
+  def start_link(_) do
     Agent.start_link(fn -> %{ "players": [] } end, name: __MODULE__)
     {:ok, _} = :timer.apply_interval(100, __MODULE__, :loop, []) 
   end
@@ -93,7 +95,7 @@ defmodule Aotb.Game do
   def add_player(name, socket_id) do
     # x = Enum.random(0..3000)
     x = 100
-    y = 150 # Enum.random(0..n)
+    y = 150
     player = %{
       name: name,
       x: x, 
@@ -120,7 +122,6 @@ defmodule Aotb.Game do
     end)
   end
 
-  # TODO: Should probably be get_player and then just use the documentation thing to document it
   def get_player_by_name(name) do
     get_players() |> Enum.find([], fn x -> x[:name] == name end )
   end
@@ -191,11 +192,6 @@ defmodule Aotb.Game do
     end)
   end
 
-  
-  # not properly implemented d : 
-  # def delete_player(player) do
-  #   Agent.get_and_update(__MODULE__, &Map.pop(&1, player))
-  # end
 
   def watch(player) do
     Agent.update(__MODULE__, fn(state) -> 
@@ -207,18 +203,4 @@ defmodule Aotb.Game do
   def player_says_stab_hit(id, hit_id) do
     
   end
-
-
-  # def start do
-  #   {:ok, pid} = Chat.Game.start_link
-    
-  #   Chat.Game.add_player("George")
-  #   Chat.Game.add_player("Lopez")
-  #   Chat.Game.add_player("Lee")
-
-
-  #   Chat.Game.get_players()
-
-  #   # {:ok, pid} 
-  # end
 end
