@@ -180,16 +180,6 @@ defmodule Aotb.Game do
       removed_player = List.delete(state.players, player)
       Map.put(state, :players, removed_player )
     end)
-    
-  end
-
-  def remove_player_by_socket_id(socket_id) do
-    player = get_player_by_socket_id(socket_id)
-    Logger.debug "removing player"
-    Agent.update(__MODULE__, fn(state) -> 
-      removed_player = List.delete(state.players, player) 
-      Map.put(state, :players, removed_player )
-    end)
   end
 
 

@@ -1,10 +1,10 @@
 defmodule Aotb.GameTest do
     use ExUnit.Case, async: true
 
-    setup do
+    # setup do
       # game = start_supervised!(Aotb.Game)
       # %{game: game}
-    end
+    # end
   
     # test "spawns buckets", %{game: game} do
     #     # assert KV.Registry.lookup(game, "shopping") != :error
@@ -16,9 +16,14 @@ defmodule Aotb.GameTest do
     #     assert KV.Bucket.get(bucket, "milk") == 1
     #   end
 
-    test "adds p", %{game: game} do 
+    test "adds p" do 
         player_one = Aotb.Game.add_player("playerone", 0)
-        assert Aotb.Game.get_players.length == 1
+        assert Aotb.Game.get_players |> length == 1
+    end
+
+    test "removes p" do 
+      player_one = Aotb.Game.remove_player_by_socket_id(0)
+      assert Aotb.Game.get_players |> length == 0
     end
 
   end
