@@ -35,9 +35,9 @@ defmodule Aotb.Game do
         move_player_by_socket_id(player[:socket_id], "down")
       end
 
-      if (player[:moving][:down] or player[:moving][:left] or player[:moving][:right]  or player[:moving][:up] ) do
+      # if (player[:moving][:down] or player[:moving][:left] or player[:moving][:right]  or player[:moving][:up] ) do
         AotbWeb.Endpoint.broadcast("room:game", "update_player", player)
-      end
+      # end
     end
   end
 
@@ -152,7 +152,7 @@ defmodule Aotb.Game do
     player_x = player.x + 20
     player_y = player.y
     player_width = 50
-    hitbox_x = player_x + :math.sin(player.sword_rotation)*50 - player_width - 10
+    hitbox_x = player_x + :math.sin(player.sword_rotation)*50 - player_width + 10
     hitbox_y = player_y - :math.cos(player.sword_rotation)*55 
     Logger.debug "x: #{hitbox_x}, y: #{hitbox_y}, player_x: #{player.x}, player_y: #{player.y}"
     %{x: hitbox_x, y: hitbox_y, width: 10, height: 10, shape: "rectangle"}
