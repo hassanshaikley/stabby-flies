@@ -77,7 +77,8 @@ defmodule Aotb.Game do
       socket_id: socket_id, 
       moving: %{left: false, up: false, down: false, right: false},
       sword_rotation: 0,
-      hp: 10
+      hp: 10,
+      maxHp: 10
     }
 
     Agent.update(__MODULE__, fn(state) -> 
@@ -138,6 +139,19 @@ defmodule Aotb.Game do
     end)
   end
 
+  def do_damage_to_player(socket_id, damage) do
+    player = get_player_by_socket_id(socket_id)
+
+    Agent.update(__MODULE__, fn(state) ->
+      new_hp = player.hp - damage
+      new_hp = if new_hp - damage >= 0, do: new_hp - damage, else: 0
+      updated_player = %{player | hp: new_hp}
+      removed_player = List.delete(state.players, player)
+      Map.put(state, :players, [updated_player | removed_player] )
+    end)
+
+  end
+
   def remove_player_by_socket_id(socket_id) do
     player = get_player_by_socket_id(socket_id)
 
@@ -147,7 +161,7 @@ defmodule Aotb.Game do
     end)
   end
 
-  def calculate_stab_hits(id) do 
+  def calculate_stab_hits(id, damage) do 
     player = get_player_by_socket_id(id)
     player_x = player.x + 20
     player_y = player.y
@@ -179,7 +193,11 @@ defmodule Aotb.Game do
         #   player: other_player, 
         #   hit: rectangles_overlap(stab_data, %{x: x, y: y, width: width, height: height})
         # }
-        rectangles_overlap(stab_data, %{x: x, y: y, width: width, height: height})
+        is_hit = rectangles_overlap(stab_data, %{x: x, y: y, width: width, height: height})  
+        # do_damage_to_player
+        if is_hit, do: do_damage_to_player(other_player.socket_id, damage), else: 0
+
+        is_hit && other_player.hp > 0
       end)
     
     # %{x: x, y: y, width: width, height: height, shape: "rectangle"}

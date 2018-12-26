@@ -7,7 +7,7 @@ export default class Fly extends Player {
     this.y = props.y
     this.id = props.id
     this.hp = props.hp
-    this.maxHp = props.hp
+    this.maxHp = props.maxHp
 
     let textureArray = []
     for (let i = 1; i < 4; i++) {
@@ -52,6 +52,7 @@ export default class Fly extends Player {
     this.healthBar.addChild(this.healthRed)
     this.healthBar.addChild(this.healthGreen)
     this.addChild(this.healthBar)
+    this.updateHealthBar()
 
     // this.swordHitBox = new PIXI.Graphics()
     // this.swordHitBox.beginFill(0x888)
@@ -82,10 +83,14 @@ export default class Fly extends Player {
     this.__DEBUG__updateSwordHitbox()
   }
 
+  updateHealthBar () {
+    this.healthGreen.width = 50 * (this.hp / this.maxHp)
+  }
+
   takeDamage (amt) {
     // console.log(amt, this.hp, this.maxHp)
     this.hp -= amt
-    this.healthGreen.width = 50 * (this.hp / this.maxHp)
+    this.updateHealthBar()
 
     // this.healthGreen.x = -25 + ((1 / 50) * (this.hp / this.maxHp)) / 2
     // this.healthGreen.x = (-25 * (this.hp / this.maxHp)) / 2

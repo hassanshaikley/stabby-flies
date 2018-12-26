@@ -209,14 +209,7 @@ export class Game {
       return
     }
 
-    const player = new Fly({
-      x: obj.x,
-      y: obj.y,
-      name: obj.name,
-      id: obj.socket_id,
-      sword_rotation: obj.sword_rotation,
-      hp: obj.hp
-    })
+    const player = new Fly({ ...obj, id: obj.socket_id })
 
     this.players.push(player)
     this.drawPlayer(player)
