@@ -19,7 +19,7 @@ defmodule Aotb.Game do
 
   def loop do
     players = get_players
-
+    # Logger.debug "--LOOP--"
     Enum.each players, fn player -> 
 
       if player[:moving][:left] do
@@ -36,18 +36,17 @@ defmodule Aotb.Game do
       end
 
       if (player.hp <= 0) do
-        Logger.debug "enum loop respawn"
+        # Logger.debug "enum loop respawn"
         respawn_player(player)
       end
 
-      # if (player[:moving][:down] or player[:moving][:left] or player[:moving][:right]  or player[:moving][:up] ) do
-        AotbWeb.Endpoint.broadcast("room:game", "update_player", player)
-      # end
+      # IO.inspect player
+
+      AotbWeb.Endpoint.broadcast("room:game", "update_player", player)
     end
   end
 
   def respawn_player(player) do
-    Logger.debug "agent respawn"
     # | x: Enum.random(0..3000) | y: 150 | 
     Agent.update(__MODULE__, fn(state) ->
       updated_player = Map.merge(player, %{hp: player.maxHp, y: 150, x: Enum.random(0..3000) })
@@ -57,7 +56,6 @@ defmodule Aotb.Game do
   end
 
   def set_player_moving(id, direction, moving) do
-    Logger.debug("Player moving")
     player = get_player_by_socket_id(id)
     IO.inspect player
     Agent.update(__MODULE__, fn(state) ->
@@ -68,11 +66,9 @@ defmodule Aotb.Game do
   end
 
   def rotate_player_sword(id, amount) do
-    Logger.debug "Rotating Sword #{id} #{amount}"
     player = get_player_by_socket_id(id)
     Agent.update(__MODULE__, fn(state) ->
       current_rotation = player[:sword_rotation]
-      Logger.debug current_rotation
       updated_player = put_in(player[:sword_rotation], current_rotation + amount)
       IO.inspect updated_player
       removed_player = List.delete(state.players, player)

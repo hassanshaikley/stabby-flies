@@ -97,7 +97,6 @@ export class Game {
   }
 
   createExplosion (position) {
-    // this.viewpo
     const explosion = new Explosion(position)
     this.viewport.addChild(explosion)
     this.gameObjects.push(explosion)

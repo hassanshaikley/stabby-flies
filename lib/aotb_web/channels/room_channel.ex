@@ -31,8 +31,6 @@ defmodule AotbWeb.RoomChannel do
   end
 
   def handle_in("stab", payload, socket) do
-    Logger.debug "Sending down stab"
-    # broadcast socket, "debug shape", 
     damage = 1
     hit_players = Game.calculate_stab_hits(socket.id, damage)
         
@@ -50,39 +48,10 @@ defmodule AotbWeb.RoomChannel do
     {:noreply, socket}
   end
 
-  def respawn_player(player) do
-    # :timer.apply_after(...)
-    Logger.debug "IN RESPAWN PLAYTER"
-    :timer.apply_after(1000, __MODULE__, :emit_respawn, [player]) 
-  end
-
-  def emit_respawn(player) do
-    Logger.debug "EMIT RESPWAN FOR player"
-    
-  end
-
-  # def handle_in("stab_hit", payload, socket) do
-  #   Logger.debug "Stab hit"
-  #   hit_players = Game.player_says_stab_hit(socket.id, payload["id"])
-
-
-  #   {:noreply, socket}
-  # end
-
-
   def handle_in("connect", payload, socket) do
     Logger.debug "Connect"
     {:noreply, socket}
   end
-
-  # def handle_in("explosion", payload, socket) do
-  #   Logger.debug "Explosion"
-  #   IO.inspect payload["position"]
-  #   broadcast socket, "explosion", %{x: payload["position"]["x"], y: payload["position"]["y"]}
-
-  #   {:noreply, socket}
-  # end
-
 
   def handle_in("move", payload, socket) do
     player = Game.set_player_moving(socket.id, String.to_atom(payload["direction"]), payload["down"])
@@ -97,7 +66,7 @@ defmodule AotbWeb.RoomChannel do
 
   def handle_info(:after_join, socket) do
     name = ["Bessy", "Borkbork", "Borb", "Bob", "Babylon", "Babina", "Bamboon"] |> Enum.shuffle |> hd
-    IO.puts "H"
+    IO.puts "After Join! Adding Player #{socket.id}"
     IO.inspect socket
     new_player = Game.add_player("#{name}-#{socket.id}", socket.id)
 

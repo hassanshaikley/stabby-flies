@@ -54,11 +54,6 @@ channel.on('disconnect', function (payload) {
   game.removePlayerById(payload.id)
 })
 
-channel.on('explosion', function (payload) {
-  console.log('explosion AT', payload)
-  game.createExplosion(payload)
-})
-
 channel.on('debug shape', function (payload) {
   game.debugShape(payload)
 })
