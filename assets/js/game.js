@@ -9,6 +9,7 @@ import { CRTFilter } from '@pixi/filter-crt'
 
 import Explosion from './explosion'
 import Debug from './debug'
+import Text from './text'
 
 var Viewport = require('pixi-viewport')
 
@@ -181,6 +182,23 @@ export class Game {
 
     this.viewport.addChild(floor)
     this.loaded = true
+
+    const messageone = new Text({
+      message: 'Hello & Welcome',
+      duration: 1000
+    })
+    const messagetwo =
+      'WASD to move\nLeft click stab\nRight click rotate\nctrl-right lcick counter rotate'
+    setTimeout(() => {
+      this.app.stage.addChild(messageone)
+      this.gameObjects.push(messageone)
+    }, 1000)
+    setTimeout(() => {
+      this.app.stage.addChild(messagetwo)
+      this.gameObjects.push(messagetwo)
+    }, 2000)
+
+    // this.viewport.addChild(messageone)
 
     requestAnimationFrame(this.animate.bind(this))
   }

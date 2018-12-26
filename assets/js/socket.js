@@ -88,8 +88,9 @@ window.stab = obj => {
 window.addEventListener('keydown', function (event) {
   const down = true
 
-  // console.log('KEY DOWN ', event, keypresses)
   const { key } = event
+  console.log(event, keypresses)
+
   if (keypresses[key]) return
 
   switch (key) {
