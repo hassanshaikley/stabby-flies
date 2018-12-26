@@ -1,5 +1,3 @@
-import {setupCanvas} from './setupCanvas'
+import { setupCanvas } from './setupCanvas'
 
-export {
-  setupCanvas
-}
+export { setupCanvas }

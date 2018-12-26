@@ -182,22 +182,7 @@ export class Game {
     this.viewport.addChild(floor)
     this.loaded = true
 
-    const messageone = new Text({
-      message: 'Hello & Welcome',
-      duration: 1000
-    })
-    const messagetwo =
-      'WASD to move\nLeft click stab\nRight click rotate\nctrl-right lcick counter rotate'
-    setTimeout(() => {
-      this.app.stage.addChild(messageone)
-      this.gameObjects.push(messageone)
-    }, 1000)
-    setTimeout(() => {
-      this.app.stage.addChild(messagetwo)
-      this.gameObjects.push(messagetwo)
-    }, 2000)
-
-    // this.viewport.addChild(messageone)
+    this.introText()
 
     requestAnimationFrame(this.animate.bind(this))
   }
@@ -266,5 +251,79 @@ export class Game {
       default:
         throw `Woops: unreqcognized shape ${shape}`
     }
+  }
+
+  introText () {
+    setTimeout(() => {
+      const messageone = new Text({
+        message: 'Hello & Welcome',
+        duration: 2000,
+        fade: false
+      })
+      this.app.stage.addChild(messageone)
+      this.gameObjects.push(messageone)
+    }, 1000)
+
+    setTimeout(() => {
+      const messagetwo = new Text({
+        message: 'Your objective is to take down other players',
+        duration: 2000,
+        fade: false
+      })
+      this.app.stage.addChild(messagetwo)
+      this.gameObjects.push(messagetwo)
+    }, 3000)
+
+    setTimeout(() => {
+      const messageone = new Text({
+        message: 'Controls are:',
+        duration: 2000,
+        fade: false
+      })
+      this.app.stage.addChild(messageone)
+      this.gameObjects.push(messageone)
+    }, 5000)
+    setTimeout(() => {
+      const messagetwo = new Text({
+        message:
+          'wasd: move\nleft-click: stab\nright-click: rotate\nctrl+right-click: rotate opposite',
+        duration: 4000,
+        fade: false
+      })
+      this.app.stage.addChild(messagetwo)
+      this.gameObjects.push(messagetwo)
+    }, 7000)
+
+
+    setTimeout(() => {
+      const messagethree = new Text({
+        message: 'If no one is on send them a link and commence battle',
+        duration: 3000,
+        fade: false
+      })
+      this.app.stage.addChild(messagethree)
+      this.gameObjects.push(messagethree)
+    }, 11000)
+
+    setTimeout(() => {
+      const messagethree = new Text({
+        message: 'This is in its early stages and still being developed',
+        duration: 3000,
+        fade: false
+      })
+      this.app.stage.addChild(messagethree)
+      this.gameObjects.push(messagethree)
+    }, 14000)
+
+
+    setTimeout(() => {
+      const messagethree = new Text({
+        message: 'Enjoy!',
+        duration: 3000,
+        fade: false
+      })
+      this.app.stage.addChild(messagethree)
+      this.gameObjects.push(messagethree)
+    }, 17000)
   }
 }

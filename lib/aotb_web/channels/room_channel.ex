@@ -72,7 +72,6 @@ defmodule AotbWeb.RoomChannel do
 
     broadcast socket, "connect", %{new_player: new_player, players: Game.get_players,}
 
-
     Aotb.Message.get_messages()
     |> Enum.each(fn msg -> push(socket, "shout", %{
         name: msg.name,

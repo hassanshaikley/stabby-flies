@@ -7,17 +7,19 @@ export default class Text extends PIXI.Container {
     this.spawnTime = new Date()
     this.duration = props.duration || 500
 
-    let message = new PIXI.Text(props.message)
-    this.addChild(message)
+    this.message = new PIXI.Text(props.message)
+    this.addChild(this.message)
   }
 
   update () {
     const percentDone = (new Date() - this.spawnTime) / 100
 
-    this.alpha = 1 / percentDone
+    if (this.props.fade) {
+      this.alpha = 1 / percentDone
+    }
 
-    if (new Date() - this.spawnTime >= this.duration + 0.5) {
-      this.removeChild(this.debugRect)
+    if (new Date() - this.spawnTime >= this.duration) {
+      this.removeChild(this.message)
     }
   }
 }

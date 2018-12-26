@@ -2,16 +2,6 @@ defmodule Aotb.Game do
   require Logger
   use Agent
 
-
-  @background [
-    ["1", "~", "~", "~"],
-    ["~", "~", "~", "~"]
-  ]
-
-  def background do
-    @background
-  end
-
   def start_link(_) do
     Agent.start_link(fn -> %{ "players": [] } end, name: __MODULE__)
     {:ok, _} = :timer.apply_interval(100, __MODULE__, :loop, []) 
@@ -19,7 +9,7 @@ defmodule Aotb.Game do
 
   def loop do
     players = get_players
-    # Logger.debug "--LOOP--"
+    Logger.debug "--LOOP--"
     Enum.each players, fn player -> 
 
       if player[:moving][:left] do
@@ -40,14 +30,13 @@ defmodule Aotb.Game do
         respawn_player(player)
       end
 
-      # IO.inspect player
+      IO.inspect player
 
       AotbWeb.Endpoint.broadcast("room:game", "update_player", player)
     end
   end
 
   def respawn_player(player) do
-    # | x: Enum.random(0..3000) | y: 150 | 
     Agent.update(__MODULE__, fn(state) ->
       updated_player = Map.merge(player, %{hp: player.maxHp, y: 150, x: Enum.random(0..3000) })
       removed_player = List.delete(state.players, player)
@@ -57,7 +46,6 @@ defmodule Aotb.Game do
 
   def set_player_moving(id, direction, moving) do
     player = get_player_by_socket_id(id)
-    IO.inspect player
     Agent.update(__MODULE__, fn(state) ->
       updated_player = put_in(player[:moving][direction], moving)
       removed_player = List.delete(state.players, player)
@@ -70,7 +58,6 @@ defmodule Aotb.Game do
     Agent.update(__MODULE__, fn(state) ->
       current_rotation = player[:sword_rotation]
       updated_player = put_in(player[:sword_rotation], current_rotation + amount)
-      IO.inspect updated_player
       removed_player = List.delete(state.players, player)
       Map.put(state, :players, [updated_player | removed_player] )
     end)
@@ -78,7 +65,6 @@ defmodule Aotb.Game do
   end
 
   def add_player(name, socket_id) do
-    # x = Enum.random(0..3000)
     x = Enum.random(0..3000)
     y = 150
     player = %{
@@ -116,21 +102,6 @@ defmodule Aotb.Game do
     get_players() |> Enum.find([], fn x -> x[:socket_id] == socket_id end )
   end
 
-  defp update_x(x, speed) do
-    cond do 
-      (x + speed) < 0 -> 0
-      (x + speed) > 3000 -> 3000
-      (true) -> x + speed
-    end
-  end
-
-  defp update_y(y, speed) do
-    cond do 
-      (y + speed) < -100 -> -100
-      (y + speed) > 270 -> 270
-      (true) -> y + speed
-    end
-  end
 
   def move_player_by_socket_id(socket_id, direction) do
     player = get_player_by_socket_id(socket_id)
@@ -222,5 +193,21 @@ defmodule Aotb.Game do
     h1 = rect1.height
     h2 = rect2.height
     !(x1+w1<x2 or x2+w2<x1 or y1+h1<y2 or y2+h2<y1)
+  end
+
+  defp update_x(x, speed) do
+    cond do 
+      (x + speed) < 0 -> 0
+      (x + speed) > 3000 -> 3000
+      (true) -> x + speed
+    end
+  end
+
+  defp update_y(y, speed) do
+    cond do 
+      (y + speed) < -100 -> -100
+      (y + speed) > 270 -> 270
+      (true) -> y + speed
+    end
   end
 end
