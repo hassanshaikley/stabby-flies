@@ -53,12 +53,32 @@ export default class Fly extends Player {
     this.healthBar.addChild(this.healthGreen)
     this.addChild(this.healthBar)
 
+    this.swordHitBox = new PIXI.Graphics()
+    this.swordHitBox.beginFill(0x888)
+    this.swordHitBox.drawRect(-17, 3, 5, 5)
+    this.swordHitBox.endFill()
+    this.addChild(this.swordHitBox)
+
+    this.swordHitBoxTwo = new PIXI.Graphics()
+    this.swordHitBoxTwo.beginFill(0x222)
+    this.swordHitBoxTwo.drawRect(-17, 3, 5, 5)
+    this.swordHitBoxTwo.endFill()
+    this.addChild(this.swordHitBoxTwo)
+    this.__DEBUG__calculateHitbox()
+
     window.last_added_fly = this
   }
 
+  __DEBUG__calculateHitbox () {
+    const x = Math.sin(this.sword.rotation) * 50
+    const y = -Math.cos(this.sword.rotation) * 55
+    this.swordHitBoxTwo.x = x
+    this.swordHitBoxTwo.y = y
+  }
+
   rotateSword () {
-    console.log(' iam doing an rotateSword fren')
     this.sword.rotation += window.ROTATION_VALUE
+    this.__DEBUG__calculateHitbox()
   }
 
   takeDamage (amt) {
@@ -82,6 +102,8 @@ export default class Fly extends Player {
 
     this.sword.y += y
     this.sword.x += x
+
+    const swordBounds = this.sword.getBounds()
 
     players.forEach(player => {
       console.log(player)

@@ -237,4 +237,16 @@ export class Game {
   drawPlayer (player) {
     this.viewport.addChild(player)
   }
+
+  debugSquare ({ shape, x, y, width, height, radius }) {
+    console.log(x, y, width, height)
+    switch (shape) {
+      case 'circle':
+        break
+      case 'rectangle':
+        break
+      default:
+        throw `Woops: unreqcognized shape ${shape}`
+    }
+  }
 }
