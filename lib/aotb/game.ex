@@ -144,7 +144,7 @@ defmodule Aotb.Game do
 
     Agent.update(__MODULE__, fn(state) ->
       new_hp = player.hp - damage
-      new_hp = if new_hp - damage >= 0, do: new_hp - damage, else: 0
+      new_hp = if new_hp - damage >= 0, do: new_hp, else: 0
       updated_player = %{player | hp: new_hp}
       removed_player = List.delete(state.players, player)
       Map.put(state, :players, [updated_player | removed_player] )
@@ -194,13 +194,11 @@ defmodule Aotb.Game do
         #   hit: rectangles_overlap(stab_data, %{x: x, y: y, width: width, height: height})
         # }
         is_hit = rectangles_overlap(stab_data, %{x: x, y: y, width: width, height: height})  
-        # do_damage_to_player
         if is_hit, do: do_damage_to_player(other_player.socket_id, damage), else: 0
 
         is_hit && other_player.hp > 0
       end)
     
-    # %{x: x, y: y, width: width, height: height, shape: "rectangle"}
     ret
   end
 

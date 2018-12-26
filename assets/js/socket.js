@@ -30,6 +30,7 @@ channel.on('connect', function (payload) {
   // ul.appendChild(li); // append to list
   // console.log(players)
   players.forEach(player => {
+    console.log(player)
     game.addPlayer(player)
   })
 })
@@ -38,11 +39,16 @@ channel.on('fly-rotate', function (payload) {
   game.playerRotates(payload.id, payload.currentRotation)
 })
 channel.on('stab', function (payload) {
-  game.playerStabs(payload.id)
+  const { id, hit_players_data } = payload
+  game.playerStabs(id)
+  hit_players_data.forEach(obj => {
+    game.playerIsHit(obj)
+  })
 })
-channel.on('hit', function (payload) {
-  game.playerIsHit(payload)
-})
+// channel.on('hit', function (payload) {
+//   console.log('IAAAM HITT')
+//   game.playerIsHit(payload)
+// })
 channel.on('disconnect', function (payload) {
   console.log('disconnect', payload)
   game.removePlayerById(payload.id)

@@ -111,10 +111,6 @@ export default class Fly extends Player {
 
     const swordBounds = this.sword.getBounds()
 
-    // players.forEach(player => {
-    //   console.log(player)
-    // })
-
     setTimeout(() => {
       this.stabbing = false
       this.sword.y = prevy

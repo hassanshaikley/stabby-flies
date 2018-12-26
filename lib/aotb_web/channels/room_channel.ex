@@ -36,16 +36,16 @@ defmodule AotbWeb.RoomChannel do
     damage = 1
     hit_players = Game.calculate_stab_hits(socket.id, damage)
         
-    hit_players
-    |> Enum.each(fn player -> 
-      push(socket, "hit", %{
+    hit_players_data = hit_players
+    |> Enum.map(fn player -> 
+      %{
         id: player.socket_id,
         damage: damage
-      })
+      }
       end
       )
 
-    broadcast socket, "stab", %{id: socket.id}
+    broadcast socket, "stab", %{id: socket.id, hit_players_data: hit_players_data}
     {:noreply, socket}
   end
 
