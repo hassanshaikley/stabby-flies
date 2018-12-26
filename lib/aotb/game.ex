@@ -63,6 +63,7 @@ defmodule Aotb.Game do
       removed_player = List.delete(state.players, player)
       Map.put(state, :players, [updated_player | removed_player] )
     end)
+    player
   end
 
   def add_player(name, socket_id) do
@@ -144,6 +145,21 @@ defmodule Aotb.Game do
       removed_player = List.delete(state.players, player)
       Map.put(state, :players, removed_player )
     end)
+  end
+
+  def calculate_stab_hits(id) do 
+    player = get_player_by_socket_id(id)
+    player_x = player.x + 20
+    player_y = player.y
+    player_width = 50
+    hitbox_x = player_x + :math.sin(player.sword_rotation)*50 - player_width - 10
+    hitbox_y = player_y - :math.cos(player.sword_rotation)*55 
+    Logger.debug "x: #{hitbox_x}, y: #{hitbox_y}, player_x: #{player.x}, player_y: #{player.y}"
+    %{x: hitbox_x, y: hitbox_y, width: 10, height: 10, shape: "rectangle"}
+    # hitbox_y = player.y
+
+    # sword_hit_box = 
+    # playerX = 
   end
 
   def player_says_stab_hit(id, hit_id) do

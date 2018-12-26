@@ -25,13 +25,14 @@ defmodule AotbWeb.RoomChannel do
   end
 
   def handle_in("fly-rotate", payload, socket) do
-    Game.rotate_player_sword(socket.id, payload["amount"])
-    broadcast socket, "fly-rotate", %{id: socket.id}
+    player = Game.rotate_player_sword(socket.id, payload["amount"])
+    broadcast socket, "fly-rotate", %{id: socket.id, currentRotation: player[:sword_rotation] + payload["amount"]}
     {:noreply, socket}
   end
 
   def handle_in("stab", payload, socket) do
     Logger.debug "Sending down stab"
+    broadcast socket, "debug shape", Game.calculate_stab_hits(socket.id)
     broadcast socket, "stab", %{id: socket.id}
     {:noreply, socket}
   end
@@ -58,11 +59,8 @@ defmodule AotbWeb.RoomChannel do
 
 
   def handle_in("move", payload, socket) do
-    Logger.debug("--in move--")
-    IO.inspect(payload)
     player = Game.set_player_moving(socket.id, String.to_atom(payload["direction"]), payload["down"])
-    IO.inspect(player)
-    {:reply, {:ok, payload}, socket}
+    {:noreply, socket}
   end
 
   def terminate(reason, socket) do

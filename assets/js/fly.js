@@ -53,36 +53,37 @@ export default class Fly extends Player {
     this.healthBar.addChild(this.healthGreen)
     this.addChild(this.healthBar)
 
-    this.swordHitBox = new PIXI.Graphics()
-    this.swordHitBox.beginFill(0x888)
-    this.swordHitBox.drawRect(-17, 3, 5, 5)
-    this.swordHitBox.endFill()
-    this.addChild(this.swordHitBox)
+    // this.swordHitBox = new PIXI.Graphics()
+    // this.swordHitBox.beginFill(0x888)
+    // this.swordHitBox.drawRect(-17, 3, 5, 5)
+    // this.swordHitBox.endFill()
+    // this.addChild(this.swordHitBox)
 
-    this.swordHitBoxTwo = new PIXI.Graphics()
-    this.swordHitBoxTwo.beginFill(0x222)
-    this.swordHitBoxTwo.drawRect(-17, 3, 5, 5)
-    this.swordHitBoxTwo.endFill()
-    this.addChild(this.swordHitBoxTwo)
-    this.__DEBUG__calculateHitbox()
+    // this.swordHitBoxTwo = new PIXI.Graphics()
+    // this.swordHitBoxTwo.beginFill(0x222)
+    // this.swordHitBoxTwo.drawRect(0, 0, 5, 5)
+    // this.swordHitBoxTwo.endFill()
+    // this.addChild(this.swordHitBoxTwo)
+    this.__DEBUG__updateSwordHitbox()
 
     window.last_added_fly = this
   }
 
-  __DEBUG__calculateHitbox () {
+  __DEBUG__updateSwordHitbox () {
     const x = Math.sin(this.sword.rotation) * 50
     const y = -Math.cos(this.sword.rotation) * 55
-    this.swordHitBoxTwo.x = x
-    this.swordHitBoxTwo.y = y
+    // this.swordHitBoxTwo.x = x
+    // this.swordHitBoxTwo.y = y
+    console.log(`x: ${x}, y: ${y}, this.x, ${this.x}, this.y: ${this.y}`)
   }
 
-  rotateSword () {
-    this.sword.rotation += window.ROTATION_VALUE
-    this.__DEBUG__calculateHitbox()
+  rotateSword (currentRotation) {
+    this.sword.rotation = currentRotation
+    this.__DEBUG__updateSwordHitbox()
   }
 
   takeDamage (amt) {
-    console.log(amt, this.hp, this.maxHp)
+    // console.log(amt, this.hp, this.maxHp)
     this.hp -= amt
     this.healthGreen.width = 50 * (this.hp / this.maxHp)
 
@@ -105,9 +106,9 @@ export default class Fly extends Player {
 
     const swordBounds = this.sword.getBounds()
 
-    players.forEach(player => {
-      console.log(player)
-    })
+    // players.forEach(player => {
+    //   console.log(player)
+    // })
 
     setTimeout(() => {
       this.stabbing = false

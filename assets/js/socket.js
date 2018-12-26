@@ -35,7 +35,7 @@ channel.on('connect', function (payload) {
 })
 
 channel.on('fly-rotate', function (payload) {
-  game.playerRotates(payload.id)
+  game.playerRotates(payload.id, payload.currentRotation)
 })
 channel.on('stab', function (payload) {
   game.playerStabs(payload.id)
@@ -48,6 +48,10 @@ channel.on('disconnect', function (payload) {
 channel.on('explosion', function (payload) {
   console.log('explosion AT', payload)
   game.createExplosion(payload)
+})
+
+channel.on('debug shape', function (payload) {
+  game.debugShape(payload)
 })
 
 channel.join() // join the channel.
@@ -67,7 +71,8 @@ var msg = document.getElementById('msg') // message input field
 //   })
 // }
 
-window.stab = () => {
+window.stab = obj => {
+  // console.log('stabbing with ', obj)
   channel.push('stab', {})
 }
 
@@ -253,9 +258,11 @@ socket.connect()
 export default socket
 
 document.oncontextmenu = evt => {
-  console.log('sneding fly rotate')
+  console.log('sneding fly rotate ', evt, evt.ctrlKey)
+  const amount = evt.ctrlKey ? -window.ROTATION_VALUE : window.ROTATION_VALUE
+  console.log(amount, evt.ctrlKey)
   channel.push('fly-rotate', {
-    amount: window.ROTATION_VALUE
+    amount
   })
   evt.preventDefault()
 }
