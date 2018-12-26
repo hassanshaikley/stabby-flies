@@ -45,8 +45,20 @@ defmodule AotbWeb.RoomChannel do
       end
       )
 
+
     broadcast socket, "stab", %{id: socket.id, hit_players_data: hit_players_data}
     {:noreply, socket}
+  end
+
+  def respawn_player(player) do
+    # :timer.apply_after(...)
+    Logger.debug "IN RESPAWN PLAYTER"
+    :timer.apply_after(1000, __MODULE__, :emit_respawn, [player]) 
+  end
+
+  def emit_respawn(player) do
+    Logger.debug "EMIT RESPWAN FOR player"
+    
   end
 
   # def handle_in("stab_hit", payload, socket) do

@@ -205,11 +205,7 @@ channel.on('initialize', function (payload) {
 
 channel.on('update_player', function (payload) {
   const { socket_id, x, y } = payload
-  game.updatePlayer({
-    id: socket_id,
-    x,
-    y
-  })
+  game.updatePlayer({ ...payload, id: socket_id })
 })
 
 /* End Add */

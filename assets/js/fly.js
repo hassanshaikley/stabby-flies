@@ -83,6 +83,14 @@ export default class Fly extends Player {
     this.__DEBUG__updateSwordHitbox()
   }
 
+  updateVariables (obj) {
+    this.x = obj.x
+    this.y = obj.y
+    this.hp = obj.hp
+    // this = Object.assign(this, obj)
+    this.updateHealthBar()
+  }
+
   updateHealthBar () {
     this.healthGreen.width = 50 * (this.hp / this.maxHp)
   }

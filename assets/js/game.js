@@ -83,7 +83,7 @@ export class Game {
 
   playerIsHit (payload) {
     const { damage, id } = payload
-    console.log(id, damage)
+
     const player = this.players.find(player => {
       return player.id == id
     })
@@ -216,11 +216,13 @@ export class Game {
     this.setPlayerFilters()
   }
   updatePlayer (obj) {
-    const { id, x, y } = obj
-    const player = this.players.find(player => player.id == id)
-
-    player.x = x
-    player.y = y
+    const { id, x, y, hp } = obj
+    let player = this.players.find(player => player.id == id)
+    // console.log(obj)
+    // player.x = x
+    // player.y = y
+    // player.hp = hp
+    player.updateVariables(obj)
   }
 
   removePlayerById (id) {

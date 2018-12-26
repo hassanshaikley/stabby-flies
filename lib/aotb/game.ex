@@ -35,10 +35,25 @@ defmodule Aotb.Game do
         move_player_by_socket_id(player[:socket_id], "down")
       end
 
+      if (player.hp <= 0) do
+        Logger.debug "enum loop respawn"
+        respawn_player(player)
+      end
+
       # if (player[:moving][:down] or player[:moving][:left] or player[:moving][:right]  or player[:moving][:up] ) do
         AotbWeb.Endpoint.broadcast("room:game", "update_player", player)
       # end
     end
+  end
+
+  def respawn_player(player) do
+    Logger.debug "agent respawn"
+    # | x: Enum.random(0..3000) | y: 150 | 
+    Agent.update(__MODULE__, fn(state) ->
+      updated_player = Map.merge(player, %{hp: player.maxHp, y: 150, x: Enum.random(0..3000) })
+      removed_player = List.delete(state.players, player)
+      Map.put(state, :players, [updated_player | removed_player] )
+    end)
   end
 
   def set_player_moving(id, direction, moving) do
@@ -68,7 +83,7 @@ defmodule Aotb.Game do
 
   def add_player(name, socket_id) do
     # x = Enum.random(0..3000)
-    x = 100
+    x = Enum.random(0..3000)
     y = 150
     player = %{
       name: name,
@@ -189,10 +204,6 @@ defmodule Aotb.Game do
         width = 80
         height = 60
 
-        # %{
-        #   player: other_player, 
-        #   hit: rectangles_overlap(stab_data, %{x: x, y: y, width: width, height: height})
-        # }
         is_hit = rectangles_overlap(stab_data, %{x: x, y: y, width: width, height: height})  
         if is_hit, do: do_damage_to_player(other_player.socket_id, damage), else: 0
 
@@ -200,10 +211,6 @@ defmodule Aotb.Game do
       end)
     
     ret
-  end
-
-  def player_says_stab_hit(id, hit_id) do
-    
   end
 
   defp rectangles_overlap(rect1, rect2) do
@@ -219,11 +226,5 @@ defmodule Aotb.Game do
     h1 = rect1.height
     h2 = rect2.height
     !(x1+w1<x2 or x2+w2<x1 or y1+h1<y2 or y2+h2<y1)
-
-#     if ():
-#     Intersection = Empty
-# else:
-#     Intersection = Not Empty
-
   end
 end
