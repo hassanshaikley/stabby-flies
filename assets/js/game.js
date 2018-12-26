@@ -8,6 +8,7 @@ import { OutlineFilter } from '@pixi/filter-outline'
 import { CRTFilter } from '@pixi/filter-crt'
 
 import Explosion from './explosion'
+import Debug from './debug'
 
 var Viewport = require('pixi-viewport')
 
@@ -80,7 +81,9 @@ export class Game {
       .load(this.spritesLoaded.bind(this))
   }
 
-  playerIsHit (id, damage) {
+  playerIsHit (payload) {
+    const { damage, id } = payload
+    console.log(id, damage)
     const player = this.players.find(player => {
       return player.id == id
     })
@@ -238,18 +241,15 @@ export class Game {
     this.viewport.addChild(player)
   }
 
-  debugShape ({ shape, x, y, width, height, radius }) {
-    console.log(x, y, width, height)
+  debugShape (obj) {
+    const { shape } = obj
     switch (shape) {
       case 'circle':
         break
       case 'rectangle':
-        const debugRect = new PIXI.Graphics()
-        debugRect.beginFill(0xff0000)
-        debugRect.drawRect(x, y, width, height)
-        debugRect.endFill()
-        this.viewport.addChild(debugRect)
-
+        const debug = new Debug(obj)
+        this.viewport.addChild(debug)
+        this.gameObjects.push(debug)
         break
       default:
         throw `Woops: unreqcognized shape ${shape}`

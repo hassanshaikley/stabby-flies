@@ -154,15 +154,60 @@ defmodule Aotb.Game do
     player_width = 50
     hitbox_x = player_x + :math.sin(player.sword_rotation)*50 - player_width + 10
     hitbox_y = player_y - :math.cos(player.sword_rotation)*55 
-    Logger.debug "x: #{hitbox_x}, y: #{hitbox_y}, player_x: #{player.x}, player_y: #{player.y}"
-    %{x: hitbox_x, y: hitbox_y, width: 10, height: 10, shape: "rectangle"}
-    # hitbox_y = player.y
+    # Logger.debug "x: #{hitbox_x}, y: #{hitbox_y}, player_x: #{player.x}, player_y: #{player.y}"
 
-    # sword_hit_box = 
-    # playerX = 
+    x = hitbox_x
+    y = hitbox_y
+    width = 10
+    height = 10
+
+    stab_data = %{x: x, y: y, width: width, height: height}
+
+    # Get all the hit players
+    ret = get_players() 
+    |>  Enum.filter(fn x -> x.socket_id != id end)
+    |>  Enum.filter(fn other_player -> 
+        x = other_player.x
+        y = other_player.y
+
+        x = other_player.x - 40
+        y = other_player.y - 30
+        width = 80
+        height = 60
+
+        # %{
+        #   player: other_player, 
+        #   hit: rectangles_overlap(stab_data, %{x: x, y: y, width: width, height: height})
+        # }
+        rectangles_overlap(stab_data, %{x: x, y: y, width: width, height: height})
+      end)
+    
+    # %{x: x, y: y, width: width, height: height, shape: "rectangle"}
+    ret
   end
 
   def player_says_stab_hit(id, hit_id) do
     
+  end
+
+  defp rectangles_overlap(rect1, rect2) do
+    x1 = rect1.x
+    x2 = rect2.x
+
+    y1 = rect1.y
+    y2 = rect2.y 
+
+    w1 = rect1.width
+    w2 = rect2.width
+
+    h1 = rect1.height
+    h2 = rect2.height
+    !(x1+w1<x2 or x2+w2<x1 or y1+h1<y2 or y2+h2<y1)
+
+#     if ():
+#     Intersection = Empty
+# else:
+#     Intersection = Not Empty
+
   end
 end

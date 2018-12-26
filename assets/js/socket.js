@@ -40,6 +40,9 @@ channel.on('fly-rotate', function (payload) {
 channel.on('stab', function (payload) {
   game.playerStabs(payload.id)
 })
+channel.on('hit', function (payload) {
+  game.playerIsHit(payload)
+})
 channel.on('disconnect', function (payload) {
   console.log('disconnect', payload)
   game.removePlayerById(payload.id)
@@ -79,7 +82,7 @@ window.stab = obj => {
 window.addEventListener('keydown', function (event) {
   const down = true
 
-  console.log('KEY DOWN ', event, keypresses)
+  // console.log('KEY DOWN ', event, keypresses)
   const { key } = event
   if (keypresses[key]) return
 

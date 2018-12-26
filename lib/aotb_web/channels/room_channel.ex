@@ -32,16 +32,29 @@ defmodule AotbWeb.RoomChannel do
 
   def handle_in("stab", payload, socket) do
     Logger.debug "Sending down stab"
-    broadcast socket, "debug shape", Game.calculate_stab_hits(socket.id)
+    # broadcast socket, "debug shape", 
+    hit_players = Game.calculate_stab_hits(socket.id)
+        
+    hit_players
+    |> Enum.each(fn player -> 
+      push(socket, "hit", %{
+        id: player.socket_id,
+        damage: 10
+      })
+      end
+      )
+      
     broadcast socket, "stab", %{id: socket.id}
     {:noreply, socket}
   end
 
-  def handle_in("stab_hit", payload, socket) do
-    Logger.debug "Stab hit"
-    Game.player_says_stab_hit(socket.id, payload["id"])
-    {:noreply, socket}
-  end
+  # def handle_in("stab_hit", payload, socket) do
+  #   Logger.debug "Stab hit"
+  #   hit_players = Game.player_says_stab_hit(socket.id, payload["id"])
+
+
+  #   {:noreply, socket}
+  # end
 
 
   def handle_in("connect", payload, socket) do
