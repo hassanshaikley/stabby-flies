@@ -254,6 +254,10 @@ export class Game {
   }
 
   introText () {
+    if (localStorage.getItem('seen_tutorial') === "true"){
+
+      return
+    }
     setTimeout(() => {
       const messageone = new Text({
         message: 'Hello & Welcome',
@@ -324,6 +328,8 @@ export class Game {
       })
       this.app.stage.addChild(messagethree)
       this.gameObjects.push(messagethree)
+
+      localStorage.setItem('seen_tutorial', true)
     }, 19000)
   }
 }
