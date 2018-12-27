@@ -307,8 +307,8 @@ export class Game {
 
     setTimeout(() => {
       const messagethree = new Text({
-        message: 'This is in its early stages and still being developed',
-        duration: 3000,
+        message: 'And also: this is in its early stages and still being developed\nSorry for any bugs!',
+        duration: 5000,
         fade: false
       })
       this.app.stage.addChild(messagethree)
@@ -324,6 +324,6 @@ export class Game {
       })
       this.app.stage.addChild(messagethree)
       this.gameObjects.push(messagethree)
-    }, 17000)
+    }, 19000)
   }
 }
