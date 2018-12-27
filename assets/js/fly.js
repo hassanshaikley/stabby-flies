@@ -8,6 +8,7 @@ export default class Fly extends Player {
     this.id = props.id
     this.hp = props.hp
     this.maxHp = props.maxHp
+    this.name = props.name
 
     let textureArray = []
     for (let i = 1; i < 4; i++) {
@@ -54,6 +55,17 @@ export default class Fly extends Player {
     this.addChild(this.healthBar)
     this.updateHealthBar()
 
+    var nameStyle = {
+      font: 'bold italic 10px Arial',
+      fill: '#ffffff',
+      stroke: '#000000',
+      align: 'center',
+      strokeThickness: 1
+    }
+    this.nameText = new PIXI.Text(this.name, nameStyle)
+    this.nameText.x -= this.nameText.width / 2
+    this.nameText.y -= 55
+    this.addChild(this.nameText)
     // this.swordHitBox = new PIXI.Graphics()
     // this.swordHitBox.beginFill(0x888)
     // this.swordHitBox.drawRect(-17, 3, 5, 5)
