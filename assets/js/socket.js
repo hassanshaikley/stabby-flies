@@ -118,8 +118,8 @@ document.addEventListener('keydown', function (event) {
       break
   }
 
-  event.preventDefault()
-  event.stopPropagation()
+  // event.preventDefault()
+  // event.stopPropagation()
 })
 
 document.addEventListener('keyup', function (event) {
@@ -157,12 +157,12 @@ document.addEventListener('keyup', function (event) {
       break
   }
 
-  event.preventDefault()
-  event.stopPropagation()
+  // event.preventDefault()
+  // event.stopPropagation()
 })
 
 // "listen" for the [Enter] keypress event to send a message:
-window.addEventListener('keypress', function (event) {
+document.addEventListener('keypress', function (event) {
   switch (event.key) {
     case 'Enter':
       if (msg.value.length > 0) {
@@ -177,10 +177,13 @@ window.addEventListener('keypress', function (event) {
 
       break
   }
+
+  // event.preventDefault()
+  // event.stopPropagation()
 })
 
 window.addEventListener('click', function (event) {
-  event.preventDefault()
+  // event.preventDefault()
   //   console.log(event)
   //   if (event.type !== "click") {
   //     return
@@ -264,9 +267,7 @@ socket.connect()
 export default socket
 
 document.oncontextmenu = event => {
-  console.log('sneding fly rotate ', event, event.ctrlKey)
-  const amount = event.ctrlKey ? -window.ROTATION_VALUE : window.ROTATION_VALUE
-  console.log(amount, event.ctrlKey)
+  const amount = event.shiftKey ? -window.ROTATION_VALUE : window.ROTATION_VALUE
   channel.push('fly-rotate', {
     amount
   })

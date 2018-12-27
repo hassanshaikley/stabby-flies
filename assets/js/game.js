@@ -290,7 +290,7 @@ export class Game {
     setTimeout(() => {
       const messagetwo = new Text({
         message:
-          'wasd: move\nleft-click: stab\nright-click: rotate\nctrl+right-click: rotate opposite',
+          'wasd: move\nleft-click: stab\nright-click: rotate\shift+right-click: rotate opposite',
         duration: 4000,
         fade: false
       })
