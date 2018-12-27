@@ -80,11 +80,10 @@ window.stab = obj => {
   channel.push('stab', {})
 }
 
-window.addEventListener('keydown', function (event) {
+document.addEventListener('keydown', function (event) {
   const down = true
 
   const { key } = event
-  console.log(event, keypresses)
 
   if (keypresses[key]) return
 
@@ -118,9 +117,12 @@ window.addEventListener('keydown', function (event) {
       })
       break
   }
+
+  event.preventDefault()
+  event.stopPropagation()
 })
 
-window.addEventListener('keyup', function (event) {
+document.addEventListener('keyup', function (event) {
   const down = false
 
   const { key } = event
@@ -154,6 +156,9 @@ window.addEventListener('keyup', function (event) {
       })
       break
   }
+
+  event.preventDefault()
+  event.stopPropagation()
 })
 
 // "listen" for the [Enter] keypress event to send a message:
@@ -174,15 +179,15 @@ window.addEventListener('keypress', function (event) {
   }
 })
 
-// window.addEventListener("click", function(event) {
-//   console.log(event)
-//   if (event.type !== "click") {
-//     return
-//   }
-//   const x = event.screenX
-//   const y = event.screenY
-
-// });
+window.addEventListener('click', function (event) {
+  event.preventDefault()
+  //   console.log(event)
+  //   if (event.type !== "click") {
+  //     return
+  //   }
+  //   const x = event.screenX
+  //   const y = event.screenY
+})
 
 console.log('attempting connection')
 channel.push('connect', {
@@ -258,12 +263,13 @@ socket.connect()
 
 export default socket
 
-document.oncontextmenu = evt => {
-  console.log('sneding fly rotate ', evt, evt.ctrlKey)
-  const amount = evt.ctrlKey ? -window.ROTATION_VALUE : window.ROTATION_VALUE
-  console.log(amount, evt.ctrlKey)
+document.oncontextmenu = event => {
+  console.log('sneding fly rotate ', event, event.ctrlKey)
+  const amount = event.ctrlKey ? -window.ROTATION_VALUE : window.ROTATION_VALUE
+  console.log(amount, event.ctrlKey)
   channel.push('fly-rotate', {
     amount
   })
-  evt.preventDefault()
+  event.preventDefault()
+  event.stopPropagation()
 }

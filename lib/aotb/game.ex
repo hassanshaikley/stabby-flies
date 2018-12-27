@@ -75,7 +75,8 @@ defmodule Aotb.Game do
       moving: %{left: false, up: false, down: false, right: false},
       sword_rotation: 0,
       hp: 10,
-      maxHp: 10
+      maxHp: 10,
+      last_stab: Time.utc_now
     }
 
     Agent.update(__MODULE__, fn(state) -> 

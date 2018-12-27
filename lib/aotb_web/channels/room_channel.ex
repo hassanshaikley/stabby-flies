@@ -32,6 +32,9 @@ defmodule AotbWeb.RoomChannel do
 
   def handle_in("stab", payload, socket) do
     damage = 1
+
+    # can_stab = Game.player_can_stab(socket.id)
+
     hit_players = Game.calculate_stab_hits(socket.id, damage)
         
     hit_players_data = hit_players
