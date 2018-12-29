@@ -57,7 +57,8 @@ defmodule Aotb.Game do
       sword_rotation: 0,
       hp: 10,
       maxHp: 10,
-      last_stab: Time.utc_now
+      last_stab: Time.utc_now,
+      speed: 20 * 10
     }
 
     Agent.update(__MODULE__, fn(state) -> 
@@ -94,7 +95,7 @@ defmodule Aotb.Game do
       # Logger.debug "enum loop respawn"
       respawn_player(player.socket_id)
     else
-      speed = 20
+      speed = player.speed / 10 # this should be proportional to the loop timer
       
 
       y_speed_1 = if player[:moving][:up], do: -speed, else: 0

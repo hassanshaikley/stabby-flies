@@ -77,6 +77,8 @@ export class Game {
 
     this.app.stage.addChild(this.viewport)
 
+    this.lastFrame = new Date()
+
     PIXI.loader
       .add('/images/spritesheet.json')
       .load(this.spritesLoaded.bind(this))
@@ -188,13 +190,19 @@ export class Game {
   }
 
   animate () {
-    // this.explosion.update()
+    this.fps = new Date() - this.lastFrame
+
     this.gameObjects.forEach((gameObject, index) => {
       gameObject.update()
+      // clean up
       if (gameObject.children.length === 0) {
         this.gameObjects.splice(index, 1)
       }
     })
+    this.players.forEach(player => {
+      player.update(this.fps)
+    })
+    this.lastFrame = new Date()
     requestAnimationFrame(this.animate.bind(this))
   }
 

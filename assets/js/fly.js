@@ -5,10 +5,13 @@ export default class Fly extends Player {
     super(props)
     this.x = props.x
     this.y = props.y
+    this.serverX = props.x
+    this.serverY = props.y
     this.id = props.id
     this.hp = props.hp
     this.maxHp = props.maxHp
     this.name = props.name
+    this.speed = props.speed
 
     let textureArray = []
     for (let i = 1; i < 4; i++) {
@@ -85,9 +88,6 @@ export default class Fly extends Player {
   __DEBUG__updateSwordHitbox () {
     const x = Math.sin(this.sword.rotation) * 50
     const y = -Math.cos(this.sword.rotation) * 55
-    // this.swordHitBoxTwo.x = x
-    // this.swordHitBoxTwo.y = y
-    // console.log(`x: ${x}, y: ${y}, this.x, ${this.x}, this.y: ${this.y}`)
   }
 
   rotateSword (currentRotation) {
@@ -96,11 +96,43 @@ export default class Fly extends Player {
   }
 
   updateVariables (obj) {
-    this.x = obj.x
-    this.y = obj.y
+    this.serverX = obj.x
+    this.serverY = obj.y
     this.hp = obj.hp
     this.rotateSword(obj.sword_rotation)
     this.updateHealthBar()
+  }
+
+  update (fps) {
+    const speed = this.speed / fps
+
+    if (this.y > this.serverY) {
+      if (this.y - speed < this.serverY) {
+        this.y = this.serverY
+      } else {
+        this.y -= speed
+      }
+    } else if (this.y < this.serverY) {
+      if (this.y + speed > this.serverY) {
+        this.y = this.serverY
+      } else {
+        this.y += speed
+      }
+    }
+
+    if (this.x > this.serverX) {
+      if (this.x - speed < this.serverX) {
+        this.x = this.serverX
+      } else {
+        this.x -= speed
+      }
+    } else if (this.x < this.serverX) {
+      if (this.x + speed > this.serverX) {
+        this.x = this.serverX
+      } else {
+        this.x += speed
+      }
+    }
   }
 
   updateHealthBar () {
