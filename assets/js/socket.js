@@ -35,9 +35,9 @@ channel.on('connect', function (payload) {
   })
 })
 
-channel.on('fly-rotate', function (payload) {
-  game.playerRotates(payload.id, payload.currentRotation)
-})
+// channel.on('fly-rotate', function (payload) {
+//   game.playerRotates(payload.id, payload.currentRotation)
+// })
 channel.on('stab', function (payload) {
   const { id, hit_players_data } = payload
   game.playerStabs(id)

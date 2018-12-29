@@ -198,6 +198,21 @@ export class Game {
     requestAnimationFrame(this.animate.bind(this))
   }
 
+  updatePlayerCount () {
+    if (!localStorage.getItem('seen_tutorial')) {
+      return
+    }
+
+    this.app.stage.removeChild(this.playerCountText)
+
+    this.playerCountText = new PIXI.Text(
+      `${this.players.length} players online`,
+      { fontSize: 15 }
+    )
+
+    this.app.stage.addChild(this.playerCountText)
+  }
+
   addPlayer (obj) {
     if (!this.loaded) {
       setTimeout(this.addPlayer.bind(this, obj), 1)
@@ -216,11 +231,11 @@ export class Game {
     this.players.push(player)
     this.drawPlayer(player)
     this.setPlayerFilters()
+    this.updatePlayerCount()
   }
   updatePlayer (obj) {
     const { id, x, y, hp } = obj
     let player = this.players.find(player => player.id == id)
-    // console.log(obj)
     // player.x = x
     // player.y = y
     // player.hp = hp
@@ -232,6 +247,7 @@ export class Game {
     const player = this.players[playerIndex]
     this.viewport.removeChild(player)
     this.players.splice(playerIndex, 1)
+    this.updatePlayerCount()
   }
 
   drawPlayer (player) {
@@ -254,8 +270,7 @@ export class Game {
   }
 
   introText () {
-    if (localStorage.getItem('seen_tutorial') === "true"){
-
+    if (localStorage.getItem('seen_tutorial') === 'true') {
       return
     }
     setTimeout(() => {
@@ -311,7 +326,7 @@ export class Game {
 
     setTimeout(() => {
       const messagethree = new Text({
-        message: 'And also: this is in its early stages and still being developed\nSorry for any bugs!',
+        message: 'PS: This is in its early stages and still being developed!',
         duration: 5000,
         fade: false
       })
@@ -331,5 +346,9 @@ export class Game {
 
       localStorage.setItem('seen_tutorial', true)
     }, 19000)
+
+    setTimeout(() => {
+      this.updatePlayerCount()
+    }, 22000)
   }
 }
