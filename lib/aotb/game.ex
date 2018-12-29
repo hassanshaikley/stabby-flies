@@ -10,8 +10,8 @@ defmodule Aotb.Game do
   def loop do
     players = get_players
     # Logger.debug "--LOOP-- #{length(players)}"
-    players |> Enum.with_index |> Enum.each fn {player, index} -> 
-      update_player(player, index)
+    players |> Enum.each fn player -> 
+      update_player(player)
       AotbWeb.Endpoint.broadcast("room:game", "update_player", player)
     end
   end
@@ -87,7 +87,7 @@ defmodule Aotb.Game do
     player_list|> Enum.find([], fn x -> x[:socket_id] == socket_id end )
   end
 
-  def update_player(player, index) do
+  def update_player(player) do
     
 
     if (player.hp <= 0) do
@@ -109,10 +109,11 @@ defmodule Aotb.Game do
   
       if new_x != 0 or new_y != 0 do
         Agent.update(__MODULE__, fn(state) ->
-          updated_player =  %{player | x: new_x }
+          player_now = get_player_by_socket_id(player.socket_id, state.players)
+          updated_player =  %{player_now | x: new_x }
           updated_player =  %{updated_player | y: new_y }
   
-          removed_player = List.delete_at(state.players, index)
+          removed_player = List.delete(state.players, player_now)
           Map.put(state, :players, [updated_player | removed_player] )
         end)
       end
