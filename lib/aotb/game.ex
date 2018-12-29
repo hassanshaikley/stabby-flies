@@ -9,28 +9,10 @@ defmodule Aotb.Game do
 
   def loop do
     players = get_players
-    Logger.debug "--LOOP--"
+    # Logger.debug "--LOOP--"
     Enum.each players, fn player -> 
-
-      if player[:moving][:left] do
-        move_player_by_socket_id(player[:socket_id], "left")
-      end
-      if player[:moving][:right] do
-        move_player_by_socket_id(player[:socket_id], "right")
-      end
-      if player[:moving][:up] do
-        move_player_by_socket_id(player[:socket_id], "up")
-      end
-      if player[:moving][:down] do
-        move_player_by_socket_id(player[:socket_id], "down")
-      end
-
-      if (player.hp <= 0) do
-        # Logger.debug "enum loop respawn"
-        respawn_player(player)
-      end
-
-      IO.inspect player
+      update_player(player)
+      # IO.inspect player
 
       AotbWeb.Endpoint.broadcast("room:game", "update_player", player)
     end
@@ -103,24 +85,37 @@ defmodule Aotb.Game do
     get_players() |> Enum.find([], fn x -> x[:socket_id] == socket_id end )
   end
 
-
-  def move_player_by_socket_id(socket_id, direction) do
-    player = get_player_by_socket_id(socket_id)
-
-    speed = 20
+  def update_player(player) do
     
-    Agent.update(__MODULE__, fn(state) ->
-      updated_player = case direction do
-        "left" -> %{player | x: update_x(player.x, -speed)}
-        "right" -> %{player | x: update_x(player.x, speed)}
-        "up" -> %{player | y: update_y(player.y, -speed)}
-        "down" -> %{player | y: update_y(player.y, speed)}
-      end
 
-      removed_player = List.delete(state.players, player)
-      Map.put(state, :players, [updated_player | removed_player] )
-    end)
+    if (player.hp <= 0) do
+      # Logger.debug "enum loop respawn"
+      respawn_player(player)
+    else
+      speed = 20
+      
+
+      y_speed_1 = if player[:moving][:up], do: -speed, else: 0
+      y_speed_2 = if player[:moving][:down], do: speed, else: 0
+
+      new_y = update_y(player.y, y_speed_1 + y_speed_2)
+
+      x_speed_1 = if player[:moving][:left], do: -speed, else: 0
+      x_speed_2 = if player[:moving][:right], do: speed, else: 0
+
+      new_x = update_x(player.x, x_speed_1 + x_speed_2)
+  
+      Agent.update(__MODULE__, fn(state) ->
+        updated_player =  %{player | x: new_x }
+        updated_player =  %{updated_player | y: new_y }
+
+        removed_player = List.delete(state.players, player)
+        Map.put(state, :players, [updated_player | removed_player] )
+      end)
+    end
   end
+
+
 
   def do_damage_to_player(socket_id, damage) do
     player = get_player_by_socket_id(socket_id)
@@ -142,6 +137,13 @@ defmodule Aotb.Game do
       removed_player = List.delete(state.players, player)
       Map.put(state, :players, removed_player )
     end)
+  end
+
+  def (id) do
+    player = get_player_by_socket_id(id)
+    
+    # if player, do: do_damage_to_player(other_player.socket_id, damage), else: 0
+
   end
 
   def calculate_stab_hits(id, damage) do 
