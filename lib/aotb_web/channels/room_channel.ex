@@ -33,22 +33,27 @@ defmodule AotbWeb.RoomChannel do
   def handle_in("stab", payload, socket) do
     damage = 1
 
-    # can_stab = Game.player_can_stab(socket.id)
+    {player, can_stab} = Game.player_can_stab(socket.id)
+    Logger.debug "can stab? #{can_stab}"
 
-    hit_players = Game.calculate_stab_hits(socket.id, damage)
+    # if player[:moving][:up], do: -speed, else: 0
+    if can_stab do
+      hit_players = Game.calculate_stab_hits(player, damage)
         
-    hit_players_data = hit_players
-    |> Enum.map(fn player -> 
-      %{
-        id: player.socket_id,
-        damage: damage
-      }
-      end
-      )
+      hit_players_data = hit_players
+      |> Enum.map(fn player -> 
+        %{
+          id: player.socket_id,
+          damage: damage
+        }
+        end
+        )
+  
+      broadcast socket, "stab", %{id: socket.id, hit_players_data: hit_players_data}
+      
+    end
 
 
-    broadcast socket, "stab", %{id: socket.id, hit_players_data: hit_players_data}
-    
     {:noreply, socket}
   end
 

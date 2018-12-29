@@ -12,8 +12,6 @@ defmodule Aotb.Game do
     # Logger.debug "--LOOP-- #{length(players)}"
     players |> Enum.with_index |> Enum.each fn {player, index} -> 
       update_player(player, index)
-      # IO.inspect player
-
       AotbWeb.Endpoint.broadcast("room:game", "update_player", player)
     end
   end
@@ -142,21 +140,20 @@ defmodule Aotb.Game do
     end)
   end
 
-  def (id) do
-    player = get_player_by_socket_id(id)
+  # def (id) do
+  #   player = get_player_by_socket_id(id)
     
-    # if player, do: do_damage_to_player(other_player.socket_id, damage), else: 0
+  #   # if player, do: do_damage_to_player(other_player.socket_id, damage), else: 0
 
-  end
+  # end
 
-  def calculate_stab_hits(id, damage) do 
-    player = get_player_by_socket_id(id)
+  def calculate_stab_hits(player, damage) do 
+  
     player_x = player.x + 20
     player_y = player.y
     player_width = 50
     hitbox_x = player_x + :math.sin(player.sword_rotation)*50 - player_width + 10
     hitbox_y = player_y - :math.cos(player.sword_rotation)*55 
-    # Logger.debug "x: #{hitbox_x}, y: #{hitbox_y}, player_x: #{player.x}, player_y: #{player.y}"
 
     x = hitbox_x
     y = hitbox_y
@@ -165,9 +162,8 @@ defmodule Aotb.Game do
 
     stab_data = %{x: x, y: y, width: width, height: height}
 
-    # Get all the hit players
     ret = get_players() 
-    |>  Enum.filter(fn x -> x.socket_id != id end)
+    |>  Enum.filter(fn x -> (x.socket_id != player.socket_id )end)
     |>  Enum.filter(fn other_player -> 
         x = other_player.x
         y = other_player.y
@@ -179,11 +175,29 @@ defmodule Aotb.Game do
 
         is_hit = rectangles_overlap(stab_data, %{x: x, y: y, width: width, height: height})  
         if is_hit, do: do_damage_to_player(other_player.socket_id, damage), else: 0
-
         is_hit && other_player.hp > 0
       end)
-    
+    set_last_stab_to_now(player)
     ret
+  end
+
+  def set_last_stab_to_now(player) do
+    Agent.update(__MODULE__, fn(state) ->
+      updated_player = %{player | last_stab: Time.utc_now}
+      removed_player = List.delete(state.players, player)
+      Map.put(state, :players, [updated_player | removed_player] )
+    end)
+  end
+
+
+  def player_can_stab(socket_id) do
+    player = get_player_by_socket_id(socket_id)
+
+    cooldown = 300
+    now = Time.utc_now
+
+    can_stab = (Time.diff(now, player.last_stab, :milliseconds) >= cooldown)
+    {player, can_stab}
   end
 
   defp rectangles_overlap(rect1, rect2) do
