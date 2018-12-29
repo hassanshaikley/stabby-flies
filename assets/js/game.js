@@ -247,7 +247,7 @@ export class Game {
     // player.x = x
     // player.y = y
     // player.hp = hp
-    player.updateVariables(obj)
+    player && player.updateVariables(obj)
   }
 
   removePlayerById (id) {
