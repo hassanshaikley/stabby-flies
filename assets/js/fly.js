@@ -87,7 +87,7 @@ export default class Fly extends Player {
     const y = -Math.cos(this.sword.rotation) * 55
     // this.swordHitBoxTwo.x = x
     // this.swordHitBoxTwo.y = y
-    console.log(`x: ${x}, y: ${y}, this.x, ${this.x}, this.y: ${this.y}`)
+    // console.log(`x: ${x}, y: ${y}, this.x, ${this.x}, this.y: ${this.y}`)
   }
 
   rotateSword (currentRotation) {
@@ -99,7 +99,7 @@ export default class Fly extends Player {
     this.x = obj.x
     this.y = obj.y
     this.hp = obj.hp
-    // this = Object.assign(this, obj)
+    this.rotateSword(obj.sword_rotation)
     this.updateHealthBar()
   }
 

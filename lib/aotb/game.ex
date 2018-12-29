@@ -9,19 +9,20 @@ defmodule Aotb.Game do
 
   def loop do
     players = get_players
-    # Logger.debug "--LOOP--"
-    Enum.each players, fn player -> 
-      update_player(player)
+    # Logger.debug "--LOOP-- #{length(players)}"
+    players |> Enum.with_index |> Enum.each fn {player, index} -> 
+      update_player(player, index)
       # IO.inspect player
 
       AotbWeb.Endpoint.broadcast("room:game", "update_player", player)
     end
   end
 
-  def respawn_player(player) do
+  def respawn_player(player, index) do
     Agent.update(__MODULE__, fn(state) ->
       updated_player = Map.merge(player, %{hp: player.maxHp, y: 150, x: Enum.random(0..3000) })
-      removed_player = List.delete(state.players, player)
+
+      removed_player = List.delete_at(state.players, index)
       Map.put(state, :players, [updated_player | removed_player] )
     end)
   end
@@ -85,12 +86,12 @@ defmodule Aotb.Game do
     get_players() |> Enum.find([], fn x -> x[:socket_id] == socket_id end )
   end
 
-  def update_player(player) do
+  def update_player(player, index) do
     
 
     if (player.hp <= 0) do
       # Logger.debug "enum loop respawn"
-      respawn_player(player)
+      respawn_player(player, index)
     else
       speed = 20
       
@@ -105,13 +106,15 @@ defmodule Aotb.Game do
 
       new_x = update_x(player.x, x_speed_1 + x_speed_2)
   
-      Agent.update(__MODULE__, fn(state) ->
-        updated_player =  %{player | x: new_x }
-        updated_player =  %{updated_player | y: new_y }
-
-        removed_player = List.delete(state.players, player)
-        Map.put(state, :players, [updated_player | removed_player] )
-      end)
+      if new_x != 0 or new_y != 0 do
+        Agent.update(__MODULE__, fn(state) ->
+          updated_player =  %{player | x: new_x }
+          updated_player =  %{updated_player | y: new_y }
+  
+          removed_player = List.delete_at(state.players, index)
+          Map.put(state, :players, [updated_player | removed_player] )
+        end)
+      end
     end
   end
 

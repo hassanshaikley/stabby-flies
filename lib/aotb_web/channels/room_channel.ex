@@ -26,7 +26,7 @@ defmodule AotbWeb.RoomChannel do
 
   def handle_in("fly-rotate", payload, socket) do
     player = Game.rotate_player_sword(socket.id, payload["amount"])
-    broadcast socket, "fly-rotate", %{id: socket.id, currentRotation: player[:sword_rotation] + payload["amount"]}
+    # broadcast socket, "fly-rotate", %{id: socket.id, currentRotation: player[:sword_rotation] + payload["amount"]}
     {:noreply, socket}
   end
 
@@ -48,6 +48,7 @@ defmodule AotbWeb.RoomChannel do
 
 
     broadcast socket, "stab", %{id: socket.id, hit_players_data: hit_players_data}
+    
     {:noreply, socket}
   end
 
@@ -66,6 +67,7 @@ defmodule AotbWeb.RoomChannel do
     broadcast socket, "disconnect", %{id: socket.id}
     Game.remove_player_by_socket_id(socket.id)
   end
+
 
   def handle_info(:after_join, socket) do
     name = ["Bandit", "Neutral", "CrayolaFriendship", "BurgerDude", "Bandicoot", "CalgaryFlames", "CalgaryFlamesDestroyer", "MyMathTeacherWasRight", "Cat", "Aardvark", "Sheep", "FarmHand", "AcidicMilkHotel"] |> Enum.shuffle |> hd
