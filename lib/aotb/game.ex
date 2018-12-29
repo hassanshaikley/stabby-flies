@@ -26,8 +26,9 @@ defmodule Aotb.Game do
   end
 
   def set_player_moving(id, direction, moving) do
-    player = get_player_by_socket_id(id)
     Agent.update(__MODULE__, fn(state) ->
+      player = get_player_by_socket_id(id, state.players)
+      
       updated_player = put_in(player[:moving][direction], moving)
       removed_player = List.delete(state.players, player)
       Map.put(state, :players, [updated_player | removed_player] )
@@ -35,14 +36,13 @@ defmodule Aotb.Game do
   end
 
   def rotate_player_sword(id, amount) do
-    player = get_player_by_socket_id(id)
     Agent.update(__MODULE__, fn(state) ->
+      player = get_player_by_socket_id(id, state.players)
       current_rotation = player[:sword_rotation]
       updated_player = put_in(player[:sword_rotation], current_rotation + amount)
       removed_player = List.delete(state.players, player)
       Map.put(state, :players, [updated_player | removed_player] )
     end)
-    player
   end
 
   def add_player(name, socket_id) do
@@ -83,6 +83,9 @@ defmodule Aotb.Game do
   def get_player_by_socket_id(socket_id) do
     get_players() |> Enum.find([], fn x -> x[:socket_id] == socket_id end )
   end
+  def get_player_by_socket_id(socket_id, player_list) do
+    player_list|> Enum.find([], fn x -> x[:socket_id] == socket_id end )
+  end
 
   def update_player(player, index) do
     
@@ -119,9 +122,10 @@ defmodule Aotb.Game do
 
 
   def do_damage_to_player(socket_id, damage) do
-    player = get_player_by_socket_id(socket_id)
 
     Agent.update(__MODULE__, fn(state) ->
+      player = get_player_by_socket_id(socket_id, state.players)
+
       new_hp = player.hp - damage
       new_hp = if new_hp - damage >= 0, do: new_hp, else: 0
       updated_player = %{player | hp: new_hp}
@@ -132,20 +136,13 @@ defmodule Aotb.Game do
   end
 
   def remove_player_by_socket_id(socket_id) do
-    player = get_player_by_socket_id(socket_id)
-
     Agent.update(__MODULE__, fn(state) ->
+      player = get_player_by_socket_id(socket_id, state.players)
+
       removed_player = List.delete(state.players, player)
       Map.put(state, :players, removed_player )
     end)
   end
-
-  # def (id) do
-  #   player = get_player_by_socket_id(id)
-    
-  #   # if player, do: do_damage_to_player(other_player.socket_id, damage), else: 0
-
-  # end
 
   def calculate_stab_hits(player, damage) do 
   
