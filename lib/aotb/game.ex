@@ -16,11 +16,11 @@ defmodule Aotb.Game do
     end
   end
 
-  def respawn_player(player, index) do
+  def respawn_player(socket_id) do
     Agent.update(__MODULE__, fn(state) ->
+      player = get_player_by_socket_id(socket_id, state.players)
       updated_player = Map.merge(player, %{hp: player.maxHp, y: 150, x: Enum.random(0..3000) })
-
-      removed_player = List.delete_at(state.players, index)
+      removed_player = List.delete(state.players, player)
       Map.put(state, :players, [updated_player | removed_player] )
     end)
   end
@@ -92,7 +92,7 @@ defmodule Aotb.Game do
 
     if (player.hp <= 0) do
       # Logger.debug "enum loop respawn"
-      respawn_player(player, index)
+      respawn_player(player.socket_id)
     else
       speed = 20
       
