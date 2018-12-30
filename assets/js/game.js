@@ -77,8 +77,6 @@ export class Game {
 
     this.app.stage.addChild(this.viewport)
 
-    this.lastFrame = new Date()
-
     PIXI.loader
       .add('/images/spritesheet.json')
       .load(this.spritesLoaded.bind(this))
@@ -130,7 +128,7 @@ export class Game {
     }
     this.setPlayerFilters()
 
-    this.viewport.follow(player, { speed: 60 })
+    this.viewport.follow(player, { speed: 4 })
     this.viewport.fit(player, 500, 500)
     player.filters = [new OutlineFilter(3, 0x101010)]
 
@@ -190,7 +188,6 @@ export class Game {
   }
 
   animate () {
-    this.fps = new Date() - this.lastFrame
 
     this.gameObjects.forEach((gameObject, index) => {
       gameObject.update()
@@ -200,9 +197,8 @@ export class Game {
       }
     })
     this.players.forEach(player => {
-      player.update(this.fps)
+      player.update()
     })
-    this.lastFrame = new Date()
     requestAnimationFrame(this.animate.bind(this))
   }
 

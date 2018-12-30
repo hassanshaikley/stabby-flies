@@ -103,36 +103,44 @@ export default class Fly extends Player {
     this.updateHealthBar()
   }
 
-  update (fps) {
-    const speed = this.speed / fps
+  update () {
+    const now = new Date().getTime()
 
+    const delta = now - (this.lastMovementUpdateTime || now)
+
+    const speed = this.speed / delta / 3.5
+
+    // console.log(this.speed)
+
+    // move 200 every second so
+    // 200 / fps
     if (this.y > this.serverY) {
-      if (this.y - speed < this.serverY) {
+      this.y -= speed
+      if (this.y < this.serverY) {
         this.y = this.serverY
-      } else {
-        this.y -= speed
       }
     } else if (this.y < this.serverY) {
-      if (this.y + speed > this.serverY) {
+      this.y += speed
+      if (this.y > this.serverY) {
         this.y = this.serverY
-      } else {
-        this.y += speed
       }
     }
 
     if (this.x > this.serverX) {
-      if (this.x - speed < this.serverX) {
+      console.log(`delta: ${delta}, this.speed: ${this.speed}`)
+
+      this.x -= speed
+      if (this.x < this.serverX) {
         this.x = this.serverX
-      } else {
-        this.x -= speed
       }
     } else if (this.x < this.serverX) {
-      if (this.x + speed > this.serverX) {
+      this.x += speed
+      if (this.x > this.serverX) {
         this.x = this.serverX
-      } else {
-        this.x += speed
       }
     }
+
+    this.lastMovementUpdateTime = new Date().getTime()
   }
 
   updateHealthBar () {
