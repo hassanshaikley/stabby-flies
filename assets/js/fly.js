@@ -101,6 +101,11 @@ export default class Fly extends Player {
     this.hp = obj.hp
     this.rotateSword(obj.sword_rotation)
     this.updateHealthBar()
+
+    if (Math.abs(Math.abs(this.serverX) - Math.abs(this.x)) > 100) {
+      this.x = this.serverX
+      this.y = this.serverY
+    }
   }
 
   update () {
