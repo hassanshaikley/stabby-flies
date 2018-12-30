@@ -77,6 +77,13 @@ export class Game {
 
     this.app.stage.addChild(this.viewport)
 
+    window.onfocus = () => {
+      this.players.forEach((player) => {
+        player.x = player.serverX
+        player.y = player.serverY
+      })
+    }
+
     PIXI.loader
       .add('/images/spritesheet.json')
       .load(this.spritesLoaded.bind(this))
@@ -128,7 +135,7 @@ export class Game {
     }
     this.setPlayerFilters()
 
-    this.viewport.follow(player, { speed: 4 })
+    this.viewport.follow(player, { speed: 8 })
     this.viewport.fit(player, 500, 500)
     player.filters = [new OutlineFilter(3, 0x101010)]
 
