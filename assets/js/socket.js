@@ -266,6 +266,7 @@ document.oncontextmenu = event => {
 // }
 
 window.onblur = function () {
+  game.blurred = true
   Object.keys(keypresses).forEach(key => {
     if (keypresses[key]) {
       let direction

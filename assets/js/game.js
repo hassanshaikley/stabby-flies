@@ -19,6 +19,7 @@ export class Game {
     this.display = undefined
     this.engine = undefined
     this.loaded = false
+    this.blurred = false
 
     window.__game = this
 
@@ -100,6 +101,9 @@ export class Game {
     this.app.stage.addChild(this.viewport)
 
     window.onfocus = () => {
+      document.title = 'Stabby Flies'
+
+      this.blurred = false
       this.players.forEach(player => {
         player.x = player.serverX
         player.y = player.serverY
@@ -240,6 +244,9 @@ export class Game {
   }
 
   addPlayer (obj) {
+    if (this.blurred) {
+      document.title = '(1) Stabby Flies'
+    }
     if (!this.loaded) {
       setTimeout(this.addPlayer.bind(this, obj), 1)
       return
