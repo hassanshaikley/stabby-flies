@@ -156,14 +156,14 @@ export class Game {
       100
     )
 
-    const bg = new PIXI.extras.TilingSprite(
-      PIXI.Texture.fromImage('bg.png'),
-      5000,
-      600
-    )
+    // const bg = new PIXI.extras.TilingSprite(
+    //   PIXI.Texture.fromImage('bg.png'),
+    //   5000,
+    //   600
+    // )
 
-    bg.y = -200
-    this.viewport.addChild(bg)
+    // bg.y = -200
+    // this.viewport.addChild(bg)
 
     for (let i = 0; i < 10; i++) {
       const cloud = new PIXI.Sprite(PIXI.Texture.fromImage('cloud.png'))
