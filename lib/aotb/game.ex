@@ -35,11 +35,11 @@ defmodule Aotb.Game do
     end)
   end
 
-  def rotate_player_sword(id, amount) do
+  def rotate_player_sword(id, new_rotation) do
     Agent.update(__MODULE__, fn(state) ->
       player = get_player_by_socket_id(id, state.players)
       current_rotation = player[:sword_rotation]
-      updated_player = put_in(player[:sword_rotation], current_rotation + amount)
+      updated_player = put_in(player[:sword_rotation], new_rotation)
       removed_player = List.delete(state.players, player)
       Map.put(state, :players, [updated_player | removed_player] )
     end)

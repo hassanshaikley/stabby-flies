@@ -30,14 +30,10 @@ channel.on('connect', function (payload) {
   // ul.appendChild(li); // append to list
   // console.log(players)
   players.forEach(player => {
-    console.log(player)
     game.addPlayer(player)
   })
 })
 
-// channel.on('fly-rotate', function (payload) {
-//   game.playerRotates(payload.id, payload.currentRotation)
-// })
 channel.on('stab', function (payload) {
   const { id, hit_players_data } = payload
   game.playerStabs(id)
@@ -45,10 +41,7 @@ channel.on('stab', function (payload) {
     game.playerIsHit(obj)
   })
 })
-// channel.on('hit', function (payload) {
-//   console.log('IAAAM HITT')
-//   game.playerIsHit(payload)
-// })
+
 channel.on('disconnect', function (payload) {
   console.log('disconnect', payload)
   game.removePlayerById(payload.id)
@@ -63,21 +56,16 @@ channel.join() // join the channel.
 var ul = document.getElementById('msg-list') // list of messages.
 var msg = document.getElementById('msg') // message input field
 
-// window.onbeforeunload = onPageClose;
-// function onPageClose(){
-//   channel.push("disconnect", {
-//   });
-// }
-
-// window.createExplosion = position => {
-//   channel.push('explosion', {
-//     position: position
-//   })
-// }
-
 window.stab = obj => {
   // console.log('stabbing with ', obj)
   channel.push('stab', {})
+}
+
+window.rotate = obj => {
+  const { amount } = obj
+  channel.push('fly-rotate', {
+    amount
+  })
 }
 
 document.addEventListener('keydown', function (event) {
@@ -182,17 +170,16 @@ document.addEventListener('keypress', function (event) {
   // event.stopPropagation()
 })
 
-window.addEventListener('click', function (event) {
-  // event.preventDefault()
-  //   console.log(event)
-  //   if (event.type !== "click") {
-  //     return
-  //   }
-  //   const x = event.screenX
-  //   const y = event.screenY
-})
+// window.addEventListener('click', function (event) {
+// event.preventDefault()
+//   console.log(event)
+//   if (event.type !== "click") {
+//     return
+//   }
+//   const x = event.screenX
+//   const y = event.screenY
+// })
 
-console.log('attempting connection')
 channel.push('connect', {
   // send the message to the server on "shout" channel
   // name: 'Admin',     // get value of "name" of person sending the message
@@ -267,17 +254,19 @@ socket.connect()
 export default socket
 
 document.oncontextmenu = event => {
-  const amount = event.shiftKey ? -window.ROTATION_VALUE : window.ROTATION_VALUE
-  channel.push('fly-rotate', {
-    amount
-  })
   event.preventDefault()
   event.stopPropagation()
 }
 
+// document.onmousemove = event => {
+//   // const amount = event.shiftKey ? -window.ROTATION_VALUE : window.ROTATION_VALUE
+//   // const amount =
+//   console.log(event)
+//   console.log(game.localPlayer)
+// }
+
 window.onblur = function () {
   Object.keys(keypresses).forEach(key => {
-    console.log(key)
     if (keypresses[key]) {
       let direction
       switch (key) {

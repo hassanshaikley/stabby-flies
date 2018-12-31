@@ -90,8 +90,9 @@ export default class Fly extends Player {
     const y = -Math.cos(this.sword.rotation) * 55
   }
 
-  rotateSword (currentRotation) {
-    this.sword.rotation = currentRotation
+  rotateSword (newRotation) {
+    if (this.stabbing) return
+    this.sword.rotation = newRotation
     this.__DEBUG__updateSwordHitbox()
   }
 

@@ -56,6 +56,28 @@ export class Game {
       window.stab()
     })
 
+    this.lastPointerMove = new Date()
+    this.viewport.on('pointermove', event => {
+      const { x, y } = event.data.global
+      const covertedToWorld = this.viewport.toWorld(x, y)
+      const p1 = covertedToWorld
+
+      if (!this.localPlayer) return
+      let p2 = {
+        x: this.localPlayer.x - 15,
+        y: this.localPlayer.y + 5
+      }
+
+      var angleRadians = Math.atan2(p2.y - p1.y, p2.x - p1.x) - 1.5708
+
+      // this.localPlayer.rotateSword(angleRadians)
+
+      if (new Date() - this.lastPointerMove <= 200) return
+
+      window.rotate({ amount: angleRadians })
+      this.lastPointerMove = new Date()
+    })
+
     this.viewport.fit()
 
     this.viewport
@@ -78,7 +100,7 @@ export class Game {
     this.app.stage.addChild(this.viewport)
 
     window.onfocus = () => {
-      this.players.forEach((player) => {
+      this.players.forEach(player => {
         player.x = player.serverX
         player.y = player.serverY
       })
@@ -117,14 +139,6 @@ export class Game {
     player && player.stab(this.players)
   }
 
-  playerRotates (id, currentRotation) {
-    const player = this.players.find(player => {
-      return player.id == id
-    })
-
-    player && player.rotateSword(currentRotation)
-  }
-
   setLocalPlayer (id) {
     const player = this.players.find(player => {
       return player.id == id
@@ -140,6 +154,7 @@ export class Game {
     player.filters = [new OutlineFilter(3, 0x101010)]
 
     player.localPlayer = true
+    this.localPlayer = player
   }
 
   setPlayerFilters () {
@@ -286,7 +301,7 @@ export class Game {
     }
     setTimeout(() => {
       const messageone = new Text({
-        message: 'Hello & Welcome',
+        message: 'Hello & Welcome to the World of Stabby Flies',
         duration: 2000,
         fade: false
       })
@@ -315,8 +330,7 @@ export class Game {
     }, 5000)
     setTimeout(() => {
       const messagetwo = new Text({
-        message:
-          'wasd: move\nleft-click: stab\nright-click: rotate\nshift+right-click: rotate opposite',
+        message: 'move: w a s d\nstab: left click\nrotate sword: move mouse ',
         duration: 4000,
         fade: false
       })
