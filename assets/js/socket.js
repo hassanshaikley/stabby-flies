@@ -274,3 +274,33 @@ document.oncontextmenu = event => {
   event.preventDefault()
   event.stopPropagation()
 }
+
+window.onblur = function () {
+  Object.keys(keypresses).forEach(key => {
+    console.log(key)
+    if (keypresses[key]) {
+      let direction
+      switch (key) {
+        case 'd':
+          direction = 'right'
+          break
+        case 'a':
+          direction = 'left'
+          break
+        case 'w':
+          direction = 'up'
+          break
+        case 's':
+          direction = 'down'
+          break
+      }
+
+      channel.push('move', {
+        down: false,
+        direction
+      })
+
+      keypresses[key] = false
+    }
+  })
+}

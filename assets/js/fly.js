@@ -132,7 +132,7 @@ export default class Fly extends Player {
     }
 
     if (this.x > this.serverX) {
-      console.log(`delta: ${delta}, this.speed: ${this.speed}`)
+      // console.log(`delta: ${delta}, this.speed: ${this.speed}`)
 
       this.x -= speed
       if (this.x < this.serverX) {
