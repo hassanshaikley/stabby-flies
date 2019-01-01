@@ -19,7 +19,7 @@ defmodule Aotb.Game do
   def respawn_player(socket_id) do
     Agent.update(__MODULE__, fn(state) ->
       player = get_player_by_socket_id(socket_id, state.players)
-      updated_player = Map.merge(player, %{hp: player.maxHp, y: 150, x: Enum.random(0..3000) })
+      updated_player = Map.merge(player, %{hp: player.maxHp, y: Enum.random(-100..270), x: Enum.random(0..3000) })
       removed_player = List.delete(state.players, player)
       Map.put(state, :players, [updated_player | removed_player] )
     end)
@@ -46,7 +46,7 @@ defmodule Aotb.Game do
 
   def add_player(name, socket_id) do
     x = Enum.random(0..3000)
-    y = 150
+    y = Enum.random(-100..270)
     player = %{
       name: name,
       x: x, 
