@@ -35,15 +35,14 @@ defmodule Aotb.Game do
     end)
   end
 
-  def rotate_player_sword(id, new_rotation) do
-    Agent.update(__MODULE__, fn(state) ->
-      player = get_player_by_socket_id(id, state.players)
-      current_rotation = player[:sword_rotation]
-      updated_player = put_in(player[:sword_rotation], new_rotation)
-      removed_player = List.delete(state.players, player)
-      Map.put(state, :players, [updated_player | removed_player] )
-    end)
-  end
+  # def rotate_player_sword(id, new_rotation) do
+  #   Agent.update(__MODULE__, fn(state) ->
+  #     player = get_player_by_socket_id(id, state.players)
+  #     updated_player = put_in(player[:sword_rotation], new_rotation)
+  #     removed_player = List.delete(state.players, player)
+  #     Map.put(state, :players, [updated_player | removed_player] )
+  #   end)
+  # end
 
   def add_player(name, socket_id) do
     x = Enum.random(0..3000)
@@ -92,7 +91,6 @@ defmodule Aotb.Game do
     
 
     if (player.hp <= 0) do
-      # Logger.debug "enum loop respawn"
       respawn_player(player.socket_id)
     else
       speed = player.speed / 10 # this should be proportional to the loop timer
@@ -107,13 +105,17 @@ defmodule Aotb.Game do
       x_speed_2 = if player[:moving][:right], do: speed, else: 0
 
       new_x = update_x(player.x, x_speed_1 + x_speed_2)
-  
+    
+
       if new_x != 0 or new_y != 0 do
+        new_rotation = get_rotation(player)
+
         Agent.update(__MODULE__, fn(state) ->
           player_now = get_player_by_socket_id(player.socket_id, state.players)
           updated_player =  %{player_now | x: new_x }
           updated_player =  %{updated_player | y: new_y }
-  
+          updated_player = put_in(updated_player[:sword_rotation], new_rotation)
+
           removed_player = List.delete(state.players, player_now)
           Map.put(state, :players, [updated_player | removed_player] )
         end)
@@ -121,6 +123,40 @@ defmodule Aotb.Game do
     end
   end
 
+  def get_rotation(player) do
+    direction = player[:moving]
+    correct_left = direction[:left] and !direction[:right]
+    correct_right = direction[:right] and !direction[:left]
+    correct_up = direction[:up] and !direction[:down]
+    correct_down = direction[:down] and !direction[:up]
+
+    correct_direction = %{
+      left: correct_left,
+      right: correct_right,
+      up: correct_up,
+      down: correct_down
+    }
+
+
+    ret_dir = case correct_direction do
+      %{left: false, right: false, up: false, down: false} -> player[:sword_rotation]
+
+      %{left: true, right: false, up: false, down: false} -> - :math.pi/2
+      %{left: true, right: false, up: true, down: false} -> - :math.pi/3
+      %{left: true, right: false, up: false, down: true} -> 3.92699
+
+
+      %{left: false, right: true, up: false, down: false} -> :math.pi/2
+      %{left: false, right: true, up: true, down: false} -> :math.pi/3
+      %{left: false, right: true, up: false, down: true} -> - 3.92699
+
+      %{left: false, right: false, up: true, down: false} -> 0
+      %{left: false, right: false, up: false, down: true} -> :math.pi
+
+    end
+    ret_dir
+  end
+  
 
 
   def do_damage_to_player(socket_id, damage) do

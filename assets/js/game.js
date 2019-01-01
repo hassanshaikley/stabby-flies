@@ -57,27 +57,25 @@ export class Game {
       window.stab()
     })
 
-    this.lastPointerMove = new Date()
-    this.viewport.on('pointermove', event => {
-      const { x, y } = event.data.global
-      const covertedToWorld = this.viewport.toWorld(x, y)
-      const p1 = covertedToWorld
+    // this.lastPointerMove = new Date()
+    // this.viewport.on('pointermove', event => {
+    //   const { x, y } = event.data.global
+    //   const covertedToWorld = this.viewport.toWorld(x, y)
+    //   const p1 = covertedToWorld
 
-      if (!this.localPlayer) return
-      let p2 = {
-        x: this.localPlayer.x - 15,
-        y: this.localPlayer.y + 5
-      }
+    //   if (!this.localPlayer) return
+    //   let p2 = {
+    //     x: this.localPlayer.x - 15,
+    //     y: this.localPlayer.y + 5
+    //   }
 
-      var angleRadians = Math.atan2(p2.y - p1.y, p2.x - p1.x) - 1.5708
+    //   var angleRadians = Math.atan2(p2.y - p1.y, p2.x - p1.x) - 1.5708
 
-      // this.localPlayer.rotateSword(angleRadians)
+    //   if (new Date() - this.lastPointerMove <= 200) return
 
-      if (new Date() - this.lastPointerMove <= 200) return
-
-      window.rotate({ amount: angleRadians })
-      this.lastPointerMove = new Date()
-    })
+    //   window.rotate({ amount: angleRadians })
+    //   this.lastPointerMove = new Date()
+    // })
 
     this.viewport.fit()
 
@@ -269,9 +267,6 @@ export class Game {
   updatePlayer (obj) {
     const { id, x, y, hp } = obj
     let player = this.players.find(player => player.id == id)
-    // player.x = x
-    // player.y = y
-    // player.hp = hp
     player && player.updateVariables(obj)
   }
 
