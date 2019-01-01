@@ -90,8 +90,6 @@ export class Game {
       // .zoomPercent(1.5)
       .decelerate()
 
-    this.viewport.position.set(1500, 200)
-
     this.viewport.emit(new Event('moved-end', {}))
 
     this.viewport.filters = []
@@ -152,11 +150,15 @@ export class Game {
     this.setPlayerFilters()
 
     this.viewport.follow(player, { speed: 8 })
-    this.viewport.fit(player, 500, 500)
+    this.viewport.fit(player, 400, 400)
+
+    this.viewport.moveCenter(player.x, player.y)
+
     player.filters = [new OutlineFilter(3, 0x101010)]
 
     player.localPlayer = true
     this.localPlayer = player
+
   }
 
   setPlayerFilters () {
