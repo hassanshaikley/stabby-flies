@@ -116,7 +116,7 @@ export default class Fly extends Player {
 
     const delta = now - (this.lastMovementUpdateTime || now)
 
-    const speed = this.speed / delta / 1.85
+    const speed = this.speed / delta / 1.83
 
     // console.log(this.speed)
 
