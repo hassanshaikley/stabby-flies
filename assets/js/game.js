@@ -154,7 +154,9 @@ export class Game {
 
     this.viewport.moveCenter(player.x, player.y)
 
-    player.filters = [new OutlineFilter(3, 0x101010)]
+    const f = new OutlineFilter(3, 0x101010)
+    f.padding = -1
+    player.filters = [f]
 
     player.localPlayer = true
     this.localPlayer = player
@@ -162,9 +164,11 @@ export class Game {
   }
 
   setPlayerFilters () {
+    const f = new OutlineFilter(3, 0xbb2222)
+    f.padding = -1
     this.players.forEach(_player => {
       !_player.localPlayer &&
-        (_player.filters = [new OutlineFilter(3, 0xbb2222)])
+        (_player.filters = [f])
     })
   }
 
@@ -193,8 +197,11 @@ export class Game {
       cloud.y = y
       this.viewport.addChild(cloud)
     }
-
-    floor.filters = [new OutlineFilter(3, 0x101010)]
+    const f = new OutlineFilter(5, 0x101010)
+    f.padding = -1
+    // f.
+    floor.filters = [f]
+    
 
     let rectangle = new PIXI.Graphics()
     // rectangle.beginFill(0x66CC00);
