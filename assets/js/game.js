@@ -235,8 +235,10 @@ export class Game {
 
     this.app.stage.removeChild(this.playerCountText)
 
+    const playerCountText = this.players.length === 1 ? 'player' : 'players'
+
     this.playerCountText = new PIXI.Text(
-      `${this.players.length} players online`,
+      `${this.players.length} ${playerCountText} online`,
       { fontSize: 15 }
     )
 
