@@ -176,7 +176,7 @@ export class Game {
     )
 
     // const bg = new PIXI.extras.TilingSprite(
-    //   PIXI.Texture.fromImage('bg.png'),
+    //   PIXI.Textug.fromImage('bg.png'),
     //   5000,
     //   600
     // )
@@ -271,7 +271,7 @@ export class Game {
   updatePlayer (obj) {
     const { id, x, y, hp } = obj
     let player = this.players.find(player => player.id == id)
-    player && player.updateVariables(obj)
+    player && player.updateVariables(obj, this.viewport)
   }
 
   removePlayerById (id) {

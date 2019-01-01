@@ -97,7 +97,8 @@ export default class Fly extends Player {
     this.__DEBUG__updateSwordHitbox()
   }
 
-  updateVariables (obj) {
+  updateVariables (obj, viewport) {
+    if (this.localPlayer && this.hp < obj.hp && obj.hp === this.maxHp) viewport.moveCenter(obj.x, obj.y)
     this.serverX = obj.x
     this.serverY = obj.y
     this.hp = obj.hp
