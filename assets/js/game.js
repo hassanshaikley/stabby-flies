@@ -170,7 +170,7 @@ export class Game {
 
   spritesLoaded (obj) {
     const floor = new PIXI.extras.TilingSprite(
-      PIXI.Texture.fromImage('earthen_floor.png'),
+      PIXI.Texture.fromImage('images/earthenfloor.png'),
       5000,
       100
     )
