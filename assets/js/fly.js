@@ -1,4 +1,5 @@
 import Player from './player'
+import { GlowFilter } from 'pixi-filters'
 
 export default class Fly extends Player {
   constructor (props) {
@@ -177,10 +178,13 @@ export default class Fly extends Player {
 
     const swordBounds = this.sword.getBounds()
 
+    this.sword.filters = [new GlowFilter()]
+
     setTimeout(() => {
       this.stabbing = false
       this.sword.y = prevy
       this.sword.x = prevx
+      this.sword.filters = []
     }, 200)
   }
 }
