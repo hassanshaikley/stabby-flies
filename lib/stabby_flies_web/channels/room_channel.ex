@@ -32,7 +32,7 @@ defmodule StabbyFliesWeb.RoomChannel do
   # end
 
   def handle_in("stab", payload, socket) do
-    damage = 2
+    damage = 5
 
     {player, can_stab} = Game.player_can_stab(socket.id)
 

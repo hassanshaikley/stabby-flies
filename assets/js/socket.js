@@ -80,7 +80,7 @@ const setupGameChannel = channel => {
   })
 
   channel.on('update_player', function (payload) {
-    const { socket_id, x, y } = payload
+    const { socket_id } = payload
     game.updatePlayer({ ...payload, id: socket_id })
   })
 

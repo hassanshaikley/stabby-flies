@@ -13,6 +13,7 @@ export default class Fly extends Player {
     this.maxHp = props.maxHp
     this.name = props.name
     this.speed = props.speed
+    this.kill_count = props.kill_count
 
     let textureArray = []
     for (let i = 1; i < 4; i++) {
@@ -104,6 +105,7 @@ export default class Fly extends Player {
     this.serverX = obj.x
     this.serverY = obj.y
     this.hp = obj.hp
+    this.kill_count = obj.kill_count
     this.rotateSword(obj.sword_rotation)
     this.updateHealthBar()
 

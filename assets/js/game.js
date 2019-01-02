@@ -1,5 +1,5 @@
 import Player from './player'
-import { setupCanvas } from './utils/'
+import { setupCanvas, sortByKills } from './utils/'
 import Fly from './fly'
 
 // import {MotionBlurFilter} from '@pixi/filter-motion-blur';
@@ -62,26 +62,6 @@ export class Game {
       window.stab()
     })
 
-    // this.lastPointerMove = new Date()
-    // this.viewport.on('pointermove', event => {
-    //   const { x, y } = event.data.global
-    //   const covertedToWorld = this.viewport.toWorld(x, y)
-    //   const p1 = covertedToWorld
-
-    //   if (!this.localPlayer) return
-    //   let p2 = {
-    //     x: this.localPlayer.x - 15,
-    //     y: this.localPlayer.y + 5
-    //   }
-
-    //   var angleRadians = Math.atan2(p2.y - p1.y, p2.x - p1.x) - 1.5708
-
-    //   if (new Date() - this.lastPointerMove <= 200) return
-
-    //   window.rotate({ amount: angleRadians })
-    //   this.lastPointerMove = new Date()
-    // })
-
     this.viewport.fit()
 
     this.viewport
@@ -112,6 +92,10 @@ export class Game {
         player.y = player.serverY
       })
     }
+
+    setInterval(() => {
+      this.updateScoreboard()
+    }, 500)
 
     PIXI.loader
       .add('/images/spritesheet.json')
@@ -283,15 +267,13 @@ export class Game {
     this.updatePlayerCount()
 
     this.drawLocalPlayerAboveOthers()
-
   }
   drawLocalPlayerAboveOthers () {
     if (!this.localPlayer) {
       return
-    };
+    }
     this.viewport.removeChild(this.localPlayer)
     this.viewport.addChild(this.localPlayer)
-
   }
   updatePlayer (obj) {
     const { id, x, y, hp } = obj
@@ -309,6 +291,48 @@ export class Game {
 
   drawPlayer (player) {
     this.viewport.addChild(player)
+  }
+
+  updateScoreboard () {
+    if (!this.scoreBoard) {
+      this.scoreBoard = new PIXI.Container()
+      this.app.stage.addChild(this.scoreBoard)
+    } else {
+      this.scoreBoard.removeChildren()
+    }
+
+    const bg = new PIXI.Graphics()
+
+    this.scoreBoard.addChild(bg)
+
+    this.scoreBoard.addChild(
+      new PIXI.Text('High Score', { fontSize: 20, fontFamily: 'monospace' })
+    )
+
+    const playerNamesAndKills = sortByKills(this.players, this.localPlayer)
+    .map(p => `${p.kill_count}: ${p.name || 'Unknown'}`)
+    .join("\n")
+    
+    
+
+    const scoresText = new PIXI.Text(
+      playerNamesAndKills,
+      {
+        fontSize: 15,
+        fontFamily: 'monospace'
+      }
+    )
+    scoresText.y = 20
+
+    this.scoreBoard.addChild(scoresText)
+
+    this.scoreBoard.x = window.innerWidth - this.scoreBoard.width - 5
+    this.scoreBoard.y = 5
+
+    bg.beginFill(0x222222)
+    bg.drawRect(0, 0, this.scoreBoard.width, this.scoreBoard.height)
+    bg.endFill()
+    bg.alpha = 0.5
   }
 
   debugShape (obj) {
@@ -361,8 +385,7 @@ export class Game {
     }, 5000)
     setTimeout(() => {
       const messagetwo = new Text({
-        message:
-          'move: w a s d\nstab: left click',
+        message: 'move: w a s d\nstab: left click',
         duration: 4000,
         fade: false
       })

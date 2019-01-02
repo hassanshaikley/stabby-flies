@@ -18,7 +18,7 @@ defmodule StabbyFlies.Game do
   def respawn_player(socket_id) do
     Agent.update(__MODULE__, fn(state) ->
       player = get_player_by_socket_id(socket_id, state.players)
-      updated_player = Map.merge(player, %{hp: player.maxHp, y: Enum.random(-100..270), x: Enum.random(0..3000) })
+      updated_player = Map.merge(player, %{hp: player.maxHp, y: Enum.random(-100..270), x: Enum.random(0..3000), kill_count: 0 })
       players_excluding_player = List.delete(state.players, player)
       Map.put(state, :players, [updated_player | players_excluding_player] )
     end)
@@ -47,7 +47,8 @@ defmodule StabbyFlies.Game do
       hp: 10,
       maxHp: 10,
       last_stab: Time.utc_now,
-      speed: 20 * 10
+      speed: 20 * 10,
+      kill_count: 0
     }
 
     Agent.update(__MODULE__, fn(state) -> 
@@ -184,7 +185,7 @@ defmodule StabbyFlies.Game do
 
     stab_data = %{x: x, y: y, width: width, height: height}
 
-    ret = get_players() 
+    hit_players = get_players() 
     |>  Enum.filter(fn x -> (x.socket_id != player.socket_id )end)
     |>  Enum.filter(fn other_player -> 
         x = other_player.x
@@ -192,22 +193,28 @@ defmodule StabbyFlies.Game do
 
         x = other_player.x - 40
         y = other_player.y - 30
+
         width = 80
         height = 60
 
         is_hit = rectangles_overlap(stab_data, %{x: x, y: y, width: width, height: height})  
         if is_hit, do: do_damage_to_player(other_player.socket_id, damage), else: 0
-        is_hit && other_player.hp > 0
+        is_hit 
       end)
-    set_last_stab_to_now(player)
-    ret
+    update_last_stab_and_kill_count(player, hit_players, damage)
+    hit_players
   end
 
-  def set_last_stab_to_now(player) do
-    Agent.update(__MODULE__, fn(state) ->
+  def update_last_stab_and_kill_count(player, hit_players, damage) do
+    killed_players = Enum.filter(hit_players, fn hit_player ->
+      hit_player.hp - damage <= 0
+    end)
 
+    Agent.update(__MODULE__, fn(state) ->
       player = get_player_by_socket_id(player.socket_id, state.players)
       updated_player = %{player | last_stab: Time.utc_now}
+      updated_player = %{ updated_player | kill_count: player.kill_count + length(killed_players)}
+      updated_player = %{ updated_player | hp: update_hp(player.hp, damage/2, player.maxHp) }
       players_excluding_player = List.delete(state.players, player)
       Map.put(state, :players, [updated_player | players_excluding_player] )
     end)
@@ -252,6 +259,14 @@ defmodule StabbyFlies.Game do
       (y + speed) < -100 -> -100
       (y + speed) > 270 -> 270
       (true) -> y + speed
+    end
+  end
+  
+  defp update_hp(hp, change, maxHp) do
+    cond do 
+      (hp + change) <= 0 -> 0
+      (hp + change) >= maxHp -> maxHp
+      (true) -> hp + change
     end
   end
 end
