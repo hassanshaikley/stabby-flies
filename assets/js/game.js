@@ -343,7 +343,7 @@ export class Game {
     }, 5000)
     setTimeout(() => {
       const messagetwo = new Text({
-        message: 'move: w a s d\nstab: left click\nrotate sword: move mouse ',
+        message: 'move: w a s d\nstab: left click',
         duration: 4000,
         fade: false
       })
