@@ -47,11 +47,8 @@ defmodule AotbWeb.RoomChannel do
         }
         end
         )
-  
       broadcast socket, "stab", %{id: socket.id, hit_players_data: hit_players_data}
-      
     end
-
 
     {:noreply, socket}
   end

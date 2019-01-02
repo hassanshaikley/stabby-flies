@@ -225,7 +225,6 @@ export class Game {
   }
 
   animate () {
-
     this.gameObjects.forEach((gameObject, index) => {
       gameObject.update()
       // clean up
@@ -252,9 +251,8 @@ export class Game {
       `${this.players.length} ${playerCountText} online`,
       { fontSize: 15, fontFamily: 'monospace' }
     )
-    this.playerCountText.x = 2;
-    this.playerCountText.y = 2;
-
+    this.playerCountText.x = 2
+    this.playerCountText.y = 2
 
     this.app.stage.addChild(this.playerCountText)
   }
@@ -358,7 +356,6 @@ export class Game {
       this.gameObjects.push(messagetwo)
     }, 7000)
 
-
     setTimeout(() => {
       const messagethree = new Text({
         message: 'If no one is on send them a link and commence battle',
@@ -378,7 +375,6 @@ export class Game {
       this.app.stage.addChild(messagethree)
       this.gameObjects.push(messagethree)
     }, 14000)
-
 
     setTimeout(() => {
       const messagethree = new Text({

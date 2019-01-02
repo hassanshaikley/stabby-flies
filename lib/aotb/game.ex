@@ -78,8 +78,6 @@ defmodule Aotb.Game do
   end
 
   def update_player(player) do
-    
-
     if (player.hp <= 0) do
       respawn_player(player.socket_id)
     else
@@ -106,7 +104,6 @@ defmodule Aotb.Game do
           updated_player =  %{player_now | x: new_x }
           updated_player =  %{updated_player | y: new_y }
           updated_player = put_in(updated_player[:sword_rotation], new_rotation)
-
           players_excluding_player = List.delete(state.players, player_now)
           Map.put(state, :players, [updated_player | players_excluding_player] )
         end)
