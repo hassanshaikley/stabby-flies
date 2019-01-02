@@ -2,7 +2,7 @@
     <div id="join-game-form-container" >
         <form id="join-game-form">
         Nickname: 
-        <input id="nickname-form" type="text" name="nickname">
+        <input id="nickname-form" type="text" name="nickname" autofocus>
         <input type="submit" value="Join Game"/>
         </form>
     </div>

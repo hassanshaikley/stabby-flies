@@ -208,6 +208,8 @@ defmodule Aotb.Game do
 
   def set_last_stab_to_now(player) do
     Agent.update(__MODULE__, fn(state) ->
+
+      player = get_player_by_socket_id(player.socket_id, state.players)
       updated_player = %{player | last_stab: Time.utc_now}
       players_excluding_player = List.delete(state.players, player)
       Map.put(state, :players, [updated_player | players_excluding_player] )
