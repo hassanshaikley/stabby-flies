@@ -103,10 +103,10 @@ export class Game {
   }
 
   playerIsHit (payload) {
-    const { damage, id } = payload
+    const { damage, socket_id } = payload
 
     const player = this.players.find(player => {
-      return player.id == id
+      return player.socket_id == socket_id
     })
 
     this.createExplosion({
@@ -122,20 +122,20 @@ export class Game {
     this.gameObjects.push(explosion)
   }
 
-  playerStabs (id) {
+  playerStabs (socket_id) {
     const player = this.players.find(player => {
-      return player.id == id
+      return player.socket_id == socket_id
     })
 
     player && player.stab(this.players)
   }
 
-  setLocalPlayer (id) {
+  setLocalPlayer (socket_id) {
     const player = this.players.find(player => {
-      return player.id == id
+      return player.socket_id == socket_id
     })
     if (!player) {
-      setTimeout(this.setLocalPlayer.bind(this, id), 5)
+      setTimeout(this.setLocalPlayer.bind(this, socket_id), 5)
       return
     }
     this.setPlayerFilters()
@@ -253,13 +253,13 @@ export class Game {
     }
 
     const alreadyThere = this.players.find(player => {
-      return player.id == obj.socket_id
+      return player.socket_id == obj.socket_id
     })
     if (alreadyThere) {
       return
     }
 
-    const player = new Fly({ ...obj, id: obj.socket_id })
+    const player = new Fly({ ...obj, socket_id: obj.socket_id })
 
     this.players.push(player)
     this.drawPlayer(player)
@@ -276,13 +276,13 @@ export class Game {
     this.viewport.addChild(this.localPlayer)
   }
   updatePlayer (obj) {
-    const { id, x, y, hp } = obj
-    let player = this.players.find(player => player.id == id)
+    const { socket_id, x, y, hp } = obj
+    let player = this.players.find(player => player.socket_id == socket_id)
     player && player.updateVariables(obj, this.viewport)
   }
 
-  removePlayerById (id) {
-    const playerIndex = this.players.findIndex(player => player.id == id)
+  removePlayerById (socket_id) {
+    const playerIndex = this.players.findIndex(player => player.socket_id == socket_id)
     const player = this.players[playerIndex]
     this.viewport.removeChild(player)
     this.players.splice(playerIndex, 1)

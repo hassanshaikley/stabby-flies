@@ -42,12 +42,12 @@ defmodule StabbyFliesWeb.RoomChannel do
       hit_players_data = hit_players
       |> Enum.map(fn player -> 
         %{
-          id: player.socket_id,
+          socket_id: player.socket_id,
           damage: damage
         }
         end
         )
-      broadcast socket, "stab", %{id: socket.id, hit_players_data: hit_players_data}
+      broadcast socket, "stab", %{socket_id: socket.id, hit_players_data: hit_players_data}
     end
 
     {:noreply, socket}

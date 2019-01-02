@@ -55,8 +55,8 @@ const setupGameChannel = channel => {
   })
 
   channel.on('stab', function (payload) {
-    const { id, hit_players_data } = payload
-    game.playerStabs(id)
+    const { socket_id, hit_players_data } = payload
+    game.playerStabs(socket_id)
     hit_players_data.forEach(obj => {
       game.playerIsHit(obj)
     })
@@ -64,7 +64,7 @@ const setupGameChannel = channel => {
 
   channel.on('disconnect', function (payload) {
     console.log('disconnect', payload)
-    game.removePlayerById(payload.id)
+    game.removePlayerById(payload.socket_id)
   })
 
   channel.on('debug shape', function (payload) {
@@ -80,8 +80,7 @@ const setupGameChannel = channel => {
   })
 
   channel.on('update_player', function (payload) {
-    const { socket_id } = payload
-    game.updatePlayer({ ...payload, id: socket_id })
+    game.updatePlayer({ ...payload })
   })
 
   window.stab = obj => {
