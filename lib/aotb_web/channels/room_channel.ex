@@ -7,10 +7,11 @@ defmodule AotbWeb.RoomChannel do
   @messages ["You are cool", "You suck"]
 
   def join("room:game", payload, socket) do
-    Logger.debug "Joined Lobby"
+    Logger.debug "Joined Lobby #{payload["nickname"]}"
     socket = socket 
       |> assign(:message, Enum.random(@messages))
       |> assign(:albums, [])
+      |> assign(:nickname, payload["nickname"])
       send(self(), :after_join)
       {:ok, socket}
   end
@@ -57,7 +58,6 @@ defmodule AotbWeb.RoomChannel do
   end
 
   def handle_in("connect", payload, socket) do
-    Logger.debug "Connect"
     {:noreply, socket}
   end
 
@@ -77,7 +77,7 @@ defmodule AotbWeb.RoomChannel do
     name = ["Bandit", "Neutral", "CrayolaFriendship", "BurgerDude", "Bandicoot", "CalgaryFlames", "CalgaryFlamesDestroyer", "MyMathTeacherWasRight", "Cat", "Aardvark", "Sheep", "FarmHand", "AcidicMilkHotel"] |> Enum.shuffle |> hd
     IO.puts "After Join! Adding Player #{socket.id}"
     IO.inspect socket
-    new_player = Game.add_player("#{name}-#{socket.id}", socket.id)
+    new_player = Game.add_player("#{socket.assigns.nickname}", socket.id)
 
     broadcast socket, "connect", %{new_player: new_player, players: Game.get_players,}
 

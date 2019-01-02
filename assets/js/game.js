@@ -92,6 +92,8 @@ export class Game {
 
     this.viewport.emit(new Event('moved-end', {}))
 
+    this.viewport.zoomPercent(4)
+
     this.viewport.filters = []
 
     this.app.stage.addChild(this.viewport)
@@ -160,15 +162,13 @@ export class Game {
 
     player.localPlayer = true
     this.localPlayer = player
-
   }
 
   setPlayerFilters () {
     const f = new OutlineFilter(3, 0xbb2222)
     f.padding = -1
     this.players.forEach(_player => {
-      !_player.localPlayer &&
-        (_player.filters = [f])
+      !_player.localPlayer && (_player.filters = [f])
     })
   }
 
@@ -201,7 +201,6 @@ export class Game {
     f.padding = -1
     // f.
     floor.filters = [f]
-    
 
     let rectangle = new PIXI.Graphics()
     // rectangle.beginFill(0x66CC00);
@@ -246,8 +245,11 @@ export class Game {
 
     this.playerCountText = new PIXI.Text(
       `${this.players.length} ${playerCountText} online`,
-      { fontSize: 15 }
+      { fontSize: 15, fontFamily: 'monospace' }
     )
+    this.playerCountText.x = 2;
+    this.playerCountText.y = 2;
+
 
     this.app.stage.addChild(this.playerCountText)
   }

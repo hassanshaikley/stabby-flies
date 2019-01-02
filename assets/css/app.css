@@ -6,7 +6,7 @@
 }
 
 .container {
-  display: none;
+  /* display: none; */
 }
 
 .grid-container {
@@ -30,4 +30,33 @@
 body {
   margin: 0px;
   overflow-y: hidden;
+  font-family: monospace;
+}
+input {
+  font-family: monospace;
+}
+
+#join-game-form {
+  display: block;
+  margin: auto;
+  width: fit-content;
+  padding: 10px;
+  background: rgba(10,10,10,.5);
+
+}
+
+#join-game-form-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  top: 0px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+canvas {
+  position: absolute;
+  top: 0px;
 }

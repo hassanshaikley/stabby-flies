@@ -60,7 +60,7 @@ export default class Fly extends Player {
     this.updateHealthBar()
 
     var nameStyle = {
-      font: 'bold italic 10px Arial',
+      font: '10px monospace',
       fill: '#ffffff',
       stroke: '#000000',
       align: 'center',
@@ -98,7 +98,9 @@ export default class Fly extends Player {
   }
 
   updateVariables (obj, viewport) {
-    if (this.localPlayer && this.hp < obj.hp && obj.hp === this.maxHp) viewport.moveCenter(obj.x, obj.y)
+    if (this.localPlayer && this.hp < obj.hp && obj.hp === this.maxHp) {
+      viewport.moveCenter(obj.x, obj.y)
+    }
     this.serverX = obj.x
     this.serverY = obj.y
     this.hp = obj.hp
