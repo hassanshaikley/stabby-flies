@@ -9,7 +9,6 @@ defmodule Aotb.Game do
 
   def loop do
     players = get_players
-    # Logger.debug "--LOOP-- #{length(players)}"
     players |> Enum.each fn player -> 
       update_player(player)
       AotbWeb.Endpoint.broadcast("room:game", "update_player", player)
@@ -20,29 +19,20 @@ defmodule Aotb.Game do
     Agent.update(__MODULE__, fn(state) ->
       player = get_player_by_socket_id(socket_id, state.players)
       updated_player = Map.merge(player, %{hp: player.maxHp, y: Enum.random(-100..270), x: Enum.random(0..3000) })
-      removed_player = List.delete(state.players, player)
-      Map.put(state, :players, [updated_player | removed_player] )
+      players_excluding_player = List.delete(state.players, player)
+      Map.put(state, :players, [updated_player | players_excluding_player] )
     end)
   end
 
-  def set_player_moving(id, direction, moving) do
+  def set_player_moving(socket_id, direction, moving) do
     Agent.update(__MODULE__, fn(state) ->
-      player = get_player_by_socket_id(id, state.players)
+      player = get_player_by_socket_id(socket_id, state.players)
       
       updated_player = put_in(player[:moving][direction], moving)
-      removed_player = List.delete(state.players, player)
-      Map.put(state, :players, [updated_player | removed_player] )
+      players_excluding_player = List.delete(state.players, player)
+      Map.put(state, :players, [updated_player | players_excluding_player] )
     end)
   end
-
-  # def rotate_player_sword(id, new_rotation) do
-  #   Agent.update(__MODULE__, fn(state) ->
-  #     player = get_player_by_socket_id(id, state.players)
-  #     updated_player = put_in(player[:sword_rotation], new_rotation)
-  #     removed_player = List.delete(state.players, player)
-  #     Map.put(state, :players, [updated_player | removed_player] )
-  #   end)
-  # end
 
   def add_player(name, socket_id) do
     x = Enum.random(0..3000)
@@ -110,14 +100,15 @@ defmodule Aotb.Game do
       if new_x != 0 or new_y != 0 do
         new_rotation = get_rotation(player)
 
+
         Agent.update(__MODULE__, fn(state) ->
           player_now = get_player_by_socket_id(player.socket_id, state.players)
           updated_player =  %{player_now | x: new_x }
           updated_player =  %{updated_player | y: new_y }
           updated_player = put_in(updated_player[:sword_rotation], new_rotation)
 
-          removed_player = List.delete(state.players, player_now)
-          Map.put(state, :players, [updated_player | removed_player] )
+          players_excluding_player = List.delete(state.players, player_now)
+          Map.put(state, :players, [updated_player | players_excluding_player] )
         end)
       end
     end
@@ -160,15 +151,14 @@ defmodule Aotb.Game do
 
 
   def do_damage_to_player(socket_id, damage) do
-
     Agent.update(__MODULE__, fn(state) ->
       player = get_player_by_socket_id(socket_id, state.players)
 
       new_hp = player.hp - damage
       new_hp = if new_hp - damage >= 0, do: new_hp, else: 0
       updated_player = %{player | hp: new_hp}
-      removed_player = List.delete(state.players, player)
-      Map.put(state, :players, [updated_player | removed_player] )
+      players_excluding_player = List.delete(state.players, player)
+      Map.put(state, :players, [updated_player | players_excluding_player] )
     end)
 
   end
@@ -177,8 +167,8 @@ defmodule Aotb.Game do
     Agent.update(__MODULE__, fn(state) ->
       player = get_player_by_socket_id(socket_id, state.players)
 
-      removed_player = List.delete(state.players, player)
-      Map.put(state, :players, removed_player )
+      players_excluding_player = List.delete(state.players, player)
+      Map.put(state, :players, players_excluding_player )
     end)
   end
 
@@ -219,8 +209,8 @@ defmodule Aotb.Game do
   def set_last_stab_to_now(player) do
     Agent.update(__MODULE__, fn(state) ->
       updated_player = %{player | last_stab: Time.utc_now}
-      removed_player = List.delete(state.players, player)
-      Map.put(state, :players, [updated_player | removed_player] )
+      players_excluding_player = List.delete(state.players, player)
+      Map.put(state, :players, [updated_player | players_excluding_player] )
     end)
   end
 
