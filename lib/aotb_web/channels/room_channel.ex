@@ -31,7 +31,7 @@ defmodule AotbWeb.RoomChannel do
   # end
 
   def handle_in("stab", payload, socket) do
-    damage = 5
+    damage = 2
 
     {player, can_stab} = Game.player_can_stab(socket.id)
     Logger.debug "can stab? #{can_stab}"
