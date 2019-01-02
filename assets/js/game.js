@@ -167,6 +167,8 @@ export class Game {
 
     player.localPlayer = true
     this.localPlayer = player
+
+    this.drawLocalPlayerAboveOthers()
   }
 
   setPlayerFilters () {
@@ -279,6 +281,17 @@ export class Game {
     this.drawPlayer(player)
     this.setPlayerFilters()
     this.updatePlayerCount()
+
+    this.drawLocalPlayerAboveOthers()
+
+  }
+  drawLocalPlayerAboveOthers () {
+    if (!this.localPlayer) {
+      return
+    };
+    this.viewport.removeChild(this.localPlayer)
+    this.viewport.addChild(this.localPlayer)
+
   }
   updatePlayer (obj) {
     const { id, x, y, hp } = obj
