@@ -319,7 +319,7 @@ export class Game {
     }
     setTimeout(() => {
       const messageone = new Text({
-        message: 'Hello & Welcome to the World of Stabby Flies',
+        message: 'Hello & Welcome to Stabby Flies',
         duration: 2000,
         fade: false
       })
@@ -348,7 +348,8 @@ export class Game {
     }, 5000)
     setTimeout(() => {
       const messagetwo = new Text({
-        message: 'move: w a s d\nstab: left click',
+        message:
+          'move: w a s d\nstab: left click',
         duration: 4000,
         fade: false
       })
@@ -358,7 +359,7 @@ export class Game {
 
     setTimeout(() => {
       const messagethree = new Text({
-        message: 'If no one is on send them a link and commence battle',
+        message: '& the tip of your sword does the damage',
         duration: 3000,
         fade: false
       })
@@ -368,7 +369,7 @@ export class Game {
 
     setTimeout(() => {
       const messagethree = new Text({
-        message: 'PS: This is in its early stages and still being developed!',
+        message: 'If no one is on send them a link and fight them!',
         duration: 5000,
         fade: false
       })
