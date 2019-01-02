@@ -1,2 +1,2 @@
 ExUnit.start()
-Ecto.Adapters.SQL.Sandbox.mode(Aotb.Repo, :manual)
+Ecto.Adapters.SQL.Sandbox.mode(StabbyFlies.Repo, :manual)

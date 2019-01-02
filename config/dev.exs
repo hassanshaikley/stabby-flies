@@ -6,7 +6,7 @@ use Mix.Config
 # The watchers configuration can be used to run external
 # watchers to your application. For example, we use it
 # with webpack to recompile .js and .css sources.
-config :aotb, AotbWeb.Endpoint,
+config :stabby_flies, StabbyFliesWeb.Endpoint,
   http: [port: 4000],
   debug_errors: true,
   code_reloader: true,
@@ -22,10 +22,10 @@ config :aotb, AotbWeb.Endpoint,
   ]
 
 # Configure your database
-config :aotb, Aotb.Repo,
+config :stabby_flies, StabbyFlies.Repo,
   username: "postgres",
   password: "postgres",
-  database: "aotb_Dev",
+  database: "stabby_flies_Dev",
   hostname: "localhost",
   pool_size: 10
 
@@ -55,13 +55,13 @@ config :aotb, Aotb.Repo,
 # different ports.
 
 # Watch static and templates for browser reloading.
-config :aotb, AotbWeb.Endpoint,
+config :stabby_flies, StabbyFliesWeb.Endpoint,
   live_reload: [
     patterns: [
       ~r{priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$},
       ~r{priv/gettext/.*(po)$},
-      ~r{lib/aotb_web/views/.*(ex)$},
-      ~r{lib/aotb_web/templates/.*(eex)$}
+      ~r{lib/stabby_flies_web/views/.*(ex)$},
+      ~r{lib/stabby_flies_web/templates/.*(eex)$}
     ]
   ]
 

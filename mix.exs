@@ -1,9 +1,9 @@
-defmodule Aotb.MixProject do
+defmodule StabbyFlies.MixProject do
   use Mix.Project
 
   def project do
     [
-      app: :aotb,
+      app: :stabby_flies,
       version: "0.1.0",
       elixir: "~> 1.5",
       elixirc_paths: elixirc_paths(Mix.env()),
@@ -19,7 +19,7 @@ defmodule Aotb.MixProject do
   # Type `mix help compile.app` for more information.
   def application do
     [
-      mod: {Aotb.Application, []},
+      mod: {StabbyFlies.Application, []},
       extra_applications: [:logger, :runtime_tools]
     ]
   end

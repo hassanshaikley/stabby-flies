@@ -7,15 +7,15 @@
 # General application configuration
 use Mix.Config
 
-config :aotb,
-  ecto_repos: [Aotb.Repo]
+config :stabby_flies,
+  ecto_repos: [StabbyFlies.Repo]
 
 # Configures the endpoint
-config :aotb, AotbWeb.Endpoint,
+config :stabby_flies, StabbyFliesWeb.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "Al0xchNKPZ9roanAVIWcpK8d4IyM1rbyYxIGHvkP60f9VF7SNa9qjAV3n31KtsMO",
-  render_errors: [view: AotbWeb.ErrorView, accepts: ~w(html json)],
-  pubsub: [name: Aotb.PubSub, adapter: Phoenix.PubSub.PG2]
+  render_errors: [view: StabbyFliesWeb.ErrorView, accepts: ~w(html json)],
+  pubsub: [name: StabbyFlies.PubSub, adapter: Phoenix.PubSub.PG2]
 
 # Configures Elixir's Logger
 config :logger, :console,

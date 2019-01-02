@@ -1,4 +1,4 @@
-defmodule AotbWeb.ChannelCase do
+defmodule StabbyFliesWeb.ChannelCase do
   @moduledoc """
   This module defines the test case to be used by
   channel tests.
@@ -21,15 +21,15 @@ defmodule AotbWeb.ChannelCase do
       use Phoenix.ChannelTest
 
       # The default endpoint for testing
-      @endpoint AotbWeb.Endpoint
+      @endpoint StabbyFliesWeb.Endpoint
     end
   end
 
   setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Aotb.Repo)
+    :ok = Ecto.Adapters.SQL.Sandbox.checkout(StabbyFlies.Repo)
 
     unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(Aotb.Repo, {:shared, self()})
+      Ecto.Adapters.SQL.Sandbox.mode(StabbyFlies.Repo, {:shared, self()})
     end
 
     :ok

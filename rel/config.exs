@@ -44,8 +44,8 @@ end
 # when running `mix release`, the first release in the file
 # will be used by default
 
-release :aotb do
-  set version: current_version(:aotb)
+release :stabby_flies do
+  set version: current_version(:stabby_flies)
   set applications: [
     :runtime_tools
   ]
