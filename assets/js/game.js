@@ -41,6 +41,11 @@ export class Game {
     setupCanvas(this.app)
     this.app.renderer.backgroundColor = 0x69243e
 
+    window.onresize = () => {
+      this.viewport.screenWidth = window.innerWidth
+      this.viewport.screenHeight = window.innerHeight
+      this.app.renderer.resize(window.innerWidth, window.innerHeight)
+    }
     this.app.renderer.autoResize = true
 
     this.viewport = new Viewport({

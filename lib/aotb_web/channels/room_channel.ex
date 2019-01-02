@@ -74,7 +74,6 @@ defmodule AotbWeb.RoomChannel do
 
 
   def handle_info(:after_join, socket) do
-    name = ["Bandit", "Neutral", "CrayolaFriendship", "BurgerDude", "Bandicoot", "CalgaryFlames", "CalgaryFlamesDestroyer", "MyMathTeacherWasRight", "Cat", "Aardvark", "Sheep", "FarmHand", "AcidicMilkHotel"] |> Enum.shuffle |> hd
     IO.puts "After Join! Adding Player #{socket.id}"
     IO.inspect socket
     new_player = Game.add_player("#{socket.assigns.nickname}", socket.id)
