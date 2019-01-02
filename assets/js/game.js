@@ -93,10 +93,6 @@ export class Game {
       })
     }
 
-    setInterval(() => {
-      this.updateScoreboard()
-    }, 500)
-
     PIXI.loader
       .add('/images/spritesheet.json')
       .load(this.spritesLoaded.bind(this))
@@ -153,6 +149,10 @@ export class Game {
     this.localPlayer = player
 
     this.drawLocalPlayerAboveOthers()
+
+    setInterval(() => {
+      this.updateScoreboard()
+    }, 500)
   }
 
   setPlayerFilters () {
