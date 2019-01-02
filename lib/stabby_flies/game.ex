@@ -214,7 +214,7 @@ defmodule StabbyFlies.Game do
       player = get_player_by_socket_id(player.socket_id, state.players)
       updated_player = %{player | last_stab: Time.utc_now}
       updated_player = %{ updated_player | kill_count: player.kill_count + length(killed_players)}
-      updated_player = %{ updated_player | hp: update_hp(player.hp, damage/2, player.maxHp) }
+      # updated_player = %{ updated_player | hp: update_hp(player.hp, damage/2, player.maxHp) }
       players_excluding_player = List.delete(state.players, player)
       Map.put(state, :players, [updated_player | players_excluding_player] )
     end)
