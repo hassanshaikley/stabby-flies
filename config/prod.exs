@@ -18,7 +18,8 @@ config :stabby_flies, StabbyFliesWeb.Endpoint,
   check_origin: ["https://meaty-spiffy-hermitcrab.gigalixirapp.com/"],
   cache_static_manifest: "priv/static/cache_manifest.json",
   # render_errors: [view: StabbyFliesWeb.ErrorView, accepts: ~w(html json)],
-  pubsub: [name: StabbyFlies.PubSub, adapter: Phoenix.PubSub.PG2] # Not certain we need this!
+  # Not certain we need this!
+  pubsub: [name: StabbyFlies.PubSub, adapter: Phoenix.PubSub.PG2]
 
 # config :stabby_flies, StabbyFliesWeb.Endpoint,
 #   http: [:inet6, port: System.get_env("PORT") || 4000],
@@ -80,8 +81,6 @@ config :logger, level: :info
 
 # Finally import the config/prod.secret.exs which should be versioned
 # separately.
-
-
 
 config :stabby_flies, StabbyFlies.Repo,
   adapter: Ecto.Adapters.Postgres,

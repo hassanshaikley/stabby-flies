@@ -21,7 +21,7 @@ defmodule StabbyFlies.Application do
     opts = [strategy: :one_for_one, name: StabbyFlies.Supervisor]
     Supervisor.start_link(children, opts)
     StabbyFlies.Game.start_link(1)
-    StabbyFlies.SocketIdGen.start_link
+    StabbyFlies.SocketIdGen.start_link()
   end
 
   # Tell Phoenix to update the endpoint configuration

@@ -29,7 +29,6 @@ config :stabby_flies, StabbyFlies.Repo,
   hostname: "localhost",
   pool_size: 10
 
-
 # ## SSL Support
 #
 # In order to use HTTPS in development, a self-signed

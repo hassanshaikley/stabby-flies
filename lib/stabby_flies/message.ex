@@ -2,7 +2,6 @@ defmodule StabbyFlies.Message do
   use Ecto.Schema
   import Ecto.Changeset
 
-
   schema "messages" do
     field :message, :string
     field :name, :string
