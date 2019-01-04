@@ -1,4 +1,9 @@
 defmodule StabbyFlies.Game do
+  @moduledoc """
+  This is the Game module.
+
+  All of the game logic is in here including the game loop and the game state
+  """
   require Logger
   use Agent
 
@@ -18,7 +23,7 @@ defmodule StabbyFlies.Game do
   def respawn_player(socket_id) do
     Agent.update(__MODULE__, fn(state) ->
       player = get_player_by_socket_id(socket_id, state.players)
-      updated_player = Map.merge(player, %{hp: player.maxHp, y: start_y, x: start_x, kill_count: 0 })
+      updated_player = Map.merge(player, %{hp: player.maxHp, y: start_y, x: start_x, kill_count: 0, moving: %{left: false, up: false, down: false, right: false}})
       players_excluding_player = List.delete(state.players, player)
       Map.put(state, :players, [updated_player | players_excluding_player] )
     end)
@@ -48,7 +53,8 @@ defmodule StabbyFlies.Game do
       maxHp: 10,
       last_stab: Time.utc_now,
       speed: 20 * 10,
-      kill_count: 0
+      kill_count: 0,
+      damage: 5
     }
 
     Agent.update(__MODULE__, fn(state) -> 
@@ -85,23 +91,21 @@ defmodule StabbyFlies.Game do
       speed = player.speed / 10 # this should be proportional to the loop timer
       
 
-      y_speed_1 = if player[:moving][:up], do: -speed, else: 0
-      y_speed_2 = if player[:moving][:down], do: speed, else: 0
+      y_speed_up = if player[:moving][:up], do: -speed, else: 0
+      y_speed_down = if player[:moving][:down], do: speed, else: 0
 
-      new_y = update_y(player.y, y_speed_1 + y_speed_2)
+      new_y = update_y(player.y, y_speed_up + y_speed_down)
 
-      x_speed_1 = if player[:moving][:left], do: -speed, else: 0
-      x_speed_2 = if player[:moving][:right], do: speed, else: 0
+      x_speed_left = if player[:moving][:left], do: -speed, else: 0
+      x_speed_right = if player[:moving][:right], do: speed, else: 0
 
-      new_x = update_x(player.x, x_speed_1 + x_speed_2)
+      new_x = update_x(player.x, x_speed_left + x_speed_right)
     
-
       if new_x != 0 or new_y != 0 do
-        new_rotation = get_rotation(player)
-
-
         Agent.update(__MODULE__, fn(state) ->
           player_now = get_player_by_socket_id(player.socket_id, state.players)
+          new_rotation = get_rotation(player_now)
+
           updated_player =  %{player_now | x: new_x }
           updated_player =  %{updated_player | y: new_y }
           updated_player = put_in(updated_player[:sword_rotation], new_rotation)
@@ -127,6 +131,7 @@ defmodule StabbyFlies.Game do
     }
 
 
+    # Rotation (in radians) of the sword based off the keys pressed
     ret_dir = case correct_direction do
       %{left: false, right: false, up: false, down: false} -> player[:sword_rotation]
 
@@ -141,19 +146,15 @@ defmodule StabbyFlies.Game do
 
       %{left: false, right: false, up: true, down: false} -> 0
       %{left: false, right: false, up: false, down: true} -> :math.pi
-
     end
     ret_dir
   end
   
 
-
   def do_damage_to_player(socket_id, damage) do
     Agent.update(__MODULE__, fn(state) ->
       player = get_player_by_socket_id(socket_id, state.players)
-
-      new_hp = player.hp - damage
-      new_hp = if new_hp - damage >= 0, do: new_hp, else: 0
+      new_hp = if player.hp - damage >= 0, do: player.hp - damage, else: 0
       updated_player = %{player | hp: new_hp}
       players_excluding_player = List.delete(state.players, player)
       Map.put(state, :players, [updated_player | players_excluding_player] )
@@ -164,14 +165,26 @@ defmodule StabbyFlies.Game do
   def remove_player_by_socket_id(socket_id) do
     Agent.update(__MODULE__, fn(state) ->
       player = get_player_by_socket_id(socket_id, state.players)
-
       players_excluding_player = List.delete(state.players, player)
       Map.put(state, :players, players_excluding_player )
     end)
   end
 
-  def calculate_stab_hits(player, damage) do 
-  
+  @doc """
+  Calculates if a player was hit and applies damage
+
+  The hitbox logic is all here, and that invlves some hacks hence the strange math. It's absolute madness but it works!
+
+  Returns `[hit_player, other_hit_player]`.
+
+  ## Examples
+
+      iex> MyApp.Hello.world(:john)
+      :ok
+
+  """
+  def player_stabs(player) do 
+    damage = player.damage
     player_x = player.x + 20
     player_y = player.y
     player_width = 50
@@ -214,7 +227,6 @@ defmodule StabbyFlies.Game do
       player = get_player_by_socket_id(player.socket_id, state.players)
       updated_player = %{player | last_stab: Time.utc_now}
       updated_player = %{ updated_player | kill_count: player.kill_count + length(killed_players)}
-      # updated_player = %{ updated_player | hp: update_hp(player.hp, damage/2, player.maxHp) }
       players_excluding_player = List.delete(state.players, player)
       Map.put(state, :players, [updated_player | players_excluding_player] )
     end)

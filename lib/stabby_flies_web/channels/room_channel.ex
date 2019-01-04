@@ -24,18 +24,16 @@ defmodule StabbyFliesWeb.RoomChannel do
   end
 
   def handle_in("stab", payload, socket) do
-    damage = 5
-
     {player, can_stab} = Game.player_can_stab(socket.id)
 
     if can_stab do
-      hit_players = Game.calculate_stab_hits(player, damage)
+      hit_players = Game.player_stabs(player)
         
       hit_players_data = hit_players
-      |> Enum.map(fn player -> 
+      |> Enum.map(fn hit_player -> 
         %{
-          socket_id: player.socket_id,
-          damage: damage
+          socket_id: hit_player.socket_id,
+          damage: player.damage
         }
         end
         )
