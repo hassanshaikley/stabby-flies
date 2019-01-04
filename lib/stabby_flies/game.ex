@@ -13,8 +13,7 @@ defmodule StabbyFlies.Game do
   end
 
   def game_loop do
-    players = get_players
-    players |> Enum.each fn player -> 
+    get_players |> Enum.each fn player -> 
       update_player(player)
       StabbyFliesWeb.Endpoint.broadcast("room:game", "update_player", player)
     end
