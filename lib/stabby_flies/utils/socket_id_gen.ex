@@ -1,4 +1,7 @@
 defmodule StabbyFlies.SocketIdGen do
+  @moduledoc """
+  Description about this module
+  """
   require Logger
 
   def start_link do

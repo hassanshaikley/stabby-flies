@@ -1,4 +1,7 @@
 defmodule StabbyFliesWeb.RoomChannel do
+  @moduledoc """
+  Description about the use of this Module
+  """
   use StabbyFliesWeb, :channel
   require Logger
 
@@ -18,7 +21,7 @@ defmodule StabbyFliesWeb.RoomChannel do
 
   def handle_in("shout", payload, socket) do
     # Disabled until input is sanitized
-    # StabbyFlies.Message.changeset(%StabbyFlies.Message{}, payload) |> StabbyFlies.Repo.insert  
+    # StabbyFlies.Message.changeset(%StabbyFlies.Message{}, payload) |> StabbyFlies.Repo.insert
     # broadcast socket, "shout", payload
     {:noreply, socket}
   end

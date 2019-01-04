@@ -74,7 +74,7 @@ defmodule StabbyFlies.Game do
     player
   end
 
-  def reset() do
+  def reset do
     Agent.update(__MODULE__, fn _state -> %{} end)
   end
 
@@ -135,30 +135,32 @@ defmodule StabbyFlies.Game do
     correct_up = direction[:up] and !direction[:down]
     correct_down = direction[:down] and !direction[:up]
 
-    correct_direction = %{
+    # Rotation (in radians) of the sword based off the keys pressed
+    correct_direction(%{
       left: correct_left,
       right: correct_right,
       up: correct_up,
-      down: correct_down
-    }
-
-    # Rotation (in radians) of the sword based off the keys pressed
-    ret_dir =
-      case correct_direction do
-        %{left: false, right: false, up: false, down: false} -> player[:sword_rotation]
-        %{left: true, right: false, up: false, down: false} -> -:math.pi() / 2
-        %{left: true, right: false, up: true, down: false} -> -:math.pi() / 3
-        %{left: true, right: false, up: false, down: true} -> 3.92699
-        %{left: false, right: true, up: false, down: false} -> :math.pi() / 2
-        %{left: false, right: true, up: true, down: false} -> :math.pi() / 3
-        %{left: false, right: true, up: false, down: true} -> -3.92699
-        %{left: false, right: false, up: true, down: false} -> 0
-        %{left: false, right: false, up: false, down: true} -> :math.pi()
-      end
-
-    ret_dir
+      down: correct_down,
+      sword_rotation: player[:sword_rotation]
+    })
   end
 
+  defp correct_direction(%{left: true, right: false, up: false, down: false, sword_rotation: _sword_rotation}), do: :math.pi() / 2
+  defp correct_direction(%{left: true, right: false, up: true, down: false, sword_rotation: _sword_rotation}), do: -:math.pi() / 3
+  defp correct_direction(%{left: true, right: false, up: false, down: true, sword_rotation: _sword_rotation}), do: 3.92699
+  defp correct_direction(%{left: false, right: true, up: false, down: false, sword_rotation: _sword_rotation}), do: :math.pi() / 2
+  defp correct_direction(%{left: false, right: true, up: true, down: false, sword_rotation: _sword_rotation}), do: :math.pi() / 3
+  defp correct_direction(%{left: false, right: true, up: false, down: true, sword_rotation: _sword_rotation}), do: -3.92699
+  defp correct_direction(%{left: false, right: false, up: true, down: false, sword_rotation: _sword_rotation}), do: 0
+  defp correct_direction(%{left: false, right: false, up: false, down: true, sword_rotation: _sword_rotation}), do: :math.pi()
+  defp correct_direction(%{
+         left: false,
+         right: false,
+         up: false,
+         down: false,
+         sword_rotation: sword_rotation
+       }),
+       do: sword_rotation
   def do_damage_to_player(socket_id, damage) do
     Agent.update(__MODULE__, fn state ->
       player = get_player_by_socket_id(socket_id, state.players)
@@ -283,10 +285,10 @@ defmodule StabbyFlies.Game do
     end
   end
 
-  defp update_hp(hp, change, maxHp) do
+  defp update_hp(hp, change, max_hp) do
     cond do
       hp + change <= 0 -> 0
-      hp + change >= maxHp -> maxHp
+      hp + change >= max_hp -> max_hp
       true -> hp + change
     end
   end
