@@ -4,10 +4,10 @@ defmodule StabbyFlies.Game do
 
   def start_link(_) do
     Agent.start_link(fn -> %{ "players": [] } end, name: __MODULE__)
-    {:ok, _} = :timer.apply_interval(50, __MODULE__, :loop, []) 
+    {:ok, _} = :timer.apply_interval(50, __MODULE__, :game_loop, [])
   end
 
-  def loop do
+  def game_loop do
     players = get_players
     players |> Enum.each fn player -> 
       update_player(player)
@@ -18,7 +18,7 @@ defmodule StabbyFlies.Game do
   def respawn_player(socket_id) do
     Agent.update(__MODULE__, fn(state) ->
       player = get_player_by_socket_id(socket_id, state.players)
-      updated_player = Map.merge(player, %{hp: player.maxHp, y: Enum.random(-100..270), x: Enum.random(0..3000), kill_count: 0 })
+      updated_player = Map.merge(player, %{hp: player.maxHp, y: start_y, x: start_x, kill_count: 0 })
       players_excluding_player = List.delete(state.players, player)
       Map.put(state, :players, [updated_player | players_excluding_player] )
     end)
@@ -35,8 +35,8 @@ defmodule StabbyFlies.Game do
   end
 
   def add_player(name, socket_id) do
-    x = Enum.random(0..3000)
-    y = Enum.random(-100..270)
+    x = start_x
+    y = start_y
     player = %{
       name: name,
       x: x, 
@@ -268,5 +268,12 @@ defmodule StabbyFlies.Game do
       (hp + change) >= maxHp -> maxHp
       (true) -> hp + change
     end
+  end
+
+  defp start_y do
+    Enum.random(-100..270)
+  end
+  defp start_x do 
+    Enum.random(0..3000)
   end
 end

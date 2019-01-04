@@ -16,20 +16,12 @@ defmodule StabbyFliesWeb.RoomChannel do
       {:ok, socket}
   end
 
-  # It is also common to receive messages from the client and
-  # broadcast to everyone in the current topic (room:game).
   def handle_in("shout", payload, socket) do
     # Disabled until input is sanitized
     # StabbyFlies.Message.changeset(%StabbyFlies.Message{}, payload) |> StabbyFlies.Repo.insert  
     # broadcast socket, "shout", payload
     {:noreply, socket}
   end
-
-  # def handle_in("fly-rotate", payload, socket) do
-  #   player = Game.rotate_player_sword(socket.id, payload["amount"])
-  #   # broadcast socket, "fly-rotate", %{id: socket.id, currentRotation: player[:sword_rotation] + payload["amount"]}
-  #   {:noreply, socket}
-  # end
 
   def handle_in("stab", payload, socket) do
     damage = 5
@@ -85,7 +77,6 @@ defmodule StabbyFliesWeb.RoomChannel do
         new_player: new_player
       })
 
-
-    {:noreply, socket} # :noreply
+    {:noreply, socket}
   end
 end

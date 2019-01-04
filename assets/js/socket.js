@@ -23,7 +23,7 @@ document.getElementById('join-game-form').onsubmit = function (event) {
 
   channel = socket.channel('room:game', {
     nickname
-  }) // connect to chat "room"
+  })
 
   setupGameChannel(channel)
 
