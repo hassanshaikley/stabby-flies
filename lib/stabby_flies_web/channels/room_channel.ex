@@ -4,12 +4,9 @@ defmodule StabbyFliesWeb.RoomChannel do
 
   alias StabbyFlies.Game
 
-  @messages ["You are cool", "You suck"]
-
   def join("room:game", payload, socket) do
     Logger.debug "Joined Lobby #{payload["nickname"]}"
     socket = socket 
-      |> assign(:message, Enum.random(@messages))
       |> assign(:albums, [])
       |> assign(:nickname, payload["nickname"])
       send(self(), :after_join)
@@ -66,11 +63,12 @@ defmodule StabbyFliesWeb.RoomChannel do
 
     broadcast socket, "connect", %{new_player: new_player, players: Game.get_players,}
 
-    StabbyFlies.Message.get_messages()
-    |> Enum.each(fn msg -> push(socket, "shout", %{
-        name: msg.name,
-        message: msg.message,
-      }) end)
+    # Disabled for now
+    # StabbyFlies.Message.get_messages()
+    # |> Enum.each(fn msg -> push(socket, "shout", %{
+    #     name: msg.name,
+    #     message: msg.message,
+    #   }) end)
       push(socket, "initialize", %{
         new_player: new_player
       })
