@@ -8,87 +8,100 @@ defmodule StabbyFlies.Game do
   use Agent
 
   def start_link(_) do
-    Agent.start_link(fn -> %{ "players": [] } end, name: __MODULE__)
+    Agent.start_link(fn -> %{players: []} end, name: __MODULE__)
     {:ok, _} = :timer.apply_interval(50, __MODULE__, :game_loop, [])
   end
 
   def game_loop do
-    get_players |> Enum.each fn player -> 
+    get_players
+    |> Enum.each(fn player ->
       update_player(player)
       StabbyFliesWeb.Endpoint.broadcast("room:game", "update_player", player)
-    end
+    end)
   end
 
   def respawn_player(socket_id) do
-    Agent.update(__MODULE__, fn(state) ->
+    Agent.update(__MODULE__, fn state ->
       player = get_player_by_socket_id(socket_id, state.players)
-      updated_player = Map.merge(player, %{hp: player.maxHp, y: start_y, x: start_x, kill_count: 0, moving: %{left: false, up: false, down: false, right: false}})
+
+      updated_player =
+        Map.merge(player, %{
+          hp: player.maxHp,
+          y: start_y,
+          x: start_x,
+          kill_count: 0,
+          moving: %{left: false, up: false, down: false, right: false}
+        })
+
       players_excluding_player = List.delete(state.players, player)
-      Map.put(state, :players, [updated_player | players_excluding_player] )
+      Map.put(state, :players, [updated_player | players_excluding_player])
     end)
   end
 
   def set_player_moving(socket_id, direction, moving) do
-    Agent.update(__MODULE__, fn(state) ->
+    Agent.update(__MODULE__, fn state ->
       player = get_player_by_socket_id(socket_id, state.players)
-      
+
       updated_player = put_in(player[:moving][direction], moving)
       players_excluding_player = List.delete(state.players, player)
-      Map.put(state, :players, [updated_player | players_excluding_player] )
+      Map.put(state, :players, [updated_player | players_excluding_player])
     end)
   end
 
   def add_player(name, socket_id) do
     x = start_x
     y = start_y
+
     player = %{
       name: name,
-      x: x, 
-      y: y, 
-      socket_id: socket_id, 
+      x: x,
+      y: y,
+      socket_id: socket_id,
       moving: %{left: false, up: false, down: false, right: false},
       sword_rotation: 0,
       hp: 10,
       maxHp: 10,
-      last_stab: Time.utc_now,
+      last_stab: Time.utc_now(),
       speed: 20 * 10,
       kill_count: 0,
       damage: 5
     }
 
-    Agent.update(__MODULE__, fn(state) -> 
-      Map.put(state, :players, [player | state.players] )
+    Agent.update(__MODULE__, fn state ->
+      Map.put(state, :players, [player | state.players])
     end)
+
     player
   end
 
-  def reset() do
-    Agent.update(__MODULE__, fn(_state) -> %{} end)
+  def reset do
+    Agent.update(__MODULE__, fn _state -> %{} end)
   end
 
   def get_players do
-    Agent.get(__MODULE__, fn(state) ->
+    Agent.get(__MODULE__, fn state ->
       state.players
     end)
   end
 
   def get_player_by_name(name) do
-    get_players() |> Enum.find([], fn x -> x[:name] == name end )
+    get_players() |> Enum.find([], fn x -> x[:name] == name end)
   end
 
   def get_player_by_socket_id(socket_id) do
-    get_players() |> Enum.find([], fn x -> x[:socket_id] == socket_id end )
+    get_players() |> Enum.find([], fn x -> x[:socket_id] == socket_id end)
   end
+
   def get_player_by_socket_id(socket_id, player_list) do
-    player_list|> Enum.find([], fn x -> x[:socket_id] == socket_id end )
+    player_list |> Enum.find([], fn x -> x[:socket_id] == socket_id end)
   end
 
   def update_player(player) do
-    if (player.hp <= 0) do
+    if player.hp <= 0 do
       respawn_player(player.socket_id)
     else
-      speed = player.speed / 10 # this should be proportional to the loop timer
-      
+      # this should be proportional to the loop timer
+      speed = player.speed / 10
 
       y_speed_up = if player[:moving][:up], do: -speed, else: 0
       y_speed_down = if player[:moving][:down], do: speed, else: 0
@@ -99,17 +112,17 @@ defmodule StabbyFlies.Game do
       x_speed_right = if player[:moving][:right], do: speed, else: 0
 
       new_x = update_x(player.x, x_speed_left + x_speed_right)
-    
+
       if new_x != 0 or new_y != 0 do
-        Agent.update(__MODULE__, fn(state) ->
+        Agent.update(__MODULE__, fn state ->
           player_now = get_player_by_socket_id(player.socket_id, state.players)
           new_rotation = get_rotation(player_now)
 
-          updated_player =  %{player_now | x: new_x }
-          updated_player =  %{updated_player | y: new_y }
+          updated_player = %{player_now | x: new_x}
+          updated_player = %{updated_player | y: new_y}
           updated_player = put_in(updated_player[:sword_rotation], new_rotation)
           players_excluding_player = List.delete(state.players, player_now)
-          Map.put(state, :players, [updated_player | players_excluding_player] )
+          Map.put(state, :players, [updated_player | players_excluding_player])
         end)
       end
     end
@@ -122,50 +135,47 @@ defmodule StabbyFlies.Game do
     correct_up = direction[:up] and !direction[:down]
     correct_down = direction[:down] and !direction[:up]
 
-    correct_direction = %{
+    # Rotation (in radians) of the sword based off the keys pressed
+    correct_direction(%{
       left: correct_left,
       right: correct_right,
       up: correct_up,
-      down: correct_down
-    }
-
-
-    # Rotation (in radians) of the sword based off the keys pressed
-    ret_dir = case correct_direction do
-      %{left: false, right: false, up: false, down: false} -> player[:sword_rotation]
-
-      %{left: true, right: false, up: false, down: false} -> - :math.pi/2
-      %{left: true, right: false, up: true, down: false} -> - :math.pi/3
-      %{left: true, right: false, up: false, down: true} -> 3.92699
-
-
-      %{left: false, right: true, up: false, down: false} -> :math.pi/2
-      %{left: false, right: true, up: true, down: false} -> :math.pi/3
-      %{left: false, right: true, up: false, down: true} -> - 3.92699
-
-      %{left: false, right: false, up: true, down: false} -> 0
-      %{left: false, right: false, up: false, down: true} -> :math.pi
-    end
-    ret_dir
+      down: correct_down,
+      sword_rotation: player[:sword_rotation]
+    })
   end
-  
 
+  defp correct_direction(%{left: true, right: false, up: false, down: false, sword_rotation: _sword_rotation}), do: :math.pi() / 2
+  defp correct_direction(%{left: true, right: false, up: true, down: false, sword_rotation: _sword_rotation}), do: -:math.pi() / 3
+  defp correct_direction(%{left: true, right: false, up: false, down: true, sword_rotation: _sword_rotation}), do: 3.92699
+  defp correct_direction(%{left: false, right: true, up: false, down: false, sword_rotation: _sword_rotation}), do: :math.pi() / 2
+  defp correct_direction(%{left: false, right: true, up: true, down: false, sword_rotation: _sword_rotation}), do: :math.pi() / 3
+  defp correct_direction(%{left: false, right: true, up: false, down: true, sword_rotation: _sword_rotation}), do: -3.92699
+  defp correct_direction(%{left: false, right: false, up: true, down: false, sword_rotation: _sword_rotation}), do: 0
+  defp correct_direction(%{left: false, right: false, up: false, down: true, sword_rotation: _sword_rotation}), do: :math.pi()
+  defp correct_direction(%{
+         left: false,
+         right: false,
+         up: false,
+         down: false,
+         sword_rotation: sword_rotation
+       }),
+       do: sword_rotation
   def do_damage_to_player(socket_id, damage) do
-    Agent.update(__MODULE__, fn(state) ->
+    Agent.update(__MODULE__, fn state ->
       player = get_player_by_socket_id(socket_id, state.players)
       new_hp = if player.hp - damage >= 0, do: player.hp - damage, else: 0
       updated_player = %{player | hp: new_hp}
       players_excluding_player = List.delete(state.players, player)
-      Map.put(state, :players, [updated_player | players_excluding_player] )
+      Map.put(state, :players, [updated_player | players_excluding_player])
     end)
-
   end
 
   def remove_player_by_socket_id(socket_id) do
-    Agent.update(__MODULE__, fn(state) ->
+    Agent.update(__MODULE__, fn state ->
       player = get_player_by_socket_id(socket_id, state.players)
       players_excluding_player = List.delete(state.players, player)
-      Map.put(state, :players, players_excluding_player )
+      Map.put(state, :players, players_excluding_player)
     end)
   end
 
@@ -182,13 +192,13 @@ defmodule StabbyFlies.Game do
       :ok
 
   """
-  def player_stabs(player) do 
+  def player_stabs(player) do
     damage = player.damage
     player_x = player.x + 20
     player_y = player.y
     player_width = 50
-    hitbox_x = player_x + :math.sin(player.sword_rotation)*50 - player_width + 10
-    hitbox_y = player_y - :math.cos(player.sword_rotation)*55 
+    hitbox_x = player_x + :math.sin(player.sword_rotation) * 50 - player_width + 10
+    hitbox_y = player_y - :math.cos(player.sword_rotation) * 55
 
     x = hitbox_x
     y = hitbox_y
@@ -197,9 +207,10 @@ defmodule StabbyFlies.Game do
 
     stab_data = %{x: x, y: y, width: width, height: height}
 
-    hit_players = get_players() 
-    |>  Enum.filter(fn x -> (x.socket_id != player.socket_id )end)
-    |>  Enum.filter(fn other_player -> 
+    hit_players =
+      get_players()
+      |> Enum.filter(fn x -> x.socket_id != player.socket_id end)
+      |> Enum.filter(fn other_player ->
         x = other_player.x
         y = other_player.y
 
@@ -209,36 +220,37 @@ defmodule StabbyFlies.Game do
         width = 80
         height = 60
 
-        is_hit = rectangles_overlap(stab_data, %{x: x, y: y, width: width, height: height})  
+        is_hit = rectangles_overlap(stab_data, %{x: x, y: y, width: width, height: height})
         if is_hit, do: do_damage_to_player(other_player.socket_id, damage), else: 0
-        is_hit 
+        is_hit
       end)
+
     update_last_stab_and_kill_count(player, hit_players, damage)
     hit_players
   end
 
   def update_last_stab_and_kill_count(player, hit_players, damage) do
-    killed_players = Enum.filter(hit_players, fn hit_player ->
-      hit_player.hp - damage <= 0
-    end)
+    killed_players =
+      Enum.filter(hit_players, fn hit_player ->
+        hit_player.hp - damage <= 0
+      end)
 
-    Agent.update(__MODULE__, fn(state) ->
+    Agent.update(__MODULE__, fn state ->
       player = get_player_by_socket_id(player.socket_id, state.players)
-      updated_player = %{player | last_stab: Time.utc_now}
-      updated_player = %{ updated_player | kill_count: player.kill_count + length(killed_players)}
+      updated_player = %{player | last_stab: Time.utc_now()}
+      updated_player = %{updated_player | kill_count: player.kill_count + length(killed_players)}
       players_excluding_player = List.delete(state.players, player)
-      Map.put(state, :players, [updated_player | players_excluding_player] )
+      Map.put(state, :players, [updated_player | players_excluding_player])
     end)
   end
-
 
   def player_can_stab(socket_id) do
     player = get_player_by_socket_id(socket_id)
 
     cooldown = 300
-    now = Time.utc_now
+    now = Time.utc_now()
 
-    can_stab = (Time.diff(now, player.last_stab, :milliseconds) >= cooldown)
+    can_stab = Time.diff(now, player.last_stab, :milliseconds) >= cooldown
     {player, can_stab}
   end
 
@@ -247,44 +259,45 @@ defmodule StabbyFlies.Game do
     x2 = rect2.x
 
     y1 = rect1.y
-    y2 = rect2.y 
+    y2 = rect2.y
 
     w1 = rect1.width
     w2 = rect2.width
 
     h1 = rect1.height
     h2 = rect2.height
-    !(x1+w1<x2 or x2+w2<x1 or y1+h1<y2 or y2+h2<y1)
+    !(x1 + w1 < x2 or x2 + w2 < x1 or y1 + h1 < y2 or y2 + h2 < y1)
   end
 
   defp update_x(x, speed) do
-    cond do 
-      (x + speed) < 0 -> 0
-      (x + speed) > 3000 -> 3000
-      (true) -> x + speed
+    cond do
+      x + speed < 0 -> 0
+      x + speed > 3000 -> 3000
+      true -> x + speed
     end
   end
 
   defp update_y(y, speed) do
-    cond do 
-      (y + speed) < -100 -> -100
-      (y + speed) > 270 -> 270
-      (true) -> y + speed
+    cond do
+      y + speed < -100 -> -100
+      y + speed > 270 -> 270
+      true -> y + speed
     end
   end
-  
-  defp update_hp(hp, change, maxHp) do
-    cond do 
-      (hp + change) <= 0 -> 0
-      (hp + change) >= maxHp -> maxHp
-      (true) -> hp + change
+
+  defp update_hp(hp, change, max_hp) do
+    cond do
+      hp + change <= 0 -> 0
+      hp + change >= max_hp -> max_hp
+      true -> hp + change
     end
   end
 
   defp start_y do
     Enum.random(-100..270)
   end
-  defp start_x do 
+
+  defp start_x do
     Enum.random(0..3000)
   end
 end
