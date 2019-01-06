@@ -30,7 +30,7 @@ defmodule StabbyFliesWeb.RoomChannel do
     {player, can_stab} = Game.player_can_stab(socket.id)
 
     if can_stab do
-      hit_players = Game.player_stabs(player)
+      {hit_players, stab_hitbox} = Game.player_stabs(player)
 
       hit_players_data =
         hit_players
@@ -41,7 +41,7 @@ defmodule StabbyFliesWeb.RoomChannel do
           }
         end)
 
-      broadcast(socket, "stab", %{socket_id: socket.id, hit_players_data: hit_players_data})
+      broadcast(socket, "stab", %{socket_id: socket.id, hit_players_data: hit_players_data, stab_hitbox: stab_hitbox})
     end
 
     {:noreply, socket}

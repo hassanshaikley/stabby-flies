@@ -197,36 +197,31 @@ defmodule StabbyFlies.Game do
     player_x = player.x + 20
     player_y = player.y
     player_width = 50
-    hitbox_x = player_x + :math.sin(player.sword_rotation) * 50 - player_width + 10
-    hitbox_y = player_y - :math.cos(player.sword_rotation) * 55
+    sword_hitbox_x = player_x + :math.sin(player.sword_rotation) * 40 - player_width
+    sword_hitbox_y = player_y - :math.cos(player.sword_rotation) * 35
 
-    x = hitbox_x
-    y = hitbox_y
-    width = 10
-    height = 10
+    sword_hitbox_width = 30
+    sword_hitbox_height = 30
 
-    stab_data = %{x: x, y: y, width: width, height: height}
+    stab_data = %{x: sword_hitbox_x, y: sword_hitbox_y, width: sword_hitbox_width, height: sword_hitbox_height}
 
     hit_players =
       get_players()
       |> Enum.filter(fn x -> x.socket_id != player.socket_id end)
       |> Enum.filter(fn other_player ->
-        x = other_player.x
-        y = other_player.y
-
         x = other_player.x - 40
         y = other_player.y - 30
 
-        width = 80
-        height = 60
+        player_hitbox_width = 80
+        player_hitbox_height = 60
 
-        is_hit = rectangles_overlap(stab_data, %{x: x, y: y, width: width, height: height})
+        is_hit = rectangles_overlap(stab_data, %{x: x, y: y, width: player_hitbox_width, height: player_hitbox_height})
         if is_hit, do: do_damage_to_player(other_player.socket_id, damage), else: 0
         is_hit
       end)
 
     update_last_stab_and_kill_count(player, hit_players, damage)
-    hit_players
+    {hit_players, stab_data}
   end
 
   def update_last_stab_and_kill_count(player, hit_players, damage) do
