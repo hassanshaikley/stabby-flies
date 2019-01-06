@@ -197,14 +197,19 @@ defmodule StabbyFlies.Game do
     player_x = player.x + 20
     player_y = player.y
     player_width = 50
-    sword_hitbox_x = player_x + :math.sin(player.sword_rotation) * 40 - player_width
-    sword_hitbox_y = player_y - :math.cos(player.sword_rotation) * 35
+    sword_hitbox_x = player_x + :math.sin(player.sword_rotation) * 50 - player_width + 10
+    sword_hitbox_x_second =  player_x + :math.sin(player.sword_rotation) * 20 - player_width + 10
+    sword_hitbox_y = player_y - :math.cos(player.sword_rotation) * 55
+    sword_hitbox_y_second = player_y - :math.cos(player.sword_rotation) * 15
 
-    sword_hitbox_width = 30
-    sword_hitbox_height = 30
+    sword_hitbox_width = 10
+    sword_hitbox_height = 10
 
-    stab_data = %{x: sword_hitbox_x, y: sword_hitbox_y, width: sword_hitbox_width, height: sword_hitbox_height}
+    stab_data_first = %{x: sword_hitbox_x, y: sword_hitbox_y, width: sword_hitbox_width, height: sword_hitbox_height}
 
+    stab_data_second = %{x: sword_hitbox_x_second, y: sword_hitbox_y_second, width: sword_hitbox_width, height: sword_hitbox_height}
+
+    
     hit_players =
       get_players()
       |> Enum.filter(fn x -> x.socket_id != player.socket_id end)
@@ -215,13 +220,16 @@ defmodule StabbyFlies.Game do
         player_hitbox_width = 80
         player_hitbox_height = 60
 
-        is_hit = rectangles_overlap(stab_data, %{x: x, y: y, width: player_hitbox_width, height: player_hitbox_height})
+        player_hitbox = %{x: x, y: y, width: player_hitbox_width, height: player_hitbox_height}
+
+        is_hit = rectangles_overlap(stab_data_first, player_hitbox) || rectangles_overlap(stab_data_second, player_hitbox)
+
         if is_hit, do: do_damage_to_player(other_player.socket_id, damage), else: 0
         is_hit
       end)
 
     update_last_stab_and_kill_count(player, hit_players, damage)
-    {hit_players, stab_data}
+    {hit_players, stab_data_second}
   end
 
   def update_last_stab_and_kill_count(player, hit_players, damage) do

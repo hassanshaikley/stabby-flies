@@ -60,7 +60,7 @@ const setupGameChannel = channel => {
     hit_players_data.forEach(obj => {
       game.playerIsHit(obj)
     })
-    game.debugShape({ ...payload.stab_hitbox, shape: 'rectangle' })
+    // game.debugShape({ ...payload.stab_hitbox, shape: 'rectangle' })
   })
 
   channel.on('disconnect', function (payload) {
