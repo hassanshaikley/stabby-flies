@@ -145,7 +145,7 @@ defmodule StabbyFlies.Game do
     })
   end
 
-  defp correct_direction(%{left: true, right: false, up: false, down: false, sword_rotation: _sword_rotation}), do: :math.pi() / 2
+  defp correct_direction(%{left: true, right: false, up: false, down: false, sword_rotation: _sword_rotation}), do: -:math.pi() / 2
   defp correct_direction(%{left: true, right: false, up: true, down: false, sword_rotation: _sword_rotation}), do: -:math.pi() / 3
   defp correct_direction(%{left: true, right: false, up: false, down: true, sword_rotation: _sword_rotation}), do: 3.92699
   defp correct_direction(%{left: false, right: true, up: false, down: false, sword_rotation: _sword_rotation}), do: :math.pi() / 2
