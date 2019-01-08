@@ -10,6 +10,7 @@ const socketUrl =
   true ? '//meaty-spiffy-hermitcrab.gigalixirapp.com/socket' : '/socket'
 let socket = new Socket(socketUrl, { params: { token: window.userToken } })
 
+window.pooh = Socket
 /* Begin Add */
 
 // window.joinGame = function (event) {
