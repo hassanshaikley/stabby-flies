@@ -187,6 +187,10 @@ export class Game {
       const y = Math.floor(Math.random() * 150) - 100
       cloud.x = x
       cloud.y = y
+      const f = new OutlineFilter(3, 0x101010)
+      f.padding = -1
+      cloud.filters = [f]
+
       this.viewport.addChild(cloud)
     }
     const f = new OutlineFilter(5, 0x101010)
