@@ -15,12 +15,12 @@ config :stabby_flies, StabbyFliesWeb.Endpoint,
   server: true,
   secret_key_base: "${SECRET_KEY_BASE}",
   url: [host: "https://meaty-spiffy-hermitcrab.gigalixirapp.com/", port: 80],
-  # check_origin: [
-  #   "//meaty-spiffy-hermitcrab.gigalixirapp.com",
-  #   # "//localhost:4000",
-  #   "//lilsheep.itch.io"
-  #   ],
-  check_origin: false,
+  check_origin: [
+    "//meaty-spiffy-hermitcrab.gigalixirapp.com",
+    # "//localhost:4000",
+    "//lilsheep.itch.io"
+    ],
+  # check_origin: false,
   cache_static_manifest: "priv/static/cache_manifest.json",
   # render_errors: [view: StabbyFliesWeb.ErrorView, accepts: ~w(html json)],
   # Not certain we need this!

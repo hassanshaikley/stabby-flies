@@ -6,7 +6,7 @@ const keypresses = {}
 let game = new Game()
 
 const socketUrl =
-  window.location.host === 'itch.io'
+  window.location.host === 'lilsheep.itch.io'
     ? '//meaty-spiffy-hermitcrab.gigalixirapp.com/socket'
     : '/socket'
 let socket = new Socket(socketUrl, { params: { token: window.userToken } })
