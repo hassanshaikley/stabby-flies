@@ -6,10 +6,9 @@ const keypresses = {}
 let game = new Game()
 
 const socketUrl =
-  window.location.host === 'itch.io'
-    ? 'https://meaty-spiffy-hermitcrab.gigalixirapp.com/socket'
-    : '/socket'
-let socket = new Socket('/socket', { params: { token: window.userToken } })
+  // window.location.host === 'itch.io'
+  true ? '//meaty-spiffy-hermitcrab.gigalixirapp.com/socket' : '/socket'
+let socket = new Socket(socketUrl, { params: { token: window.userToken } })
 
 /* Begin Add */
 
