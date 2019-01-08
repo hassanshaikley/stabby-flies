@@ -150,6 +150,7 @@ export class Game {
 
     this.drawLocalPlayerAboveOthers()
 
+    this.updateScoreboard()
     setInterval(() => {
       this.updateScoreboard()
     }, 500)
