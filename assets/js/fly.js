@@ -130,7 +130,9 @@ export default class Fly extends Player {
     this.crown._currentTime = this.fly_animation._currentTime
     this.crown.play()
 
+    this.removeChild(this.sword)
     this.addChild(this.crown)
+    this.addChild(this.sword)
   }
   removeCrown () {
     this.removeChild(this.crown)
