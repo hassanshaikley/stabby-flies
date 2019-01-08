@@ -17,7 +17,7 @@ config :stabby_flies, StabbyFliesWeb.Endpoint,
   url: [host: "https://meaty-spiffy-hermitcrab.gigalixirapp.com/", port: 80],
   check_origin: [
     "//meaty-spiffy-hermitcrab.gigalixirapp.com",
-    "//localhost:4000",
+    # "//localhost:4000",
     "//itch.io"
     ],
   # check_origin: false,
