@@ -94,7 +94,7 @@ export class Game {
     }
 
     PIXI.loader
-      .add('/images/spritesheet.json')
+      .add('images/spritesheet.json')
       .load(this.spritesLoaded.bind(this))
   }
 

@@ -18,7 +18,7 @@ config :stabby_flies, StabbyFliesWeb.Endpoint,
   check_origin: [
     "//meaty-spiffy-hermitcrab.gigalixirapp.com",
     # "//localhost:4000",
-    "//itch.io"
+    "//lilsheep.itch.io/stabby-flies"
     ],
   # check_origin: false,
   cache_static_manifest: "priv/static/cache_manifest.json",
