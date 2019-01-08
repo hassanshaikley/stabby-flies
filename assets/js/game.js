@@ -282,7 +282,9 @@ export class Game {
   }
 
   removePlayerById (socket_id) {
-    const playerIndex = this.players.findIndex(player => player.socket_id == socket_id)
+    const playerIndex = this.players.findIndex(
+      player => player.socket_id == socket_id
+    )
     const player = this.players[playerIndex]
     this.viewport.removeChild(player)
     this.players.splice(playerIndex, 1)
@@ -291,6 +293,12 @@ export class Game {
 
   drawPlayer (player) {
     this.viewport.addChild(player)
+  }
+
+  topPlayer () {
+    return this.players.sort((a, b) =>
+      a.kill_count < b.kill_count ? 1 : -1
+    )[0]
   }
 
   updateScoreboard () {
@@ -309,19 +317,19 @@ export class Game {
       new PIXI.Text('High Score', { fontSize: 20, fontFamily: 'monospace' })
     )
 
-    const playerNamesAndKills = sortByKills(this.players, this.localPlayer)
-    .map(p => `${p.kill_count}: ${p.name || 'Unknown'}`)
-    .join("\n")
-    
-    
+    const sortedByKills = sortByKills(this.players, this.localPlayer)
 
-    const scoresText = new PIXI.Text(
-      playerNamesAndKills,
-      {
-        fontSize: 15,
-        fontFamily: 'monospace'
-      }
-    )
+    this.players.forEach(p => p.removeCrown())
+    this.topPlayer().wearCrown()
+
+    const playerNamesAndKills = sortedByKills
+      .map(p => `${p.kill_count}: ${p.name || 'Unknown'}`)
+      .join('\n')
+
+    const scoresText = new PIXI.Text(playerNamesAndKills, {
+      fontSize: 15,
+      fontFamily: 'monospace'
+    })
     scoresText.y = 20
 
     this.scoreBoard.addChild(scoresText)

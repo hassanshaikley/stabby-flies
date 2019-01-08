@@ -20,7 +20,7 @@ export default class Fly extends Player {
       let texture = PIXI.Texture.fromImage('fly_' + i + '.png')
       textureArray.push(texture)
     }
-    let mc = new PIXI.extras.AnimatedSprite(textureArray)
+    this.fly_animation = new PIXI.extras.AnimatedSprite(textureArray)
 
     this.shield = new PIXI.Sprite(PIXI.Texture.fromImage('images/shield.png'))
     this.sword = new PIXI.Sprite(PIXI.Texture.fromImage('images/sword.png'))
@@ -35,10 +35,10 @@ export default class Fly extends Player {
     this.sword.x -= 15
     this.sword.y += 5
 
-    mc.anchor.x = mc.anchor.y = 0.5
-    mc.play()
-    mc.animationSpeed = 0.1
-    this.addChild(mc)
+    this.fly_animation.anchor.x = this.fly_animation.anchor.y = 0.5
+    this.fly_animation.play()
+    this.fly_animation.animationSpeed = 0.1
+    this.addChild(this.fly_animation)
     this.addChild(this.shield)
     this.addChild(this.sword)
 
@@ -59,6 +59,8 @@ export default class Fly extends Player {
     this.healthBar.addChild(this.healthGreen)
     this.addChild(this.healthBar)
     this.updateHealthBar()
+
+    // this.wearCrown()
 
     var nameStyle = {
       font: '10px monospace',
@@ -113,6 +115,25 @@ export default class Fly extends Player {
       this.x = this.serverX
       this.y = this.serverY
     }
+  }
+
+  wearCrown () {
+    let crownTextureArray = []
+    for (let i = 0; i < 3; i++) {
+      let crownTexture = PIXI.Texture.fromImage('images/fly_crown' + i + '.png')
+      crownTextureArray.push(crownTexture)
+    }
+    this.crown = new PIXI.extras.AnimatedSprite(crownTextureArray)
+
+    this.crown.anchor.x = this.crown.anchor.y = 0.5
+    this.crown.animationSpeed = 0.1
+    this.crown._currentTime = this.fly_animation._currentTime
+    this.crown.play()
+
+    this.addChild(this.crown)
+  }
+  removeCrown () {
+    this.removeChild(this.crown)
   }
 
   update () {
