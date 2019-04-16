@@ -41,7 +41,11 @@ defmodule StabbyFliesWeb.RoomChannel do
           }
         end)
 
-      broadcast(socket, "stab", %{socket_id: socket.id, hit_players_data: hit_players_data, stab_hitbox: stab_hitbox})
+      broadcast(socket, "stab", %{
+        socket_id: socket.id,
+        hit_players_data: hit_players_data,
+        stab_hitbox: stab_hitbox
+      })
     end
 
     {:noreply, socket}

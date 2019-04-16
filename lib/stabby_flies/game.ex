@@ -145,14 +145,78 @@ defmodule StabbyFlies.Game do
     })
   end
 
-  defp correct_direction(%{left: true, right: false, up: false, down: false, sword_rotation: _sword_rotation}), do: -:math.pi() / 2
-  defp correct_direction(%{left: true, right: false, up: true, down: false, sword_rotation: _sword_rotation}), do: -:math.pi() / 3
-  defp correct_direction(%{left: true, right: false, up: false, down: true, sword_rotation: _sword_rotation}), do: 3.92699
-  defp correct_direction(%{left: false, right: true, up: false, down: false, sword_rotation: _sword_rotation}), do: :math.pi() / 2
-  defp correct_direction(%{left: false, right: true, up: true, down: false, sword_rotation: _sword_rotation}), do: :math.pi() / 3
-  defp correct_direction(%{left: false, right: true, up: false, down: true, sword_rotation: _sword_rotation}), do: -3.92699
-  defp correct_direction(%{left: false, right: false, up: true, down: false, sword_rotation: _sword_rotation}), do: 0
-  defp correct_direction(%{left: false, right: false, up: false, down: true, sword_rotation: _sword_rotation}), do: :math.pi()
+  defp correct_direction(%{
+         left: true,
+         right: false,
+         up: false,
+         down: false,
+         sword_rotation: _sword_rotation
+       }),
+       do: -:math.pi() / 2
+
+  defp correct_direction(%{
+         left: true,
+         right: false,
+         up: true,
+         down: false,
+         sword_rotation: _sword_rotation
+       }),
+       do: -:math.pi() / 3
+
+  defp correct_direction(%{
+         left: true,
+         right: false,
+         up: false,
+         down: true,
+         sword_rotation: _sword_rotation
+       }),
+       do: 3.92699
+
+  defp correct_direction(%{
+         left: false,
+         right: true,
+         up: false,
+         down: false,
+         sword_rotation: _sword_rotation
+       }),
+       do: :math.pi() / 2
+
+  defp correct_direction(%{
+         left: false,
+         right: true,
+         up: true,
+         down: false,
+         sword_rotation: _sword_rotation
+       }),
+       do: :math.pi() / 3
+
+  defp correct_direction(%{
+         left: false,
+         right: true,
+         up: false,
+         down: true,
+         sword_rotation: _sword_rotation
+       }),
+       do: -3.92699
+
+  defp correct_direction(%{
+         left: false,
+         right: false,
+         up: true,
+         down: false,
+         sword_rotation: _sword_rotation
+       }),
+       do: 0
+
+  defp correct_direction(%{
+         left: false,
+         right: false,
+         up: false,
+         down: true,
+         sword_rotation: _sword_rotation
+       }),
+       do: :math.pi()
+
   defp correct_direction(%{
          left: false,
          right: false,
@@ -161,6 +225,7 @@ defmodule StabbyFlies.Game do
          sword_rotation: sword_rotation
        }),
        do: sword_rotation
+
   def do_damage_to_player(socket_id, damage) do
     Agent.update(__MODULE__, fn state ->
       player = get_player_by_socket_id(socket_id, state.players)
@@ -198,18 +263,27 @@ defmodule StabbyFlies.Game do
     player_y = player.y
     player_width = 50
     sword_hitbox_x = player_x + :math.sin(player.sword_rotation) * 50 - player_width + 10
-    sword_hitbox_x_second =  player_x + :math.sin(player.sword_rotation) * 20 - player_width + 10
+    sword_hitbox_x_second = player_x + :math.sin(player.sword_rotation) * 20 - player_width + 10
     sword_hitbox_y = player_y - :math.cos(player.sword_rotation) * 55
     sword_hitbox_y_second = player_y - :math.cos(player.sword_rotation) * 15
 
     sword_hitbox_width = 10
     sword_hitbox_height = 10
 
-    stab_data_first = %{x: sword_hitbox_x, y: sword_hitbox_y, width: sword_hitbox_width, height: sword_hitbox_height}
+    stab_data_first = %{
+      x: sword_hitbox_x,
+      y: sword_hitbox_y,
+      width: sword_hitbox_width,
+      height: sword_hitbox_height
+    }
 
-    stab_data_second = %{x: sword_hitbox_x_second, y: sword_hitbox_y_second, width: sword_hitbox_width, height: sword_hitbox_height}
+    stab_data_second = %{
+      x: sword_hitbox_x_second,
+      y: sword_hitbox_y_second,
+      width: sword_hitbox_width,
+      height: sword_hitbox_height
+    }
 
-    
     hit_players =
       get_players()
       |> Enum.filter(fn x -> x.socket_id != player.socket_id end)
@@ -222,7 +296,9 @@ defmodule StabbyFlies.Game do
 
         player_hitbox = %{x: x, y: y, width: player_hitbox_width, height: player_hitbox_height}
 
-        is_hit = rectangles_overlap(stab_data_first, player_hitbox) || rectangles_overlap(stab_data_second, player_hitbox)
+        is_hit =
+          rectangles_overlap(stab_data_first, player_hitbox) ||
+            rectangles_overlap(stab_data_second, player_hitbox)
 
         if is_hit, do: do_damage_to_player(other_player.socket_id, damage), else: 0
         is_hit
@@ -243,7 +319,10 @@ defmodule StabbyFlies.Game do
       updated_player = %{player | last_stab: Time.utc_now()}
       updated_player = %{updated_player | kill_count: player.kill_count + length(killed_players)}
 
-      updated_player = if length(killed_players) > 0, do: %{updated_player | hp: updated_player.maxHp}, else: updated_player
+      updated_player =
+        if length(killed_players) > 0,
+          do: %{updated_player | hp: updated_player.maxHp},
+          else: updated_player
 
       players_excluding_player = List.delete(state.players, player)
       Map.put(state, :players, [updated_player | players_excluding_player])

@@ -19,7 +19,7 @@ config :stabby_flies, StabbyFliesWeb.Endpoint,
     "//meaty-spiffy-hermitcrab.gigalixirapp.com",
     # "//localhost:4000",
     "//lilsheep.itch.io"
-    ],
+  ],
   # check_origin: false,
   cache_static_manifest: "priv/static/cache_manifest.json",
   # render_errors: [view: StabbyFliesWeb.ErrorView, accepts: ~w(html json)],
