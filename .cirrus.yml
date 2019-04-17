@@ -1,4 +1,4 @@
-test:
+test_task:
   container:
     image: elixir:latest
   mix_cache:
@@ -7,7 +7,7 @@ test:
     populate_script: mix deps.get
   compile_script: mix compile
   test_script: mix test
-sobelow:
+sobelow_task:
   container:
     image: elixir:latest
   mix_cache:
@@ -16,7 +16,7 @@ sobelow:
     populate_script: mix deps.get
   compile_script: mix compile
   test_script: mix sobelow
-credo:
+credo_task:
   container:
     image: elixir:latest
   mix_cache:
@@ -25,7 +25,7 @@ credo:
     populate_script: mix deps.get
   compile_script: mix compile
   test_script: mix credo --strict
-format:
+format_task:
   container:
     image: elixir:latest
   mix_cache:
@@ -34,7 +34,7 @@ format:
     populate_script: mix deps.get
   compile_script: mix compile
   test_script: mix format --check-formatted
-dialyzer:
+dialyzer_task:
   container:
     image: elixir:latest
   mix_cache:
