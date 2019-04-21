@@ -1,11 +1,11 @@
 [![Build Status](https://api.cirrus-ci.com/github/hassanshaikley/stabby-flies.svg)](https://cirrus-ci.com/github/hassanshaikley/stabby-flies)
 
 
-# Noob Quest
+# Stabby Flies
 
 Multiplayer Browser Game in Elixir/Phoenix
 
-![Screenshot](noob_quest_screenshot.png "Screenshot 1")
+![Screenshot](stabby_flies_screenshot.png "Screenshot 1")
 
 ## Status
 
