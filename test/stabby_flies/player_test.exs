@@ -3,18 +3,20 @@ defmodule StabbyFlies.PlayerTest do
   alias StabbyFlies.Player
 
   setup do
-    player = %Player{name: "John", x: 15, y: 10, hp: 10}
+    player = %Player{name: "John", x: 15, y: 10, hp: 10, velx: 0, vely: 0}
 
     %{player: player}
   end
 
-  test "struct stuff ??", %{player: player} do
+  test "initialization", %{player: player} do
     assert player.name == "John"
     assert player.x == 15
     assert player.y == 10
+    assert player.vely == 0
+    assert player.velx == 0
   end
 
-  test "is alive function", %{player: player} do
+  test "alive? function", %{player: player} do
     dead_player = %Player{name: "John", x: 15, y: 10, hp: 0}
 
     assert Player.alive?(player) == true
