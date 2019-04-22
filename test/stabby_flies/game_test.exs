@@ -29,10 +29,10 @@ defmodule StabbyFlies.GameTest do
     assert StabbyFlies.Game.get_players() |> length == players_length
   end
 
-  test "moves p" do
-    player_three = StabbyFlies.Game.add_player("player3", 3)
-    old_x = player_three[:x]
-    StabbyFlies.Game.move_player_by_socket_id(3, "left")
-    assert StabbyFlies.Game.get_player_by_socket_id(3)[:x] != old_x
-  end
+  # test "moves p" do
+  #   player_three = StabbyFlies.Game.add_player("player3", 3)
+  #   old_x = player_three[:x]
+  #   StabbyFlies.Game.move_player_by_socket_id(3, "left")
+  #   assert StabbyFlies.Game.get_player_by_socket_id(3)[:x] != old_x
+  # end
 end
