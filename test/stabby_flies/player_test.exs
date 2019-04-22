@@ -20,4 +20,8 @@ defmodule StabbyFlies.PlayerTest do
     assert Player.alive?(player) == true
     assert Player.alive?(dead_player) == false
   end
+
+  test "decrease_hp function", %{player: player} do
+    assert Player.decrease_hp(player, 2).hp == 8
+  end
 end
