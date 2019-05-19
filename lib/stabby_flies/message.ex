@@ -16,7 +16,6 @@ defmodule StabbyFlies.Message do
     StabbyFlies.Repo.all(StabbyFlies.Message, limit: limit)
   end
 
-  @doc false
   def changeset(message, attrs) do
     message
     |> cast(attrs, [:name, :message])

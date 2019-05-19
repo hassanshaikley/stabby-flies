@@ -5,8 +5,6 @@ defmodule StabbyFlies.Player do
     defstruct ~w|name x y velx vely hp max_hp sword_rotation last_stab_time|a
   end
 
-  # defstruct
-
   # defguardp is_alive?(hp) when is_integer(hp) and hp > 0
 
   # def alive?(%{hp: hp}) when is_alive?(hp), do: true
@@ -31,23 +29,6 @@ defmodule StabbyFlies.Player do
 
   # def move_down(%{vely: vely, hp: hp} = player, quantity \\ 1) do
   #   %{player | vely: 1 * quantity}
-  # end
-
-  ## ALL NEW SHIT
-
-  # def start_link(opts) do
-  #   # GenServer.start_link(__MODULE__, :ok, opts)
-  #   IO.inspect(opts, label: "__OPTS__")
-
-  #   GenServer.start_link(
-  #     __MODULE__,
-  #     %{name: "The Name", x: opts[:x], y: opts[:y], hp: opts[:hp], velx: 0, vely: 0},
-  #     opts
-  #   )
-  # end
-
-  # def init(thin) do
-  #   IO.inspect(thin)
   # end
 
   def start_link(opts) do
@@ -90,28 +71,18 @@ defmodule StabbyFlies.Player do
     )
   end
 
-  def init(init_arg) do
-    {:ok, init_arg}
-  end
-
+  def init(init_arg), do: {:ok, init_arg}
   def state(pid), do: GenServer.call(pid, :state)
   def take_damage(pid, amount), do: GenServer.call(pid, {:take_damage, amount})
   def update_position(pid), do: GenServer.call(pid, :update_position)
   def can_stab(pid), do: GenServer.call(pid, :can_stab)
   def reset_stab_cooldown(pid), do: GenServer.call(pid, :reset_stab_cooldown)
 
-  # def player_can_stab(socket_id) do
-
-  # end
-
   def handle_call(:can_stab, _from, %State{last_stab_time: last_stab_time} = state) do
-    #   player = get_player_by_socket_id(socket_id)
-
     stab_cooldown = 300
     now = Time.utc_now()
 
     can_stab = Time.diff(now, last_stab_time, :millisecond) >= stab_cooldown
-    #   {player, can_stab}
     {:reply, can_stab, state}
   end
 
