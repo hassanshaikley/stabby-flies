@@ -53,6 +53,11 @@ defmodule StabbyFlies.PlayerTest do
       )
   end
 
+  test "can_stab", %{player: player} do
+    # player_state = Player.state(player)
+    assert Player.can_stab(player) == true
+  end
+
   # test "alive? function", %{player: player} do
   #   dead_player = %Player{name: "John", x: 15, y: 10, hp: 0}
 

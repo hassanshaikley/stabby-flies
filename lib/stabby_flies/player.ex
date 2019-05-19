@@ -4,7 +4,7 @@ defmodule StabbyFlies.Player do
   alias __MODULE__
 
   defmodule State do
-    defstruct ~w|name x y velx vely hp max_hp sword_rotation|a
+    defstruct ~w|name x y velx vely hp max_hp sword_rotation last_stab_time|a
   end
 
   # defstruct
@@ -53,8 +53,6 @@ defmodule StabbyFlies.Player do
   # end
 
   def start_link(opts) do
-    IO.puts("START LINK")
-
     defaults = [
       name: "NAMELESS",
       x: start_x,
@@ -87,7 +85,8 @@ defmodule StabbyFlies.Player do
         velx: velx,
         vely: vely,
         max_hp: max_hp,
-        sword_rotation: sword_rotation
+        sword_rotation: sword_rotation,
+        last_stab_time: Time.add(Time.utc_now(), -1)
       },
       name: via_tuple(name)
     )
@@ -100,6 +99,22 @@ defmodule StabbyFlies.Player do
   def state(pid), do: GenServer.call(pid, :state)
   def take_damage(pid, amount), do: GenServer.call(pid, {:take_damage, amount})
   def update_position(pid), do: GenServer.call(pid, :update_position)
+  def can_stab(pid), do: GenServer.call(pid, :can_stab)
+
+  # def player_can_stab(socket_id) do
+
+  # end
+
+  def handle_call(:can_stab, _from, %State{last_stab_time: last_stab_time} = state) do
+    #   player = get_player_by_socket_id(socket_id)
+
+    stab_cooldown = 300
+    now = Time.utc_now()
+
+    can_stab = Time.diff(now, last_stab_time, :milliseconds) >= stab_cooldown
+    #   {player, can_stab}
+    {:reply, can_stab, state}
+  end
 
   def handle_call(:state, _from, %State{} = state) do
     {:reply, state, state}
@@ -122,6 +137,8 @@ defmodule StabbyFlies.Player do
     {:reply, new_state, new_state}
   end
 
+  # def handle_call(:can_stab) 
+
   defp start_y do
     Enum.random(-100..270)
   end
@@ -131,7 +148,6 @@ defmodule StabbyFlies.Player do
   end
 
   defp via_tuple(player_name) do
-    IO.puts("VIA TUPLE WITH #{player_name}")
     {:via, Registry, {Registry.PlayersServer, player_name}}
   end
 end
