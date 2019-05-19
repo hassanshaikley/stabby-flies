@@ -141,9 +141,9 @@ export class Game {
 
     this.viewport.moveCenter(player.x, player.y)
 
-    // const f = new OutlineFilter(3, 0x101010)
-    // f.padding = -1
-    // player.filters = [f]
+    const f = new OutlineFilter(3, 0x101010)
+    f.padding = -1
+    player.filters = [f]
 
     player.localPlayer = true
     this.localPlayer = player
@@ -157,11 +157,11 @@ export class Game {
   }
 
   setPlayerFilters() {
-    // const f = new OutlineFilter(3, 0xbb2222)
-    // f.padding = -1
-    // this.players.forEach(_player => {
-    //   !_player.localPlayer && (_player.filters = [f])
-    // })
+    const f = new OutlineFilter(3, 0xbb2222)
+    f.padding = -1
+    this.players.forEach(_player => {
+      !_player.localPlayer && (_player.filters = [f])
+    })
   }
 
   spritesLoaded(obj) {
@@ -187,15 +187,15 @@ export class Game {
       const y = Math.floor(Math.random() * 150) - 100
       cloud.x = x
       cloud.y = y
-      // const f = new OutlineFilter(3, 0x101010)
-      // f.padding = -1
-      // cloud.filters = [f]
+      const f = new OutlineFilter(3, 0x101010)
+      f.padding = -1
+      cloud.filters = [f]
 
       this.viewport.addChild(cloud)
     }
-    // const f = new OutlineFilter(5, 0x101010)
-    // f.padding = -1
-    // floor.filters = [f]
+    const f = new OutlineFilter(5, 0x101010)
+    f.padding = -1
+    floor.filters = [f]
 
     let rectangle = new PIXI.Graphics()
     // rectangle.beginFill(0x66CC00);
