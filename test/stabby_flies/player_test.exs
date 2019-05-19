@@ -24,7 +24,7 @@ defmodule StabbyFlies.PlayerTest do
   end
 
   test "take damage", %{player: player} do
-    player_state = Player.take_damage(player, 999)
+    Player.take_damage(player, 999)
     player_state = Player.state(player)
     assert player_state.hp == 0
   end
@@ -39,23 +39,26 @@ defmodule StabbyFlies.PlayerTest do
   end
 
   # Ok this test should use start_supervised! :()
-  test "spawns another player", %{player: player} do
-    player_two =
-      Player.start_link(
-        name: "xyz",
-        x: 15,
-        y: 10,
-        velx: 1,
-        vely: 1,
-        hp: 1,
-        max_hp: 1,
-        sword_rotation: 0
-      )
+  test "spawns another player" do
+    Player.start_link(
+      name: "xyz",
+      x: 15,
+      y: 10,
+      velx: 1,
+      vely: 1,
+      hp: 1,
+      max_hp: 1,
+      sword_rotation: 0
+    )
   end
 
   test "can_stab", %{player: player} do
-    # player_state = Player.state(player)
     assert Player.can_stab(player) == true
+  end
+
+  test "reset stab cooldown", %{player: player} do
+    Player.reset_stab_cooldown(player)
+    assert Player.can_stab(player) == false
   end
 
   # test "alive? function", %{player: player} do

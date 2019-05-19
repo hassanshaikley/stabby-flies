@@ -100,6 +100,7 @@ defmodule StabbyFlies.Player do
   def take_damage(pid, amount), do: GenServer.call(pid, {:take_damage, amount})
   def update_position(pid), do: GenServer.call(pid, :update_position)
   def can_stab(pid), do: GenServer.call(pid, :can_stab)
+  def reset_stab_cooldown(pid), do: GenServer.call(pid, :reset_stab_cooldown)
 
   # def player_can_stab(socket_id) do
 
@@ -114,6 +115,11 @@ defmodule StabbyFlies.Player do
     can_stab = Time.diff(now, last_stab_time, :milliseconds) >= stab_cooldown
     #   {player, can_stab}
     {:reply, can_stab, state}
+  end
+
+  def handle_call(:reset_stab_cooldown, _from, state) do
+    new_state = Map.merge(state, %{last_stab_time: Time.utc_now()})
+    {:reply, new_state, new_state}
   end
 
   def handle_call(:state, _from, %State{} = state) do
