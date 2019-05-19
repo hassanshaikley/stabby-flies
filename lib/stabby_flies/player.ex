@@ -1,8 +1,6 @@
 defmodule StabbyFlies.Player do
   use GenServer
 
-  alias __MODULE__
-
   defmodule State do
     defstruct ~w|name x y velx vely hp max_hp sword_rotation last_stab_time|a
   end
@@ -55,8 +53,8 @@ defmodule StabbyFlies.Player do
   def start_link(opts) do
     defaults = [
       name: "NAMELESS",
-      x: start_x,
-      y: start_y,
+      x: start_x(),
+      y: start_y(),
       velx: 0,
       vely: 0,
       hp: 1,
@@ -67,8 +65,8 @@ defmodule StabbyFlies.Player do
     init_fly = Keyword.merge(defaults, opts)
 
     name = Keyword.get(init_fly, :name)
-    # x = Keyword.get(init_fly, :x)
-    # y = Keyword.get(init_fly, :y)
+    x = Keyword.get(init_fly, :x)
+    y = Keyword.get(init_fly, :y)
     velx = Keyword.get(init_fly, :velx)
     vely = Keyword.get(init_fly, :vely)
     hp = Keyword.get(init_fly, :hp)
@@ -79,8 +77,8 @@ defmodule StabbyFlies.Player do
       __MODULE__,
       %State{
         name: name,
-        x: start_y,
-        y: start_y,
+        x: x,
+        y: y,
         hp: hp,
         velx: velx,
         vely: vely,
@@ -112,7 +110,7 @@ defmodule StabbyFlies.Player do
     stab_cooldown = 300
     now = Time.utc_now()
 
-    can_stab = Time.diff(now, last_stab_time, :milliseconds) >= stab_cooldown
+    can_stab = Time.diff(now, last_stab_time, :millisecond) >= stab_cooldown
     #   {player, can_stab}
     {:reply, can_stab, state}
   end
@@ -134,16 +132,14 @@ defmodule StabbyFlies.Player do
 
   def handle_call(:update_position, _from, %State{x: x, y: y, velx: velx, vely: vely} = state) do
     new_x = if x + velx < 0, do: 0, else: x + velx
-    new_x = if x + velx >= 3000, do: 3000, else: x + velx
+    new_x = if new_x + velx >= 3000, do: 3000, else: new_x + velx
 
     new_y = if y + vely < -100, do: -100, else: y + vely
-    new_y = if y + vely >= 270, do: 270, else: y + vely
+    new_y = if new_y + vely >= 270, do: 270, else: new_y + vely
 
     new_state = Map.merge(state, %{x: new_x, y: new_y})
     {:reply, new_state, new_state}
   end
-
-  # def handle_call(:can_stab) 
 
   defp start_y do
     Enum.random(-100..270)

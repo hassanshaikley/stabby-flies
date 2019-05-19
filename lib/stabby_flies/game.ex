@@ -335,7 +335,7 @@ defmodule StabbyFlies.Game do
     cooldown = 300
     now = Time.utc_now()
 
-    can_stab = Time.diff(now, player.last_stab, :milliseconds) >= cooldown
+    can_stab = Time.diff(now, player.last_stab, :millisecond) >= cooldown
     {player, can_stab}
   end
 

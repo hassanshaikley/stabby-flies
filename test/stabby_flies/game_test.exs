@@ -17,7 +17,7 @@ defmodule StabbyFlies.GameTest do
   #   end
 
   test "adds p" do
-    player_one = StabbyFlies.Game.add_player("player1", 1)
+    StabbyFlies.Game.add_player("player1", 1)
     assert StabbyFlies.Game.get_players() |> length == 1
   end
 
