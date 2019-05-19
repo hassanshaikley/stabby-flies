@@ -70,7 +70,6 @@ defmodule StabbyFliesWeb.RoomChannel do
 
   def handle_info(:after_join, socket) do
     IO.puts("After Join! Adding Player #{socket.id}")
-    IO.inspect(socket)
     new_player = Game.add_player("#{socket.assigns.nickname}", socket.id)
 
     broadcast(socket, "connect", %{new_player: new_player, players: Game.get_players()})

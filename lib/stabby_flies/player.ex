@@ -1,29 +1,81 @@
 defmodule StabbyFlies.Player do
-  defstruct name: "Poopsy", x: nil, y: nil, velx: 0, vely: 0, hp: nil
+  use GenServer
 
-  defguardp is_alive?(hp) when is_integer(hp) and hp > 0
+  alias __MODULE__
 
-  def alive?(%StabbyFlies.Player{hp: hp}) when is_alive?(hp), do: true
-  def alive?(%StabbyFlies.Player{}), do: false
-
-  def decrease_hp(%StabbyFlies.Player{hp: hp} = player, quantity) do
-    %{player | hp: hp - quantity}
+  defmodule State do
+    defstruct ~w|hp x y name|a
   end
 
-  def move_right(%StabbyFlies.Player{velx: velx, hp: hp} = player, quantity \\ 1) do
-    # when is_alive?(hp) do
-    %StabbyFlies.Player{player | velx: quantity}
+  # defstruct
+
+  # defguardp is_alive?(hp) when is_integer(hp) and hp > 0
+
+  # def alive?(%{hp: hp}) when is_alive?(hp), do: true
+  # def alive?(%{}), do: false
+
+  # def decrease_hp(%{hp: hp} = player, quantity) do
+  #   %{player | hp: hp - quantity}
+  # end
+
+  # def move_right(%{velx: velx, hp: hp} = player, quantity \\ 1) do
+  #   # when is_alive?(hp) do
+  #   %{player | velx: quantity}
+  # end
+
+  # def move_left(%{velx: velx, hp: hp} = player, quantity \\ 1) do
+  #   %{player | velx: -1 * quantity}
+  # end
+
+  # def move_up(%{vely: vely, hp: hp} = player, quantity \\ 1) do
+  #   %{player | vely: -1 * quantity}
+  # end
+
+  # def move_down(%{vely: vely, hp: hp} = player, quantity \\ 1) do
+  #   %{player | vely: 1 * quantity}
+  # end
+
+  ## ALL NEW SHIT
+
+  # def start_link(opts) do
+  #   # GenServer.start_link(__MODULE__, :ok, opts)
+  #   IO.inspect(opts, label: "__OPTS__")
+
+  #   GenServer.start_link(
+  #     __MODULE__,
+  #     %{name: "The Name", x: opts[:x], y: opts[:y], hp: opts[:hp], velx: 0, vely: 0},
+  #     opts
+  #   )
+  # end
+
+  # def init(thin) do
+  #   IO.inspect(thin)
+  # end
+
+  def start_link(opts) do
+    defaults = [
+      name: "NAMELESS",
+      x: 0,
+      y: 0,
+      velx: 0,
+      vely: 0
+    ]
+
+    init_fly = Keyword.merge(defaults, opts)
+
+    GenServer.start_link(__MODULE__, %State{name: "herp", x: 0, y: 0, hp: 10}, name: __MODULE__)
   end
 
-  def move_left(%StabbyFlies.Player{velx: velx, hp: hp} = player, quantity \\ 1) do
-    %StabbyFlies.Player{player | velx: -1 * quantity}
+  def init(init_arg) do
+    IO.inspect(init_arg, label: :init_arg)
+    {:ok, init_arg}
   end
 
-  def move_up(%StabbyFlies.Player{vely: vely, hp: hp} = player, quantity \\ 1) do
-    %StabbyFlies.Player{player | vely: -1 * quantity}
-  end
+  # def handle_call(:status, _from, %State{} = player) do
+  #   {:reply, player, player}
+  # end
 
-  def move_down(%StabbyFlies.Player{vely: vely, hp: hp} = player, quantity \\ 1) do
-    %StabbyFlies.Player{player | vely: 1 * quantity}
-  end
+  # def status(pid) do
+  #   GenServer.call(pid, :status)
+  # end
 end
