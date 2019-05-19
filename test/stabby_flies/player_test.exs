@@ -3,19 +3,21 @@ defmodule StabbyFlies.PlayerTest do
   alias StabbyFlies.Player
 
   setup do
-    # player = start_supervised!(Player, %{name: "John", x: 15, y: 10, velx: 0, vely: 0})
-    player = start_supervised!({Player, name: "Faa"})
+    # player = start_supervised!(Player, %{name: "John", })
+    player = start_supervised!({Player, name: "Faa", x: 15, y: 10, velx: 0, vely: 0, hp: 1})
 
     %{player: player}
   end
 
   test "initialization", %{player: player} do
     IO.inspect(player)
-    # assert player.name == "John"
-    # assert player.x == 15
-    # assert player.y == 10
-    # assert player.vely == 0
-    # assert player.velx == 0
+    player = Player.state()
+    assert player.name == "Faa"
+    assert player.x == 15
+    assert player.y == 10
+    assert player.vely == 0
+    assert player.velx == 0
+    assert player.hp == 1
   end
 
   # test "spawns players", %{player: player} do
