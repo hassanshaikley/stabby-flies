@@ -12,15 +12,21 @@ defmodule StabbyFlies.PlayerTest do
   end
 
   test "initialization", %{player: player} do
-    player = Player.state()
-    assert player.name == "Faa"
-    assert player.x == 15
-    assert player.y == 10
-    assert player.vely == 0
-    assert player.velx == 0
-    assert player.hp == 1
-    assert player.max_hp == 1
-    assert player.sword_rotation == 0
+    player_state = Player.state()
+    assert player_state.name == "Faa"
+    assert player_state.x == 15
+    assert player_state.y == 10
+    assert player_state.vely == 0
+    assert player_state.velx == 0
+    assert player_state.hp == 1
+    assert player_state.max_hp == 1
+    assert player_state.sword_rotation == 0
+  end
+
+  test "do damage", %{player: player} do
+    player_state = Player.take_damage(player, 999)
+    player_state = Player.state()
+    assert player_state.hp == 0
   end
 
   # test "spawns players", %{player: player} do

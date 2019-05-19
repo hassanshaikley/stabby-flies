@@ -101,6 +101,25 @@ defmodule StabbyFlies.Player do
     {:reply, state, state}
   end
 
+  # def state, do: GenServer.call(__MODULE__, :take_damage)
+  def take_damage(pid, amount) do
+    IO.puts("DO_DAMAGE")
+
+    GenServer.call(__MODULE__, {:take_damage, amount})
+    # cond do
+    #   hp + change <= 0 -> 0
+    #   hp + change >= max_hp -> max_hp
+    #   true -> hp + change
+    # end
+  end
+
+  def handle_call({:take_damage, amount}, _from, %State{hp: hp} = state) do
+    IO.puts("IN DO DAMAGE HANDLE ALL")
+    new_hp = if hp - amount < 0, do: 0, else: hp - amount
+    new_state = Map.merge(state, %{hp: new_hp})
+    {:reply, new_state, new_state}
+  end
+
   # def handle_call(:status, _from, %State{} = player) do
   #   {:reply, player, player}
   # end
