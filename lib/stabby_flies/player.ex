@@ -95,14 +95,13 @@ defmodule StabbyFlies.Player do
     {:ok, init_arg}
   end
 
-  def state, do: GenServer.call(__MODULE__, :state)
+  def state(pid), do: GenServer.call(__MODULE__, :state)
+  def take_damage(pid, amount), do: GenServer.call(__MODULE__, {:take_damage, amount})
+  def update_position(pid), do: GenServer.call(__MODULE__, :update_position)
 
   def handle_call(:state, _from, %State{} = state) do
     {:reply, state, state}
   end
-
-  # def state, do: GenServer.call(__MODULE__, :take_damage)
-  def take_damage(pid, amount), do: GenServer.call(__MODULE__, {:take_damage, amount})
 
   def handle_call({:take_damage, amount}, _from, %State{hp: hp} = state) do
     new_hp = if hp - amount < 0, do: 0, else: hp - amount
@@ -110,21 +109,32 @@ defmodule StabbyFlies.Player do
     {:reply, new_state, new_state}
   end
 
-  defp update_x(x, speed) do
-    cond do
-      x + speed < 0 -> 0
-      x + speed > 3000 -> 3000
-      true -> x + speed
-    end
+  def handle_call(:update_position, _from, %State{x: x, y: y, velx: velx, vely: vely} = state) do
+    new_x = if x + velx < 0, do: 0, else: x + velx
+    new_x = if x + velx >= 3000, do: 3000, else: x + velx
+
+    new_y = if y + vely < -100, do: -100, else: y + vely
+    new_y = if y + vely >= 270, do: 270, else: y + vely
+
+    new_state = Map.merge(state, %{x: new_x, y: new_y})
+    {:reply, new_state, new_state}
   end
 
-  defp update_y(y, speed) do
-    cond do
-      y + speed < -100 -> -100
-      y + speed > 270 -> 270
-      true -> y + speed
-    end
-  end
+  # defp update_x(x, speed) do
+  #   cond do
+  #     x + speed < 0 -> 0
+  #     x + speed > 3000 -> 3000
+  #     true -> x + speed
+  #   end
+  # end
+
+  # defp update_y(y, speed) do
+  #   cond do
+  #     y + speed < -100 -> -100
+  #     y + speed > 270 -> 270
+  #     true -> y + speed
+  #   end
+  # end
 
   defp start_y do
     Enum.random(-100..270)
