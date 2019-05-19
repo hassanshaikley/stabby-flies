@@ -102,9 +102,7 @@ defmodule StabbyFlies.Player do
   end
 
   # def state, do: GenServer.call(__MODULE__, :take_damage)
-  def take_damage(pid, amount) do
-    GenServer.call(__MODULE__, {:take_damage, amount})
-  end
+  def take_damage(pid, amount), do: GenServer.call(__MODULE__, {:take_damage, amount})
 
   def handle_call({:take_damage, amount}, _from, %State{hp: hp} = state) do
     new_hp = if hp - amount < 0, do: 0, else: hp - amount
@@ -112,13 +110,21 @@ defmodule StabbyFlies.Player do
     {:reply, new_state, new_state}
   end
 
-  # def handle_call(:status, _from, %State{} = player) do
-  #   {:reply, player, player}
-  # end
+  defp update_x(x, speed) do
+    cond do
+      x + speed < 0 -> 0
+      x + speed > 3000 -> 3000
+      true -> x + speed
+    end
+  end
 
-  # def status(pid) do
-  #   GenServer.call(pid, :status)
-  # end
+  defp update_y(y, speed) do
+    cond do
+      y + speed < -100 -> -100
+      y + speed > 270 -> 270
+      true -> y + speed
+    end
+  end
 
   defp start_y do
     Enum.random(-100..270)
