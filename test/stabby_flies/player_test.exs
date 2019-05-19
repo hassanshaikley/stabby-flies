@@ -14,8 +14,8 @@ defmodule StabbyFlies.PlayerTest do
   test "initialization", %{player: player} do
     player_state = Player.state()
     assert player_state.name == "Faa"
-    assert player_state.x == 15
-    assert player_state.y == 10
+    assert player_state.x != nil
+    assert player_state.y != nil
     assert player_state.vely == 0
     assert player_state.velx == 0
     assert player_state.hp == 1
