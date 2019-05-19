@@ -11,7 +11,9 @@ defmodule StabbyFlies.Application do
       # Start the Ecto repository
       StabbyFlies.Repo,
       # Start the endpoint when the application starts
-      StabbyFliesWeb.Endpoint
+      StabbyFliesWeb.Endpoint,
+      {Registry, [keys: :unique, name: Registry.PlayersServer]}
+
       # Starts a worker by calling: StabbyFlies.Worker.start_link(arg)
       # {StabbyFlies.Worker, arg},
     ]

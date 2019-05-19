@@ -53,6 +53,8 @@ defmodule StabbyFlies.Player do
   # end
 
   def start_link(opts) do
+    IO.puts("START LINK")
+
     defaults = [
       name: "NAMELESS",
       x: start_x,
@@ -87,7 +89,7 @@ defmodule StabbyFlies.Player do
         max_hp: max_hp,
         sword_rotation: sword_rotation
       },
-      name: __MODULE__
+      name: via_tuple(name)
     )
   end
 
@@ -95,9 +97,9 @@ defmodule StabbyFlies.Player do
     {:ok, init_arg}
   end
 
-  def state(pid), do: GenServer.call(__MODULE__, :state)
-  def take_damage(pid, amount), do: GenServer.call(__MODULE__, {:take_damage, amount})
-  def update_position(pid), do: GenServer.call(__MODULE__, :update_position)
+  def state(pid), do: GenServer.call(pid, :state)
+  def take_damage(pid, amount), do: GenServer.call(pid, {:take_damage, amount})
+  def update_position(pid), do: GenServer.call(pid, :update_position)
 
   def handle_call(:state, _from, %State{} = state) do
     {:reply, state, state}
@@ -120,27 +122,16 @@ defmodule StabbyFlies.Player do
     {:reply, new_state, new_state}
   end
 
-  # defp update_x(x, speed) do
-  #   cond do
-  #     x + speed < 0 -> 0
-  #     x + speed > 3000 -> 3000
-  #     true -> x + speed
-  #   end
-  # end
-
-  # defp update_y(y, speed) do
-  #   cond do
-  #     y + speed < -100 -> -100
-  #     y + speed > 270 -> 270
-  #     true -> y + speed
-  #   end
-  # end
-
   defp start_y do
     Enum.random(-100..270)
   end
 
   defp start_x do
     Enum.random(0..3000)
+  end
+
+  defp via_tuple(player_name) do
+    IO.puts("VIA TUPLE WITH #{player_name}")
+    {:via, Registry, {Registry.PlayersServer, player_name}}
   end
 end

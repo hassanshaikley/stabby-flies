@@ -1,5 +1,5 @@
 defmodule StabbyFlies.PlayerTest do
-  use ExUnit.Case, async: true
+  use ExUnit.Case, async: false
   alias StabbyFlies.Player
 
   setup do
@@ -38,10 +38,20 @@ defmodule StabbyFlies.PlayerTest do
     assert y != player_state.y
   end
 
-  # test "spawns players", %{player: player} do
-  #   status = Player.status(player) |> IO.inspect()
-  #   assert status != nil
-  # end
+  # Ok this test should use start_supervised! :()
+  test "spawns another player", %{player: player} do
+    player_two =
+      Player.start_link(
+        name: "xyz",
+        x: 15,
+        y: 10,
+        velx: 1,
+        vely: 1,
+        hp: 1,
+        max_hp: 1,
+        sword_rotation: 0
+      )
+  end
 
   # test "alive? function", %{player: player} do
   #   dead_player = %Player{name: "John", x: 15, y: 10, hp: 0}
