@@ -14,7 +14,7 @@ import Text from './text'
 var Viewport = require('pixi-viewport')
 
 export class Game {
-  constructor (props = {}) {
+  constructor(props = {}) {
     this.props = props
     this.display = undefined
     this.engine = undefined
@@ -93,12 +93,12 @@ export class Game {
       })
     }
 
-    PIXI.loader
+    PIXI.Loader.shared
       .add('images/spritesheet.json')
       .load(this.spritesLoaded.bind(this))
   }
 
-  playerIsHit (payload) {
+  playerIsHit(payload) {
     const { damage, socket_id } = payload
 
     const player = this.players.find(player => {
@@ -112,13 +112,13 @@ export class Game {
     player && player.takeDamage(damage)
   }
 
-  createExplosion (position) {
+  createExplosion(position) {
     const explosion = new Explosion(position)
     this.viewport.addChild(explosion)
     this.gameObjects.push(explosion)
   }
 
-  playerStabs (socket_id) {
+  playerStabs(socket_id) {
     const player = this.players.find(player => {
       return player.socket_id == socket_id
     })
@@ -126,7 +126,7 @@ export class Game {
     player && player.stab(this.players)
   }
 
-  setLocalPlayer (socket_id) {
+  setLocalPlayer(socket_id) {
     const player = this.players.find(player => {
       return player.socket_id == socket_id
     })
@@ -141,9 +141,9 @@ export class Game {
 
     this.viewport.moveCenter(player.x, player.y)
 
-    const f = new OutlineFilter(3, 0x101010)
-    f.padding = -1
-    player.filters = [f]
+    // const f = new OutlineFilter(3, 0x101010)
+    // f.padding = -1
+    // player.filters = [f]
 
     player.localPlayer = true
     this.localPlayer = player
@@ -156,23 +156,23 @@ export class Game {
     }, 500)
   }
 
-  setPlayerFilters () {
-    const f = new OutlineFilter(3, 0xbb2222)
-    f.padding = -1
-    this.players.forEach(_player => {
-      !_player.localPlayer && (_player.filters = [f])
-    })
+  setPlayerFilters() {
+    // const f = new OutlineFilter(3, 0xbb2222)
+    // f.padding = -1
+    // this.players.forEach(_player => {
+    //   !_player.localPlayer && (_player.filters = [f])
+    // })
   }
 
-  spritesLoaded (obj) {
-    const floor = new PIXI.extras.TilingSprite(
-      PIXI.Texture.fromImage('images/earthenfloor.png'),
+  spritesLoaded(obj) {
+    const floor = new PIXI.TilingSprite(
+      PIXI.Texture.from('images/earthenfloor.png'),
       5000,
       100
     )
 
-    // const bg = new PIXI.extras.TilingSprite(
-    //   PIXI.Textug.fromImage('bg.png'),
+    // const bg = new PIXI.TilingSprite(
+    //   PIXI.Textug.from('bg.png'),
     //   5000,
     //   600
     // )
@@ -181,22 +181,21 @@ export class Game {
     // this.viewport.addChild(bg)
 
     for (let i = 0; i < 10; i++) {
-      const cloud = new PIXI.Sprite(PIXI.Texture.fromImage('cloud.png'))
+      const cloud = new PIXI.Sprite(PIXI.Texture.from('cloud.png'))
 
       const x = Math.floor(Math.random() * 3000)
       const y = Math.floor(Math.random() * 150) - 100
       cloud.x = x
       cloud.y = y
-      const f = new OutlineFilter(3, 0x101010)
-      f.padding = -1
-      cloud.filters = [f]
+      // const f = new OutlineFilter(3, 0x101010)
+      // f.padding = -1
+      // cloud.filters = [f]
 
       this.viewport.addChild(cloud)
     }
-    const f = new OutlineFilter(5, 0x101010)
-    f.padding = -1
-    // f.
-    floor.filters = [f]
+    // const f = new OutlineFilter(5, 0x101010)
+    // f.padding = -1
+    // floor.filters = [f]
 
     let rectangle = new PIXI.Graphics()
     // rectangle.beginFill(0x66CC00);
@@ -215,7 +214,7 @@ export class Game {
     requestAnimationFrame(this.animate.bind(this))
   }
 
-  animate () {
+  animate() {
     this.gameObjects.forEach((gameObject, index) => {
       gameObject.update()
       // clean up
@@ -229,7 +228,7 @@ export class Game {
     requestAnimationFrame(this.animate.bind(this))
   }
 
-  updatePlayerCount () {
+  updatePlayerCount() {
     if (!localStorage.getItem('seen_tutorial')) {
       return
     }
@@ -248,7 +247,7 @@ export class Game {
     this.app.stage.addChild(this.playerCountText)
   }
 
-  addPlayer (obj) {
+  addPlayer(obj) {
     if (this.blurred) {
       document.title = '(1) Stabby Flies'
     }
@@ -273,20 +272,20 @@ export class Game {
 
     this.drawLocalPlayerAboveOthers()
   }
-  drawLocalPlayerAboveOthers () {
+  drawLocalPlayerAboveOthers() {
     if (!this.localPlayer) {
       return
     }
     this.viewport.removeChild(this.localPlayer)
     this.viewport.addChild(this.localPlayer)
   }
-  updatePlayer (obj) {
+  updatePlayer(obj) {
     const { socket_id, x, y, hp } = obj
     let player = this.players.find(player => player.socket_id == socket_id)
     player && player.updateVariables(obj, this.viewport)
   }
 
-  removePlayerById (socket_id) {
+  removePlayerById(socket_id) {
     const playerIndex = this.players.findIndex(
       player => player.socket_id == socket_id
     )
@@ -296,17 +295,17 @@ export class Game {
     this.updatePlayerCount()
   }
 
-  drawPlayer (player) {
+  drawPlayer(player) {
     this.viewport.addChild(player)
   }
 
-  topPlayer () {
+  topPlayer() {
     return this.players.sort((a, b) =>
       a.kill_count < b.kill_count ? 1 : -1
     )[0]
   }
 
-  updateScoreboard () {
+  updateScoreboard() {
     if (!this.scoreBoard) {
       this.scoreBoard = new PIXI.Container()
       this.app.stage.addChild(this.scoreBoard)
@@ -348,7 +347,7 @@ export class Game {
     bg.alpha = 0.5
   }
 
-  debugShape (obj) {
+  debugShape(obj) {
     const { shape } = obj
     switch (shape) {
       case 'circle':
@@ -363,7 +362,7 @@ export class Game {
     }
   }
 
-  introText () {
+  introText() {
     if (localStorage.getItem('seen_tutorial') === 'true') {
       return
     }

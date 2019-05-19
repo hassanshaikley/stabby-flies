@@ -2,7 +2,7 @@ import Player from './player'
 import { GlowFilter } from 'pixi-filters'
 
 export default class Fly extends Player {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.x = props.x
     this.y = props.y
@@ -17,13 +17,13 @@ export default class Fly extends Player {
 
     let textureArray = []
     for (let i = 1; i < 4; i++) {
-      let texture = PIXI.Texture.fromImage('fly_' + i + '.png')
+      let texture = PIXI.Texture.from('fly_' + i + '.png')
       textureArray.push(texture)
     }
-    this.fly_animation = new PIXI.extras.AnimatedSprite(textureArray)
+    this.fly_animation = new PIXI.AnimatedSprite(textureArray)
 
-    this.shield = new PIXI.Sprite(PIXI.Texture.fromImage('images/shield.png'))
-    this.sword = new PIXI.Sprite(PIXI.Texture.fromImage('images/sword.png'))
+    this.shield = new PIXI.Sprite(PIXI.Texture.from('images/shield.png'))
+    this.sword = new PIXI.Sprite(PIXI.Texture.from('images/sword.png'))
 
     this.shield.x -= 5
     this.shield.y -= 2
@@ -89,18 +89,18 @@ export default class Fly extends Player {
     window.last_added_fly = this
   }
 
-  __DEBUG__updateSwordHitbox () {
+  __DEBUG__updateSwordHitbox() {
     const x = Math.sin(this.sword.rotation) * 50
     const y = -Math.cos(this.sword.rotation) * 55
   }
 
-  rotateSword (newRotation) {
+  rotateSword(newRotation) {
     if (this.stabbing) return
     this.sword.rotation = newRotation
     this.__DEBUG__updateSwordHitbox()
   }
 
-  updateVariables (obj, viewport) {
+  updateVariables(obj, viewport) {
     if (this.localPlayer && this.hp < obj.hp && obj.hp === this.maxHp) {
       viewport.moveCenter(obj.x, obj.y)
     }
@@ -117,13 +117,13 @@ export default class Fly extends Player {
     }
   }
 
-  wearCrown () {
+  wearCrown() {
     let crownTextureArray = []
     for (let i = 0; i < 3; i++) {
-      let crownTexture = PIXI.Texture.fromImage('images/fly_crown' + i + '.png')
+      let crownTexture = PIXI.Texture.from('images/fly_crown' + i + '.png')
       crownTextureArray.push(crownTexture)
     }
-    this.crown = new PIXI.extras.AnimatedSprite(crownTextureArray)
+    this.crown = new PIXI.AnimatedSprite(crownTextureArray)
 
     this.crown.anchor.x = this.crown.anchor.y = 0.5
     this.crown.animationSpeed = 0.1
@@ -134,11 +134,11 @@ export default class Fly extends Player {
     this.addChild(this.crown)
     this.addChild(this.sword)
   }
-  removeCrown () {
+  removeCrown() {
     this.removeChild(this.crown)
   }
 
-  update () {
+  update() {
     const now = new Date().getTime()
 
     const delta = now - (this.lastMovementUpdateTime || now)
@@ -178,11 +178,11 @@ export default class Fly extends Player {
     this.lastMovementUpdateTime = new Date().getTime()
   }
 
-  updateHealthBar () {
+  updateHealthBar() {
     this.healthGreen.width = 50 * (this.hp / this.maxHp)
   }
 
-  takeDamage (amt) {
+  takeDamage(amt) {
     // console.log(amt, this.hp, this.maxHp)
     this.hp -= amt
     this.updateHealthBar()
@@ -191,7 +191,7 @@ export default class Fly extends Player {
     // this.healthGreen.x = (-25 * (this.hp / this.maxHp)) / 2
   }
 
-  stab (players) {
+  stab(players) {
     if (this.stabbing) return
     this.stabbing = true
 

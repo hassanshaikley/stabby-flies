@@ -1,9 +1,9 @@
 export default class Explosion extends PIXI.Container {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.props = props
     // const { container } = props
-    const texture = new PIXI.Texture.fromImage('images/particle.png')
+    const texture = new PIXI.Texture.from('images/particle.png')
 
     this.pieces = new Array(8).fill(0).map(piece => {
       return {
@@ -25,7 +25,7 @@ export default class Explosion extends PIXI.Container {
     // container.addChild(this)
   }
 
-  update () {
+  update() {
     const percentDone = (new Date() - this.spawnTime) / 100
 
     this.alpha = 1 / percentDone
