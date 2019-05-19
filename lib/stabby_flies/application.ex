@@ -12,7 +12,8 @@ defmodule StabbyFlies.Application do
       StabbyFlies.Repo,
       # Start the endpoint when the application starts
       StabbyFliesWeb.Endpoint,
-      {Registry, [keys: :unique, name: Registry.PlayersServer]}
+      {Registry, [keys: :unique, name: Registry.PlayersServer]},
+      {StabbyFlies.PlayerSupervisor, []}
 
       # Starts a worker by calling: StabbyFlies.Worker.start_link(arg)
       # {StabbyFlies.Worker, arg},

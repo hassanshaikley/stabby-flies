@@ -1,5 +1,5 @@
 defmodule StabbyFlies.PlayerTest do
-  use ExUnit.Case, async: false
+  use ExUnit.Case, async: true
   alias StabbyFlies.Player
 
   setup do
@@ -60,15 +60,4 @@ defmodule StabbyFlies.PlayerTest do
     Player.reset_stab_cooldown(player)
     assert Player.can_stab(player) == false
   end
-
-  # test "alive? function", %{player: player} do
-  #   dead_player = %Player{name: "John", x: 15, y: 10, hp: 0}
-
-  #   assert Player.alive?(player) == true
-  #   assert Player.alive?(dead_player) == false
-  # end
-
-  # test "decrease_hp function", %{player: player} do
-  #   assert Player.decrease_hp(player, 2).hp == 8
-  # end
 end
