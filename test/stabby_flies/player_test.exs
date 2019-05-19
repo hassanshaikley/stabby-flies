@@ -4,13 +4,14 @@ defmodule StabbyFlies.PlayerTest do
 
   setup do
     player =
-      start_supervised!({Player, name: "Faa", x: 15, y: 10, velx: 0, vely: 0, hp: 1, max_hp: 1})
+      start_supervised!(
+        {Player, name: "Faa", x: 15, y: 10, velx: 0, vely: 0, hp: 1, max_hp: 1, sword_rotation: 0}
+      )
 
     %{player: player}
   end
 
   test "initialization", %{player: player} do
-    IO.inspect(player)
     player = Player.state()
     assert player.name == "Faa"
     assert player.x == 15
@@ -19,6 +20,7 @@ defmodule StabbyFlies.PlayerTest do
     assert player.velx == 0
     assert player.hp == 1
     assert player.max_hp == 1
+    assert player.sword_rotation == 0
   end
 
   # test "spawns players", %{player: player} do

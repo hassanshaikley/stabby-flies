@@ -4,7 +4,7 @@ defmodule StabbyFlies.Player do
   alias __MODULE__
 
   defmodule State do
-    defstruct ~w|name x y velx vely hp max_hp|a
+    defstruct ~w|name x y velx vely hp max_hp sword_rotation|a
   end
 
   # defstruct
@@ -60,7 +60,8 @@ defmodule StabbyFlies.Player do
       velx: 0,
       vely: 0,
       hp: 1,
-      max_hp: 1
+      max_hp: 1,
+      sword_rotation: 0
     ]
 
     init_fly = Keyword.merge(defaults, opts)
@@ -72,6 +73,7 @@ defmodule StabbyFlies.Player do
     vely = Keyword.get(init_fly, :vely)
     hp = Keyword.get(init_fly, :hp)
     max_hp = Keyword.get(init_fly, :max_hp)
+    sword_rotation = Keyword.get(init_fly, :sword_rotation)
 
     GenServer.start_link(
       __MODULE__,
@@ -82,7 +84,8 @@ defmodule StabbyFlies.Player do
         hp: hp,
         velx: velx,
         vely: vely,
-        max_hp: max_hp
+        max_hp: max_hp,
+        sword_rotation: sword_rotation
       },
       name: __MODULE__
     )
