@@ -4,7 +4,7 @@ defmodule StabbyFlies.Player do
   alias __MODULE__
 
   defmodule State do
-    defstruct ~w|name x y velx vely hp|a
+    defstruct ~w|name x y velx vely hp max_hp|a
   end
 
   # defstruct
@@ -59,22 +59,19 @@ defmodule StabbyFlies.Player do
       y: 0,
       velx: 0,
       vely: 0,
-      hp: 1
+      hp: 1,
+      max_hp: 1
     ]
 
     init_fly = Keyword.merge(defaults, opts)
 
-    # GenServer.start_link(__MODULE__, %State{init_fly}, name: __MODULE__)
-    # GenServer.start_link(__MODULE__, %State{name: "herp", x: 0, y: 0, hp: 10}, name: __MODULE__)
     name = Keyword.get(init_fly, :name)
     x = Keyword.get(init_fly, :x)
     y = Keyword.get(init_fly, :y)
     velx = Keyword.get(init_fly, :velx)
     vely = Keyword.get(init_fly, :vely)
     hp = Keyword.get(init_fly, :hp)
-
-    IO.inspect(name)
-    IO.inspect(init_fly)
+    max_hp = Keyword.get(init_fly, :max_hp)
 
     GenServer.start_link(
       __MODULE__,
@@ -84,20 +81,19 @@ defmodule StabbyFlies.Player do
         y: y,
         hp: hp,
         velx: velx,
-        vely: vely
+        vely: vely,
+        max_hp: max_hp
       },
       name: __MODULE__
     )
   end
 
   def init(init_arg) do
-    IO.inspect(init_arg, label: :init_arg)
     {:ok, init_arg}
   end
 
   def state, do: GenServer.call(__MODULE__, :state)
 
-  @impl true
   def handle_call(:state, _from, %State{} = state) do
     {:reply, state, state}
   end

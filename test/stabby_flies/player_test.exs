@@ -3,8 +3,8 @@ defmodule StabbyFlies.PlayerTest do
   alias StabbyFlies.Player
 
   setup do
-    # player = start_supervised!(Player, %{name: "John", })
-    player = start_supervised!({Player, name: "Faa", x: 15, y: 10, velx: 0, vely: 0, hp: 1})
+    player =
+      start_supervised!({Player, name: "Faa", x: 15, y: 10, velx: 0, vely: 0, hp: 1, max_hp: 1})
 
     %{player: player}
   end
@@ -18,6 +18,7 @@ defmodule StabbyFlies.PlayerTest do
     assert player.vely == 0
     assert player.velx == 0
     assert player.hp == 1
+    assert player.max_hp == 1
   end
 
   # test "spawns players", %{player: player} do
