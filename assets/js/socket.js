@@ -130,37 +130,33 @@ const setupKeys = channel => {
     const { key } = event
 
     if (keypresses[key]) return
+    keypresses[key] = true
+    channel.push('move', {
+      moving: {
+        left: keypresses["a"],
+        right: keypresses["d"],
+        up: keypresses["w"],
+        down: keypresses["s"]
+      }
+    })
 
-    switch (key) {
-      case 'd':
-        keypresses['d'] = true
-        channel.push('move', {
-          direction: 'right',
-          down
-        })
-        break
-      case 'a':
-        keypresses['a'] = true
-        channel.push('move', {
-          direction: 'left',
-          down
-        })
-        break
-      case 'w':
-        keypresses['w'] = true
-        channel.push('move', {
-          direction: 'up',
-          down
-        })
-        break
-      case 's':
-        keypresses['s'] = true
-        channel.push('move', {
-          direction: 'down',
-          down
-        })
-        break
-    }
+    // switch (key) {
+    //   case 'd':
+    //     keypresses['d'] = true
+
+    //     break
+    //   case 'a':
+    //     keypresses['a'] = true
+
+    //     break
+    //   case 'w':
+    //     keypresses['w'] = true
+    //     break
+    //   case 's':
+    //     keypresses['s'] = true
+
+    //     break
+    // }
 
     // event.preventDefault()
     // event.stopPropagation()
@@ -170,36 +166,31 @@ const setupKeys = channel => {
     const down = false
 
     const { key } = event
-    if (keypresses[key]) {
-      keypresses[key] = false
-    }
+    keypresses[key] = false
 
-    switch (event.key) {
-      case 'd':
-        channel.push('move', {
-          direction: 'right',
-          down
-        })
-        break
-      case 'a':
-        channel.push('move', {
-          direction: 'left',
-          down
-        })
-        break
-      case 'w':
-        channel.push('move', {
-          direction: 'up',
-          down
-        })
-        break
-      case 's':
-        channel.push('move', {
-          direction: 'down',
-          down
-        })
-        break
-    }
+    channel.push('move', {
+      moving: {
+        left: keypresses["a"],
+        right: keypresses["d"],
+        up: keypresses["w"],
+        down: keypresses["s"]
+      }
+    })
+
+    // switch (event.key) {
+    //   case 'd':
+    //     keypresses['d'] = false
+    //     break
+    //   case 'a':
+    //     keypresses['a'] = false
+    //     break
+    //   case 'w':
+    //     keypresses['w'] = false
+    //     break
+    //   case 's':
+    //     keypresses['s'] = false
+    //     break
+    // }
 
     // event.preventDefault()
     // event.stopPropagation()
@@ -233,6 +224,9 @@ const setupKeys = channel => {
 
   setInterval(() => {
     const refresh = window.last_keypresses.a != keypresses.a || window.last_keypresses.d != keypresses.d || window.last_keypresses.w != keypresses.w || window.last_keypresses.s != keypresses.s
+    console.log(window.last_keypresses)
+    console.log(keypresses)
+    console.log(refresh)
     if (refresh) {
       channel.push('move', {
         moving: {
@@ -243,10 +237,22 @@ const setupKeys = channel => {
         }
       })
     }
+    window.last_keypresses = JSON.parse(JSON.stringify(keypresses))
+
 
   }, 500)
   window.onblur = function () {
     game.blurred = true
+
+    // channel.push('move', {
+    //   moving: {
+    //     left: false,
+    //     right: false,
+    //     up: false,
+    //     down: false
+    //   }
+    // })
+
     Object.keys(keypresses).forEach(key => {
       if (keypresses[key]) {
         let direction
