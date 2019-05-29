@@ -14,10 +14,14 @@ defmodule StabbyFlies.PlayerSupervisorTest do
   test "initialization" do
     PlayerSupervisor.create_player(name: "Farticus")
     PlayerSupervisor.create_player(name: "Farticus-Duex")
+    assert PlayerSupervisor.players() |> length == 2
   end
 
   test "deletion" do
     PlayerSupervisor.create_player(name: "Farticus")
+
     PlayerSupervisor.delete_player("Farticus")
+
+    assert PlayerSupervisor.players() |> length == 0
   end
 end

@@ -10,6 +10,20 @@ defmodule StabbyFlies.PlayerSupervisor do
     DynamicSupervisor.init(strategy: :one_for_one)
   end
 
+  def player_pids do
+    DynamicSupervisor.which_children(__MODULE__)
+    |> Enum.map(fn {:undefined, pid, :worker, _module} ->
+      pid
+    end)
+  end
+
+  def players do
+    player_pids
+    |> Enum.map(fn pid ->
+      Player.state(pid)
+    end)
+  end
+
   def create_player(player_options) do
     spec = Player.child_spec(player_options)
 
@@ -25,6 +39,13 @@ defmodule StabbyFlies.PlayerSupervisor do
   end
 
   def delete_player(name) do
-    Player.stop(name)
+    index =
+      players
+      |> Enum.find_index(fn player ->
+        player.name == name
+      end)
+
+    pid = Enum.at(player_pids, index)
+    DynamicSupervisor.terminate_child(__MODULE__, pid)
   end
 end
