@@ -2,7 +2,7 @@ defmodule StabbyFlies.Player do
   use GenServer
 
   defmodule State do
-    defstruct ~w|name x y velx vely hp max_hp sword_rotation last_stab_time kill_count|a
+    defstruct ~w|name x y movingPlayerSupervisor hp max_hp sword_rotation last_stab_time kill_count|a
   end
 
   # defguardp is_alive?(hp) when is_integer(hp) and hp > 0
@@ -40,7 +40,13 @@ defmodule StabbyFlies.Player do
       vely: 0,
       hp: 1,
       max_hp: 1,
-      sword_rotation: 0
+      sword_rotation: 0,
+      moving: %{
+        left: false,
+        right: false,
+        up: false,
+        down: false
+      }
     ]
 
     init_fly = Keyword.merge(defaults, opts)
@@ -61,8 +67,6 @@ defmodule StabbyFlies.Player do
         x: x,
         y: y,
         hp: hp,
-        velx: velx,
-        vely: vely,
         max_hp: max_hp,
         sword_rotation: sword_rotation,
         last_stab_time: Time.add(Time.utc_now(), -1),
@@ -80,6 +84,7 @@ defmodule StabbyFlies.Player do
   def reset_stab_cooldown(pid), do: GenServer.call(pid, :reset_stab_cooldown)
   def respawn(pid), do: GenServer.call(pid, :respawn)
   def increment_kill_count(pid), do: GenServer.call(pid, :increment_kill_count)
+  def update_moving(pid, moving), do: GenServer.call(pid, {:update_moving, moving})
   # def stop(pid), do: GenServer.stop(via_tuple(pid))
 
   def handle_call(:can_stab, _from, %State{last_stab_time: last_stab_time} = state) do
@@ -125,7 +130,7 @@ defmodule StabbyFlies.Player do
     {:reply, new_state, new_state}
   end
 
-  def handle_call(:update_position, _from, %State{x: x, y: y, velx: velx, vely: vely} = state) do
+  def handle_call(:update_position, _from, %State{x: x, y: y} = state) do
     new_x = if x + velx < 0, do: 0, else: x + velx
     new_x = if new_x + velx >= 3000, do: 3000, else: new_x + velx
 
@@ -136,12 +141,26 @@ defmodule StabbyFlies.Player do
     {:reply, new_state, new_state}
   end
 
+  def handle_call({:update_moving, moving}, _from, state) do
+    new_state = Map.merge(state, %{moving: moving})
+
+    {:reply, new_state, new_state}
+  end
+
   defp start_y do
     Enum.random(-100..270)
   end
 
   defp start_x do
     Enum.random(0..3000)
+  end
+
+  defp velx do
+    0
+  end
+
+  defp vely do
+    0
   end
 
   defp via_tuple(player_name) do

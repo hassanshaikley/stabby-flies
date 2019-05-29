@@ -1,11 +1,9 @@
 defmodule StabbyFlies.GameNew do
   """
-  Interface between the world and the game
+  Interface between the controller and the game
   """
 
   alias StabbyFlies.PlayerSupervisor
-
-  # Join Lobby
 
   def join_lobby() do
   end
@@ -25,11 +23,8 @@ defmodule StabbyFlies.GameNew do
   def stab(player_name) do
   end
 
-  def move(player_name) do
+  def set_player_moving(player_name, moving) do
   end
 
-  # Move
-
   # Update 
-  ### Note: Move to PubSub but for now keep here
 end

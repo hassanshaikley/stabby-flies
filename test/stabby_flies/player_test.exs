@@ -4,9 +4,7 @@ defmodule StabbyFlies.PlayerTest do
 
   setup do
     player =
-      start_supervised!(
-        {Player, name: "Faa", x: 15, y: 10, velx: 1, vely: 1, hp: 1, max_hp: 1, sword_rotation: 0}
-      )
+      start_supervised!({Player, name: "Faa", x: 15, y: 10, hp: 1, max_hp: 1, sword_rotation: 0})
 
     %{player: player}
   end
@@ -16,8 +14,6 @@ defmodule StabbyFlies.PlayerTest do
     assert player_state.name == "Faa"
     assert player_state.x != nil
     assert player_state.y != nil
-    assert player_state.vely == 1
-    assert player_state.velx == 1
     assert player_state.hp == 1
     assert player_state.max_hp == 1
     assert player_state.sword_rotation == 0
@@ -59,5 +55,18 @@ defmodule StabbyFlies.PlayerTest do
     Player.increment_kill_count(player)
     player_state = Player.state(player)
     assert old_kill_count + 1 == player_state.kill_count
+  end
+
+  test "update moving", %{player: player} do
+    new_moving = %{
+      left: true,
+      right: true,
+      up: false,
+      down: false
+    }
+
+    Player.update_moving(player, new_moving)
+    player_state = Player.state(player)
+    assert player_state.moving == new_moving
   end
 end
