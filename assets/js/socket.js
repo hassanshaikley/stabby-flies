@@ -238,7 +238,7 @@ const setupKeys = channel => {
       }
     })
 
-  }, 25)
+  }, 500)
   window.onblur = function () {
     game.blurred = true
     Object.keys(keypresses).forEach(key => {

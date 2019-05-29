@@ -42,7 +42,7 @@ defmodule StabbyFlies.Player do
         sword_rotation: 0,
         last_stab_time: Time.add(Time.utc_now(), -1),
         kill_count: 0,
-        speed: 20,
+        speed: 10,
         damage: 5,
         moving: %{
           left: false,
@@ -126,7 +126,11 @@ defmodule StabbyFlies.Player do
   #   {:reply, new_state, new_state}
   # end
 
-  def handle_call(:update, _from, %State{x: x, y: y, moving: moving, speed: speed} = state) do
+  def handle_call(
+        :update,
+        _from,
+        %State{x: x, y: y, moving: moving, speed: speed, sword_rotation: sword_rotation} = state
+      ) do
     vel_x_ = velx(moving, speed)
     vel_y_ = vely(moving, speed)
 
@@ -136,11 +140,16 @@ defmodule StabbyFlies.Player do
     new_y = if y + vel_y_ < -100, do: -100, else: y + vel_y_
     new_y = if new_y + vel_y_ >= 270, do: 270, else: new_y + vel_y_
 
-    sword_rotation = :math.atan2(vel_x_, -vel_y_)
+    case vel_x_ == 0 and vel_y_ == 0 do
+      false ->
+        {:reply,
+         Map.merge(state, %{x: new_x, y: new_y, sword_rotation: :math.atan2(vel_x_, -vel_y_)}),
+         Map.merge(state, %{x: new_x, y: new_y, sword_rotation: :math.atan2(vel_x_, -vel_y_)})}
 
-    new_state = Map.merge(state, %{x: new_x, y: new_y, sword_rotation: sword_rotation})
-
-    {:reply, new_state, new_state}
+      _ ->
+        {:reply, Map.merge(state, %{x: new_x, y: new_y, sword_rotation: sword_rotation}),
+         Map.merge(state, %{x: new_x, y: new_y, sword_rotation: sword_rotation})}
+    end
   end
 
   def handle_call({:update_moving, moving}, _from, state) do
