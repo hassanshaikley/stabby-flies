@@ -2,14 +2,10 @@ defmodule StabbyFlies.PlayerSupervisorTest do
   use ExUnit.Case, async: false
   alias StabbyFlies.PlayerSupervisor
 
-  #   setup do
-  #     player =
-  #       start_supervised!(
-  #         {Player, name: "Faa", x: 15, y: 10, velx: 1, vely: 1, hp: 1, max_hp: 1, sword_rotation: 0}
-  #       )
-
-  #     %{player: player}
-  #   end
+  setup do
+    reset
+    []
+  end
 
   test "initialization" do
     PlayerSupervisor.create_player(name: "Farticus")
@@ -18,10 +14,13 @@ defmodule StabbyFlies.PlayerSupervisorTest do
   end
 
   test "deletion" do
-    PlayerSupervisor.create_player(name: "Farticus")
-
-    PlayerSupervisor.delete_player("Farticus")
+    PlayerSupervisor.create_player(name: "Farticus-Prime")
+    PlayerSupervisor.delete_player("Farticus-Prime")
 
     assert PlayerSupervisor.players() |> length == 0
+  end
+
+  defp reset do
+    PlayerSupervisor.reset()
   end
 end

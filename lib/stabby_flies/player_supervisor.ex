@@ -48,4 +48,11 @@ defmodule StabbyFlies.PlayerSupervisor do
     pid = Enum.at(player_pids, index)
     DynamicSupervisor.terminate_child(__MODULE__, pid)
   end
+
+  def reset do
+    player_pids
+    |> Enum.map(fn pid ->
+      DynamicSupervisor.terminate_child(__MODULE__, pid)
+    end)
+  end
 end
