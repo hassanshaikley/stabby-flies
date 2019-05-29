@@ -1,7 +1,12 @@
 import { Socket } from 'phoenix'
 import { Game } from './game'
 
-const keypresses = {}
+const keypresses = {
+  a: false,
+  d: false,
+  w: false,
+  s: false
+}
 
 let game = new Game()
 
@@ -223,9 +228,18 @@ const setupKeys = channel => {
     event.stopPropagation()
   }
 
-  // setInterval(() => {
-  //   console.log(keypresses)
-  // }, 500)
+  setInterval(() => {
+    console.log(keypresses)
+    channel.push('move', {
+      moving: {
+        left: keypresses["a"],
+        right: keypresses["d"],
+        up: keypresses["w"],
+        down: keypresses["s"]
+      }
+    })
+
+  }, 500)
   window.onblur = function () {
     game.blurred = true
     Object.keys(keypresses).forEach(key => {

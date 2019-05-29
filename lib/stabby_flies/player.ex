@@ -2,34 +2,8 @@ defmodule StabbyFlies.Player do
   use GenServer
 
   defmodule State do
-    defstruct ~w|name x y movingPlayerSupervisor hp max_hp sword_rotation last_stab_time kill_count|a
+    defstruct ~w|name x y movingPlayerSupervisor hp max_hp sword_rotation last_stab_time kill_count speed damage|a
   end
-
-  # defguardp is_alive?(hp) when is_integer(hp) and hp > 0
-
-  # def alive?(%{hp: hp}) when is_alive?(hp), do: true
-  # def alive?(%{}), do: false
-
-  # def decrease_hp(%{hp: hp} = player, quantity) do
-  #   %{player | hp: hp - quantity}
-  # end
-
-  # def move_right(%{velx: velx, hp: hp} = player, quantity \\ 1) do
-  #   # when is_alive?(hp) do
-  #   %{player | velx: quantity}
-  # end
-
-  # def move_left(%{velx: velx, hp: hp} = player, quantity \\ 1) do
-  #   %{player | velx: -1 * quantity}
-  # end
-
-  # def move_up(%{vely: vely, hp: hp} = player, quantity \\ 1) do
-  #   %{player | vely: -1 * quantity}
-  # end
-
-  # def move_down(%{vely: vely, hp: hp} = player, quantity \\ 1) do
-  #   %{player | vely: 1 * quantity}
-  # end
 
   def start_link(opts) do
     defaults = [
@@ -58,7 +32,7 @@ defmodule StabbyFlies.Player do
     vely = Keyword.get(init_fly, :vely)
     hp = Keyword.get(init_fly, :hp)
     max_hp = Keyword.get(init_fly, :max_hp)
-    sword_rotation = Keyword.get(init_fly, :sword_rotation)
+    # sword_rotation = Keyword.get(init_fly, :sword_rotation)
 
     GenServer.start_link(
       __MODULE__,
@@ -68,9 +42,11 @@ defmodule StabbyFlies.Player do
         y: y,
         hp: hp,
         max_hp: max_hp,
-        sword_rotation: sword_rotation,
+        sword_rotation: 0,
         last_stab_time: Time.add(Time.utc_now(), -1),
-        kill_count: 0
+        kill_count: 0,
+        speed: 20 * 10,
+        damage: 5
       },
       name: via_tuple(name)
     )
@@ -85,7 +61,6 @@ defmodule StabbyFlies.Player do
   def respawn(pid), do: GenServer.call(pid, :respawn)
   def increment_kill_count(pid), do: GenServer.call(pid, :increment_kill_count)
   def update_moving(pid, moving), do: GenServer.call(pid, {:update_moving, moving})
-  # def stop(pid), do: GenServer.stop(via_tuple(pid))
 
   def handle_call(:can_stab, _from, %State{last_stab_time: last_stab_time} = state) do
     stab_cooldown = 300

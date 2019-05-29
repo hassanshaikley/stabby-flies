@@ -24,6 +24,13 @@ defmodule StabbyFlies.PlayerSupervisor do
     end)
   end
 
+  def player_state(name) do
+    players
+    |> Enum.find(fn player ->
+      player.name == name
+    end)
+  end
+
   def create_player(player_options) do
     spec = Player.child_spec(player_options)
 

@@ -25,14 +25,14 @@ defmodule StabbyFlies.PlayerTest do
     assert player_state.hp == 0
   end
 
-  test "updates position based on velocity", %{player: player} do
-    %{x: x, y: y} = Player.state(player)
+  # test "updates position based on moving", %{player: player} do
+  #   %{x: x, y: y} = Player.state(player)
 
-    Player.update_position(player)
-    player_state = Player.state(player)
-    assert x != player_state.x
-    assert y != player_state.y
-  end
+  #   Player.update_position(player)
+  #   player_state = Player.state(player)
+  #   assert x != player_state.x
+  #   assert y != player_state.y
+  # end
 
   test "can_stab", %{player: player} do
     assert Player.can_stab(player) == true
