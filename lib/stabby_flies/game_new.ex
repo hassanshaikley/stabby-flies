@@ -43,4 +43,8 @@ defmodule StabbyFlies.GameNew do
   def player_state(id) do
     PlayerSupervisor.player_state(id)
   end
+
+  def player_stabs(id) do
+    PlayerSupervisor.player_stabs(id)
+  end
 end

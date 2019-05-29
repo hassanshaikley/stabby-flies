@@ -7,6 +7,8 @@ const keypresses = {
   w: false,
   s: false
 }
+window.last_keypresses = JSON.parse(JSON.stringify(keypresses))
+
 
 let game = new Game()
 
@@ -66,6 +68,7 @@ const setupGameChannel = channel => {
 
   channel.on('stab', function (payload) {
     const { socket_id, hit_players_data } = payload
+    console.log("A palyer srtabs..", socket_id)
     game.playerStabs(socket_id)
     hit_players_data.forEach(obj => {
       game.playerIsHit(obj)
@@ -229,7 +232,7 @@ const setupKeys = channel => {
   }
 
   setInterval(() => {
-    const refresh = window.last_keypresses && (window.last_keypresses.a != keypresses.a || window.last_keypresses.d != keypresses.d || window.last_keypresses.w != keypresses.w || window.last_keypresses.s != keypresses.s)
+    const refresh = window.last_keypresses.a != keypresses.a || window.last_keypresses.d != keypresses.d || window.last_keypresses.w != keypresses.w || window.last_keypresses.s != keypresses.s
     if (refresh) {
       channel.push('move', {
         moving: {
@@ -241,7 +244,6 @@ const setupKeys = channel => {
       })
     }
 
-    window.last_keypresses = JSON.parse(JSON.stringify(keypresses))
   }, 500)
   window.onblur = function () {
     game.blurred = true
