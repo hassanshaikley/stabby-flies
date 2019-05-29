@@ -77,6 +77,7 @@ defmodule StabbyFlies.Player do
   def update_position(pid), do: GenServer.call(pid, :update_position)
   def can_stab(pid), do: GenServer.call(pid, :can_stab)
   def reset_stab_cooldown(pid), do: GenServer.call(pid, :reset_stab_cooldown)
+  def stop(pid), do: GenServer.stop(via_tuple(pid))
 
   def handle_call(:can_stab, _from, %State{last_stab_time: last_stab_time} = state) do
     stab_cooldown = 300
@@ -120,7 +121,7 @@ defmodule StabbyFlies.Player do
     Enum.random(0..3000)
   end
 
-  def via_tuple(player_name) do
+  defp via_tuple(player_name) do
     {:via, Registry, {Registry.PlayersServer, player_name}}
   end
 end

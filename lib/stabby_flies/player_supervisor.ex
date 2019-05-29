@@ -24,7 +24,7 @@ defmodule StabbyFlies.PlayerSupervisor do
     end
   end
 
-  def delete_player(player_name) do
-    GenServer.stop(Player.via_tuple(player_name))
+  def delete_player(name) do
+    Player.stop(name)
   end
 end
