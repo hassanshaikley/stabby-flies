@@ -53,4 +53,11 @@ defmodule StabbyFlies.PlayerTest do
     player_state = Player.state(player)
     assert player_state.hp == player_state.max_hp
   end
+
+  test "increment kill count", %{player: player} do
+    old_kill_count = Player.state(player).kill_count
+    Player.increment_kill_count(player)
+    player_state = Player.state(player)
+    assert old_kill_count + 1 == player_state.kill_count
+  end
 end

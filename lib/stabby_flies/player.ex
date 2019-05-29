@@ -2,7 +2,7 @@ defmodule StabbyFlies.Player do
   use GenServer
 
   defmodule State do
-    defstruct ~w|name x y velx vely hp max_hp sword_rotation last_stab_time|a
+    defstruct ~w|name x y velx vely hp max_hp sword_rotation last_stab_time kill_count|a
   end
 
   # defguardp is_alive?(hp) when is_integer(hp) and hp > 0
@@ -65,7 +65,8 @@ defmodule StabbyFlies.Player do
         vely: vely,
         max_hp: max_hp,
         sword_rotation: sword_rotation,
-        last_stab_time: Time.add(Time.utc_now(), -1)
+        last_stab_time: Time.add(Time.utc_now(), -1),
+        kill_count: 0
       },
       name: via_tuple(name)
     )
@@ -78,6 +79,7 @@ defmodule StabbyFlies.Player do
   def can_stab(pid), do: GenServer.call(pid, :can_stab)
   def reset_stab_cooldown(pid), do: GenServer.call(pid, :reset_stab_cooldown)
   def respawn(pid), do: GenServer.call(pid, :respawn)
+  def increment_kill_count(pid), do: GenServer.call(pid, :increment_kill_count)
   # def stop(pid), do: GenServer.stop(via_tuple(pid))
 
   def handle_call(:can_stab, _from, %State{last_stab_time: last_stab_time} = state) do
@@ -95,7 +97,21 @@ defmodule StabbyFlies.Player do
 
   def handle_call(:respawn, _from, state) do
     max_hp = state.max_hp
-    new_state = Map.merge(state, %{hp: max_hp, x: start_x, y: start_y})
+
+    new_state =
+      Map.merge(state, %{
+        hp: max_hp,
+        x: start_x,
+        y: start_y,
+        last_stab_time: Time.add(Time.utc_now(), -1),
+        kill_count: 0
+      })
+
+    {:reply, new_state, new_state}
+  end
+
+  def handle_call(:increment_kill_count, _from, state) do
+    new_state = Map.merge(state, %{kill_count: state.kill_count + 1})
     {:reply, new_state, new_state}
   end
 
