@@ -38,20 +38,6 @@ defmodule StabbyFlies.PlayerTest do
     assert y != player_state.y
   end
 
-  # Ok this test should use start_supervised! :()
-  test "spawns another player" do
-    Player.start_link(
-      name: "xyz",
-      x: 15,
-      y: 10,
-      velx: 1,
-      vely: 1,
-      hp: 1,
-      max_hp: 1,
-      sword_rotation: 0
-    )
-  end
-
   test "can_stab", %{player: player} do
     assert Player.can_stab(player) == true
   end

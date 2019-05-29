@@ -120,7 +120,7 @@ defmodule StabbyFlies.Player do
     Enum.random(0..3000)
   end
 
-  defp via_tuple(player_name) do
+  def via_tuple(player_name) do
     {:via, Registry, {Registry.PlayersServer, player_name}}
   end
 end

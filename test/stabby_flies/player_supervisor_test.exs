@@ -15,4 +15,9 @@ defmodule StabbyFlies.PlayerSupervisorTest do
     PlayerSupervisor.create_player(name: "Farticus")
     PlayerSupervisor.create_player(name: "Farticus-Duex")
   end
+
+  test "deletion" do
+    PlayerSupervisor.create_player(name: "Farticus")
+    PlayerSupervisor.delete_player("Farticus")
+  end
 end

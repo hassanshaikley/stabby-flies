@@ -23,4 +23,8 @@ defmodule StabbyFlies.PlayerSupervisor do
         {:error, error_message}
     end
   end
+
+  def delete_player(player_name) do
+    GenServer.stop(Player.via_tuple(player_name))
+  end
 end
