@@ -9,8 +9,10 @@ defmodule StabbyFlies.PlayerSupervisorTest do
 
   test "initialization" do
     PlayerSupervisor.create_player(name: "Farticus")
-    PlayerSupervisor.create_player(name: "Farticus-Duex")
+    player_two = PlayerSupervisor.create_player(name: "Farticus-Duex")
+
     assert PlayerSupervisor.players() |> length == 2
+    assert PlayerSupervisor.players() |> Enum.at(1) |> Map.get(:name) == player_two |> elem(1)
   end
 
   test "deletion" do
