@@ -3,7 +3,7 @@ defmodule StabbyFlies.GameNew do
   Interface between the controller and the game
   """
 
-  alias StabbyFlies.PlayerSupervisor
+  alias StabbyFlies.{PlayerSupervisor, Player}
 
   def join_lobby() do
   end
@@ -24,7 +24,6 @@ defmodule StabbyFlies.GameNew do
   end
 
   def set_player_moving(player_name, moving) do
+    Player.update_moving(player_name, moving)
   end
-
-  # Update 
 end

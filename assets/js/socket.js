@@ -223,6 +223,9 @@ const setupKeys = channel => {
     event.stopPropagation()
   }
 
+  // setInterval(() => {
+  //   console.log(keypresses)
+  // }, 500)
   window.onblur = function () {
     game.blurred = true
     Object.keys(keypresses).forEach(key => {
