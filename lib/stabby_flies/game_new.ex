@@ -5,6 +5,19 @@ defmodule StabbyFlies.GameNew do
 
   alias StabbyFlies.{PlayerSupervisor, Player}
 
+  def loop do
+    IO.puts("Loop")
+
+    get_players
+    |> Enum.each(fn player ->
+      player = Player.update(player)
+      IO.inspect(player, label: :update_player)
+      StabbyFliesWeb.Endpoint.broadcast("room:game", "update_player", player)
+    end)
+
+    :timer.apply_after(50, __MODULE__, :loop, [])
+  end
+
   def join_lobby(id) do
     IO.puts("Socket #{id} Joined Lobby")
   end
@@ -31,7 +44,7 @@ defmodule StabbyFlies.GameNew do
   def set_player_moving(id, moving) do
     IO.puts("Socket #{id} Moving:")
 
-    Player.update_moving(id, moving)
+    PlayerSupervisor.update_moving(id, moving)
   end
 
   def player_state(id) do

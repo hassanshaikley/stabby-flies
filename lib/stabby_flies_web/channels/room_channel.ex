@@ -33,8 +33,7 @@ defmodule StabbyFliesWeb.RoomChannel do
   end
 
   def handle_in("move", %{"moving" => moving}, socket) do
-    if moving != nil,
-      do: GameNew.set_player_moving(socket.assigns.unique_id, moving)
+    GameNew.set_player_moving(socket.assigns.unique_id, moving)
 
     # if payload["direction"] != nil,
     #   do: Game.set_player_moving(socket.id, String.to_atom(payload["direction"]), payload["down"])

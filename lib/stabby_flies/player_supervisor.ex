@@ -62,4 +62,16 @@ defmodule StabbyFlies.PlayerSupervisor do
       DynamicSupervisor.terminate_child(__MODULE__, pid)
     end)
   end
+
+  def update_moving(name, moving) do
+    index =
+      players
+      |> Enum.find_index(fn player ->
+        player.name == name
+      end)
+
+    pid = Enum.at(player_pids, index)
+
+    Player.update_moving(pid, moving)
+  end
 end

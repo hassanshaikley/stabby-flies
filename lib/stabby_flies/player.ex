@@ -2,7 +2,7 @@ defmodule StabbyFlies.Player do
   use GenServer
 
   defmodule State do
-    defstruct ~w|name x y movingPlayerSupervisor hp max_hp sword_rotation last_stab_time kill_count speed damage|a
+    defstruct ~w|name x y moving hp max_hp sword_rotation last_stab_time kill_count speed damage|a
   end
 
   def start_link(opts) do
@@ -14,13 +14,7 @@ defmodule StabbyFlies.Player do
       vely: 0,
       hp: 1,
       max_hp: 1,
-      sword_rotation: 0,
-      moving: %{
-        left: false,
-        right: false,
-        up: false,
-        down: false
-      }
+      sword_rotation: 0
     ]
 
     init_fly = Keyword.merge(defaults, opts)
@@ -46,7 +40,13 @@ defmodule StabbyFlies.Player do
         last_stab_time: Time.add(Time.utc_now(), -1),
         kill_count: 0,
         speed: 20 * 10,
-        damage: 5
+        damage: 5,
+        moving: %{
+          left: false,
+          right: false,
+          up: false,
+          down: false
+        }
       },
       name: via_tuple(name)
     )
@@ -61,6 +61,8 @@ defmodule StabbyFlies.Player do
   def respawn(pid), do: GenServer.call(pid, :respawn)
   def increment_kill_count(pid), do: GenServer.call(pid, :increment_kill_count)
   def update_moving(pid, moving), do: GenServer.call(pid, {:update_moving, moving})
+
+  def update(pid), do: GenServer.call(pid, :update)
 
   def handle_call(:can_stab, _from, %State{last_stab_time: last_stab_time} = state) do
     stab_cooldown = 300
@@ -105,15 +107,19 @@ defmodule StabbyFlies.Player do
     {:reply, new_state, new_state}
   end
 
-  def handle_call(:update_position, _from, %State{x: x, y: y} = state) do
-    new_x = if x + velx < 0, do: 0, else: x + velx
-    new_x = if new_x + velx >= 3000, do: 3000, else: new_x + velx
+  def handle_call(:update_position, _from, %State{x: x, y: y, moving: moving} = state) do
+    new_x = if x + velx(moving) < 0, do: 0, else: x + velx(moving)
+    new_x = if new_x + velx(moving) >= 3000, do: 3000, else: new_x + velx(moving)
 
-    new_y = if y + vely < -100, do: -100, else: y + vely
-    new_y = if new_y + vely >= 270, do: 270, else: new_y + vely
+    new_y = if y + vely(moving) < -100, do: -100, else: y + vely(moving)
+    new_y = if new_y + vely(moving) >= 270, do: 270, else: new_y + vely(moving)
 
     new_state = Map.merge(state, %{x: new_x, y: new_y})
     {:reply, new_state, new_state}
+  end
+
+  def handle_call(:update, _from, state) do
+    {:reply, state, state}
   end
 
   def handle_call({:update_moving, moving}, _from, state) do
@@ -130,11 +136,15 @@ defmodule StabbyFlies.Player do
     Enum.random(0..3000)
   end
 
-  defp velx do
-    0
+  defp velx(moving) do
+    case moving do
+      %{left: true, right: true} -> 0
+      %{left: true, right: false} -> -1
+      %{left: false, right: true} -> 1
+    end
   end
 
-  defp vely do
+  defp vely(moving) do
     0
   end
 
