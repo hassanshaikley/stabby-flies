@@ -76,8 +76,6 @@ defmodule StabbyFlies.PlayerSupervisor do
   end
 
   def update_players do
-    IO.puts("UPDATE PLAYERS")
-
     player_pids
     |> Enum.each(fn player ->
       player = Player.update(player)

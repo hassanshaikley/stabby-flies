@@ -229,15 +229,19 @@ const setupKeys = channel => {
   }
 
   setInterval(() => {
-    channel.push('move', {
-      moving: {
-        left: keypresses["a"],
-        right: keypresses["d"],
-        up: keypresses["w"],
-        down: keypresses["s"]
-      }
-    })
+    const refresh = window.last_keypresses && (window.last_keypresses.a != keypresses.a || window.last_keypresses.d != keypresses.d || window.last_keypresses.w != keypresses.w || window.last_keypresses.s != keypresses.s)
+    if (refresh) {
+      channel.push('move', {
+        moving: {
+          left: keypresses["a"],
+          right: keypresses["d"],
+          up: keypresses["w"],
+          down: keypresses["s"]
+        }
+      })
+    }
 
+    window.last_keypresses = JSON.parse(JSON.stringify(keypresses))
   }, 500)
   window.onblur = function () {
     game.blurred = true

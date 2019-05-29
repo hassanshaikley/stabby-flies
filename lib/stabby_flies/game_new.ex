@@ -6,8 +6,6 @@ defmodule StabbyFlies.GameNew do
   alias StabbyFlies.{PlayerSupervisor, Player}
 
   def loop do
-    IO.puts("Loop")
-
     PlayerSupervisor.update_players()
 
     :timer.apply_after(50, __MODULE__, :loop, [])
