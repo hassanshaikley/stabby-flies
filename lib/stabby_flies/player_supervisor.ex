@@ -74,4 +74,14 @@ defmodule StabbyFlies.PlayerSupervisor do
 
     Player.update_moving(pid, moving)
   end
+
+  def update_players do
+    IO.puts("UPDATE PLAYERS")
+
+    player_pids
+    |> Enum.each(fn player ->
+      player = Player.update(player)
+      StabbyFliesWeb.Endpoint.broadcast("room:game", "update_player", player)
+    end)
+  end
 end

@@ -229,7 +229,6 @@ const setupKeys = channel => {
   }
 
   setInterval(() => {
-    console.log(keypresses)
     channel.push('move', {
       moving: {
         left: keypresses["a"],
@@ -239,7 +238,7 @@ const setupKeys = channel => {
       }
     })
 
-  }, 500)
+  }, 25)
   window.onblur = function () {
     game.blurred = true
     Object.keys(keypresses).forEach(key => {

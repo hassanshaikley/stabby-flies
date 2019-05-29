@@ -35,9 +35,6 @@ defmodule StabbyFliesWeb.RoomChannel do
   def handle_in("move", %{"moving" => moving}, socket) do
     GameNew.set_player_moving(socket.assigns.unique_id, moving)
 
-    # if payload["direction"] != nil,
-    #   do: Game.set_player_moving(socket.id, String.to_atom(payload["direction"]), payload["down"])
-
     {:noreply, socket}
   end
 
@@ -79,16 +76,17 @@ defmodule StabbyFliesWeb.RoomChannel do
   end
 
   def handle_info(:after_join, socket) do
-    eh = GameNew.join_game(socket.assigns.unique_id)
-    name = elem(eh, 1)
+    GameNew.join_game(socket.assigns.unique_id)
+    new_player = GameNew.player_state(socket.assigns.unique_id)
+    # name = elem(eh, 1)
 
     # new_player = Game.add_player("#{socket.assigns.nickname}", socket.id)
 
-    # broadcast(socket, "connect", %{new_player: new_player, players: Game.get_players()})
+    broadcast(socket, "connect", %{new_player: new_player, players: GameNew.get_players()})
 
-    # push(socket, "initialize", %{
-    #   new_player: new_player
-    # })
+    push(socket, "initialize", %{
+      new_player: new_player
+    })
 
     # Disabled for now
     # StabbyFlies.Message.get_messages()

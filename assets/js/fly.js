@@ -10,7 +10,7 @@ export default class Fly extends Player {
     this.serverY = props.y
     this.socket_id = props.socket_id
     this.hp = props.hp
-    this.maxHp = props.maxHp
+    this.maxHp = props.max_hp
     this.name = props.name
     this.speed = props.speed
     this.kill_count = props.kill_count

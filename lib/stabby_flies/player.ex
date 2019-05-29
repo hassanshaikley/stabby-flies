@@ -2,7 +2,8 @@ defmodule StabbyFlies.Player do
   use GenServer
 
   defmodule State do
-    defstruct ~w|name x y moving hp max_hp sword_rotation last_stab_time kill_count speed damage|a
+    @derive Jason.Encoder
+    defstruct ~w|socket_id name x y moving hp max_hp sword_rotation last_stab_time kill_count speed damage|a
   end
 
   def start_link(opts) do
@@ -26,6 +27,8 @@ defmodule StabbyFlies.Player do
     vely = Keyword.get(init_fly, :vely)
     hp = Keyword.get(init_fly, :hp)
     max_hp = Keyword.get(init_fly, :max_hp)
+    socket_id = Keyword.get(init_fly, :socket_id)
+
     # sword_rotation = Keyword.get(init_fly, :sword_rotation)
 
     GenServer.start_link(
@@ -39,14 +42,15 @@ defmodule StabbyFlies.Player do
         sword_rotation: 0,
         last_stab_time: Time.add(Time.utc_now(), -1),
         kill_count: 0,
-        speed: 20 * 10,
+        speed: 20,
         damage: 5,
         moving: %{
           left: false,
           right: false,
           up: false,
           down: false
-        }
+        },
+        socket_id: socket_id
       },
       name: via_tuple(name)
     )
@@ -107,22 +111,41 @@ defmodule StabbyFlies.Player do
     {:reply, new_state, new_state}
   end
 
-  def handle_call(:update_position, _from, %State{x: x, y: y, moving: moving} = state) do
-    new_x = if x + velx(moving) < 0, do: 0, else: x + velx(moving)
-    new_x = if new_x + velx(moving) >= 3000, do: 3000, else: new_x + velx(moving)
+  # def handle_call(
+  #       :update_position,
+  #       _from,
+  #       %State{x: x, y: y, moving: moving, speed: speed} = state
+  #     ) do
+  #   new_x = if x + velx(moving, speed) < 0, do: 0, else: x + velx(moving, speed)
+  #   new_x = if new_x + velx(moving, speed) >= 3000, do: 3000, else: new_x + velx(moving, speed)
 
-    new_y = if y + vely(moving) < -100, do: -100, else: y + vely(moving)
-    new_y = if new_y + vely(moving) >= 270, do: 270, else: new_y + vely(moving)
+  #   new_y = if y + vely(moving, speed) < -100, do: -100, else: y + vely(moving, speed)
+  #   new_y = if new_y + vely(moving, speed) >= 270, do: 270, else: new_y + vely(moving, speed)
 
-    new_state = Map.merge(state, %{x: new_x, y: new_y})
+  #   new_state = Map.merge(state, %{x: new_x, y: new_y})
+  #   {:reply, new_state, new_state}
+  # end
+
+  def handle_call(:update, _from, %State{x: x, y: y, moving: moving, speed: speed} = state) do
+    vel_x_ = velx(moving, speed)
+    vel_y_ = vely(moving, speed)
+
+    new_x = if x + vel_x_ < 0, do: 0, else: x + vel_x_
+    new_x = if new_x + vel_x_ >= 3000, do: 3000, else: new_x + vel_x_
+
+    new_y = if y + vel_y_ < -100, do: -100, else: y + vel_y_
+    new_y = if new_y + vel_y_ >= 270, do: 270, else: new_y + vel_y_
+
+    sword_rotation = :math.atan2(vel_x_, -vel_y_)
+
+    new_state = Map.merge(state, %{x: new_x, y: new_y, sword_rotation: sword_rotation})
+
     {:reply, new_state, new_state}
   end
 
-  def handle_call(:update, _from, state) do
-    {:reply, state, state}
-  end
-
   def handle_call({:update_moving, moving}, _from, state) do
+    # new_rotation = get_rotation(state["moving"])
+
     new_state = Map.merge(state, %{moving: moving})
 
     {:reply, new_state, new_state}
@@ -136,16 +159,28 @@ defmodule StabbyFlies.Player do
     Enum.random(0..3000)
   end
 
-  defp velx(moving) do
-    case moving do
+  defp velx(moving, speed) do
+    new_moving = %{left: moving["left"], right: moving["right"]}
+
+    case new_moving do
       %{left: true, right: true} -> 0
-      %{left: true, right: false} -> -1
-      %{left: false, right: true} -> 1
+      %{left: true, right: false} -> -speed
+      %{left: false, right: true} -> speed
+      %{left: false, right: false} -> 0
+      _ -> 0
     end
   end
 
-  defp vely(moving) do
-    0
+  defp vely(moving, speed) do
+    new_moving = %{down: moving["down"], up: moving["up"]}
+
+    case new_moving do
+      %{up: true, down: true} -> 0
+      %{up: true, down: false} -> -speed
+      %{up: false, down: true} -> speed
+      %{up: false, down: false} -> 0
+      _ -> 0
+    end
   end
 
   defp via_tuple(player_name) do
