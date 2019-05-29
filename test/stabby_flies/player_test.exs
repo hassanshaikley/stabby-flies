@@ -46,4 +46,11 @@ defmodule StabbyFlies.PlayerTest do
     Player.reset_stab_cooldown(player)
     assert Player.can_stab(player) == false
   end
+
+  test "respawn", %{player: player} do
+    Player.take_damage(player, 999)
+    Player.respawn(player)
+    player_state = Player.state(player)
+    assert player_state.hp == player_state.max_hp
+  end
 end

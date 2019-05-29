@@ -77,6 +77,7 @@ defmodule StabbyFlies.Player do
   def update_position(pid), do: GenServer.call(pid, :update_position)
   def can_stab(pid), do: GenServer.call(pid, :can_stab)
   def reset_stab_cooldown(pid), do: GenServer.call(pid, :reset_stab_cooldown)
+  def respawn(pid), do: GenServer.call(pid, :respawn)
   # def stop(pid), do: GenServer.stop(via_tuple(pid))
 
   def handle_call(:can_stab, _from, %State{last_stab_time: last_stab_time} = state) do
@@ -89,6 +90,12 @@ defmodule StabbyFlies.Player do
 
   def handle_call(:reset_stab_cooldown, _from, state) do
     new_state = Map.merge(state, %{last_stab_time: Time.utc_now()})
+    {:reply, new_state, new_state}
+  end
+
+  def handle_call(:respawn, _from, state) do
+    max_hp = state.max_hp
+    new_state = Map.merge(state, %{hp: max_hp, x: start_x, y: start_y})
     {:reply, new_state, new_state}
   end
 
