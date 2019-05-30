@@ -142,7 +142,7 @@ defmodule StabbyFlies.PlayerSupervisor do
           rectangles_overlap(stab_data_first, player_hitbox) ||
             rectangles_overlap(stab_data_second, player_hitbox)
 
-        if is_hit, do: Player.take_damage(find_player_pid(player.name), damage), else: 0
+        if is_hit, do: Player.take_damage(find_player_pid(other_player.name), damage), else: 0
 
         is_hit
       end)

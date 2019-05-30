@@ -13,8 +13,8 @@ defmodule StabbyFlies.Player do
       y: start_y(),
       velx: 0,
       vely: 0,
-      hp: 1,
-      max_hp: 1,
+      hp: 10,
+      max_hp: 10,
       sword_rotation: 0
     ]
 
@@ -62,14 +62,14 @@ defmodule StabbyFlies.Player do
   def update_position(pid), do: GenServer.call(pid, :update_position)
   def can_stab(pid), do: GenServer.call(pid, :can_stab)
   def reset_stab_cooldown(pid), do: GenServer.call(pid, :reset_stab_cooldown)
-  def respawn(pid), do: GenServer.call(pid, :respawn)
+  # def respawn(pid), do: GenServer.call(pid, :respawn)
   def increment_kill_count(pid), do: GenServer.call(pid, :increment_kill_count)
   def update_moving(pid, moving), do: GenServer.call(pid, {:update_moving, moving})
 
   def update(pid), do: GenServer.call(pid, :update)
 
   def handle_call(:can_stab, _from, %State{last_stab_time: last_stab_time} = state) do
-    stab_cooldown = 2000
+    stab_cooldown = 250
     now = Time.utc_now()
 
     can_stab = Time.diff(now, last_stab_time, :millisecond) >= stab_cooldown
@@ -81,20 +81,20 @@ defmodule StabbyFlies.Player do
     {:reply, new_state, new_state}
   end
 
-  def handle_call(:respawn, _from, state) do
-    max_hp = state.max_hp
+  # def handle_call(:respawn, _from, state) do
+  #   max_hp = state.max_hp
 
-    new_state =
-      Map.merge(state, %{
-        hp: max_hp,
-        x: start_x,
-        y: start_y,
-        last_stab_time: Time.add(Time.utc_now(), -1),
-        kill_count: 0
-      })
+  #   new_state =
+  #     Map.merge(state, %{
+  #       hp: max_hp,
+  #       x: start_x,
+  #       y: start_y,
+  #       last_stab_time: Time.add(Time.utc_now(), -1),
+  #       kill_count: 0
+  #     })
 
-    {:reply, new_state, new_state}
-  end
+  #   {:reply, new_state, new_state}
+  # end
 
   def handle_call(:increment_kill_count, _from, state) do
     new_state = Map.merge(state, %{kill_count: state.kill_count + 1})
@@ -105,10 +105,30 @@ defmodule StabbyFlies.Player do
     {:reply, state, state}
   end
 
-  def handle_call({:take_damage, amount}, _from, %State{hp: hp} = state) do
+  def handle_call(
+        {:take_damage, amount},
+        _from,
+        %State{hp: hp, max_hp: max_hp} = state
+      ) do
     new_hp = if hp - amount < 0, do: 0, else: hp - amount
-    new_state = Map.merge(state, %{hp: new_hp})
-    {:reply, new_state, new_state}
+
+    case new_hp do
+      x when x <= 0 ->
+        new_state =
+          Map.merge(state, %{
+            hp: max_hp,
+            x: start_x,
+            y: start_y,
+            last_stab_time: Time.add(Time.utc_now(), -1),
+            kill_count: 0
+          })
+
+        {:reply, new_state, new_state}
+
+      x ->
+        new_state = Map.merge(state, %{hp: new_hp})
+        {:reply, new_state, new_state}
+    end
   end
 
   # def handle_call(

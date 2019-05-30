@@ -69,6 +69,7 @@ const setupGameChannel = channel => {
   channel.on('stab', function (payload) {
     const { socket_id, hit_players_data } = payload
     console.log("A palyer srtabs..", socket_id)
+    console.log("Hit players ", hit_players_data)
     game.playerStabs(socket_id)
     hit_players_data.forEach(obj => {
       game.playerIsHit(obj)
@@ -224,9 +225,7 @@ const setupKeys = channel => {
 
   setInterval(() => {
     const refresh = window.last_keypresses.a != keypresses.a || window.last_keypresses.d != keypresses.d || window.last_keypresses.w != keypresses.w || window.last_keypresses.s != keypresses.s
-    console.log(window.last_keypresses)
-    console.log(keypresses)
-    console.log(refresh)
+
     if (refresh) {
       channel.push('move', {
         moving: {
