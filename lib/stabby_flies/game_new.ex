@@ -45,6 +45,6 @@ defmodule StabbyFlies.GameNew do
   end
 
   def player_stabs(id) do
-    PlayerSupervisor.player_stabs(id)
+    PlayerSupervisor.attempt_stab(id)
   end
 end

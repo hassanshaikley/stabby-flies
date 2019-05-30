@@ -69,7 +69,7 @@ defmodule StabbyFlies.Player do
   def update(pid), do: GenServer.call(pid, :update)
 
   def handle_call(:can_stab, _from, %State{last_stab_time: last_stab_time} = state) do
-    stab_cooldown = 300
+    stab_cooldown = 2000
     now = Time.utc_now()
 
     can_stab = Time.diff(now, last_stab_time, :millisecond) >= stab_cooldown

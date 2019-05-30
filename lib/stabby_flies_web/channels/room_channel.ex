@@ -46,7 +46,7 @@ defmodule StabbyFliesWeb.RoomChannel do
     # {player, can_stab} = Game.player_can_stab(socket.assigns.unique_id)
 
     # if can_stab do
-    {hit_players, stab_hitbox} = GameNew.player_stabs(socket.assigns.unique_id)
+    {stabbed?, hit_players} = GameNew.player_stabs(socket.assigns.unique_id)
 
     #   hit_players_data =
     #     hit_players
@@ -57,25 +57,21 @@ defmodule StabbyFliesWeb.RoomChannel do
     #       }
     #     end)
 
-    hit_players_data = []
+    if stabbed? == true,
+      do:
+        broadcast(socket, "stab", %{
+          socket_id: socket.assigns.unique_id,
+          hit_players_data: []
+          # stab_hitbox: stab_hitbox
+        })
 
-    broadcast(socket, "stab", %{
-      socket_id: socket.assigns.unique_id,
-      hit_players_data: hit_players_data,
-      stab_hitbox: stab_hitbox
-    })
-
-    # end
+    # hit_players_data = []
 
     {:noreply, socket}
   end
 
   def terminate(reason, socket) do
     GameNew.leave_game(socket.assigns.unique_id)
-
-    # Logger.debug("#{@name} > leave #{inspect(reason)}")
-    # broadcast(socket, "disconnect", %{id: socket.id})
-    # Game.remove_player_by_socket_id(socket.id)
   end
 
   def handle_info(:after_join, socket) do
