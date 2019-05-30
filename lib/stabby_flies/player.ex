@@ -42,7 +42,7 @@ defmodule StabbyFlies.Player do
         sword_rotation: 0,
         last_stab_time: Time.add(Time.utc_now(), -1),
         kill_count: 0,
-        speed: 10,
+        speed: 20 * 10,
         damage: 5,
         moving: %{
           left: false,
@@ -151,6 +151,7 @@ defmodule StabbyFlies.Player do
         _from,
         %State{x: x, y: y, moving: moving, speed: speed, sword_rotation: sword_rotation} = state
       ) do
+    speed = speed / 20
     vel_x_ = velx(moving, speed)
     vel_y_ = vely(moving, speed)
 
