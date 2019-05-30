@@ -61,7 +61,7 @@ defmodule StabbyFliesWeb.RoomChannel do
       do:
         broadcast(socket, "stab", %{
           socket_id: socket.assigns.unique_id,
-          hit_players_data: []
+          hit_players_data: hit_players
           # stab_hitbox: stab_hitbox
         })
 

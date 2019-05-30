@@ -92,7 +92,7 @@ defmodule StabbyFlies.PlayerSupervisor do
     can_stab = Player.can_stab(player_pid)
 
     case(can_stab) do
-      true -> {player_stabs(player), []}
+      true -> player_stabs(player)
       false -> {false, []}
     end
   end
@@ -151,7 +151,7 @@ defmodule StabbyFlies.PlayerSupervisor do
     Player.reset_stab_cooldown(this_players_pid)
     # update_last_stab_and_kill_count(player, hit_players, damage)
     # {hit_players, stab_data_second}
-    true
+    {true, hit_players}
   end
 
   defp rectangles_overlap(rect1, rect2) do
