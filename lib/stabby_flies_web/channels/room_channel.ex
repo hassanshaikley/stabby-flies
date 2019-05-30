@@ -5,14 +5,20 @@ defmodule StabbyFliesWeb.RoomChannel do
   use StabbyFliesWeb, :channel
   require Logger
 
-  alias StabbyFlies.Game
+  alias StabbyFlies.{Game, GameNew, Player}
+
+  def handle_in("connect", payload, socket) do
+    {:noreply, socket}
+  end
 
   def join("room:game", payload, socket) do
+    unique_id = "Fly-#{socket.id}"
+
     Logger.debug("Joined Lobby #{payload["nickname"]}")
 
     socket =
       socket
-      |> assign(:albums, [])
+      |> assign(:unique_id, unique_id)
       |> assign(:nickname, payload["nickname"])
 
     send(self(), :after_join)
@@ -26,54 +32,60 @@ defmodule StabbyFliesWeb.RoomChannel do
     {:noreply, socket}
   end
 
+  def handle_in("move", %{"moving" => moving}, socket) do
+    GameNew.set_player_moving(socket.assigns.unique_id, moving)
+
+    {:noreply, socket}
+  end
+
+  def handle_in("move", _, socket) do
+    {:noreply, socket}
+  end
+
   def handle_in("stab", payload, socket) do
-    {player, can_stab} = Game.player_can_stab(socket.id)
+    # {player, can_stab} = Game.player_can_stab(socket.assigns.unique_id)
 
-    if can_stab do
-      {hit_players, stab_hitbox} = Game.player_stabs(player)
+    # if can_stab do
+    {stabbed?, hit_players} = GameNew.player_stabs(socket.assigns.unique_id)
 
-      hit_players_data =
-        hit_players
-        |> Enum.map(fn hit_player ->
-          %{
-            socket_id: hit_player.socket_id,
-            damage: player.damage
-          }
-        end)
+    #   hit_players_data =
+    #     hit_players
+    #     |> Enum.map(fn hit_player ->
+    #       %{
+    #         socket_id: hit_player.socket_id,
+    #         damage: player.damage
+    #       }
+    #     end)
 
-      broadcast(socket, "stab", %{
-        socket_id: socket.id,
-        hit_players_data: hit_players_data,
-        stab_hitbox: stab_hitbox
-      })
-    end
+    if stabbed? == true,
+      do:
+        broadcast(socket, "stab", %{
+          socket_id: socket.assigns.unique_id,
+          hit_players_data: []
+          # stab_hitbox: stab_hitbox
+        })
 
-    {:noreply, socket}
-  end
-
-  def handle_in("connect", payload, socket) do
-    {:noreply, socket}
-  end
-
-  def handle_in("move", payload, socket) do
-    player =
-      Game.set_player_moving(socket.id, String.to_atom(payload["direction"]), payload["down"])
+    # hit_players_data = []
 
     {:noreply, socket}
   end
 
   def terminate(reason, socket) do
-    Logger.debug("#{@name} > leave #{inspect(reason)}")
-    broadcast(socket, "disconnect", %{id: socket.id})
-    Game.remove_player_by_socket_id(socket.id)
+    GameNew.leave_game(socket.assigns.unique_id)
   end
 
   def handle_info(:after_join, socket) do
-    IO.puts("After Join! Adding Player #{socket.id}")
-    IO.inspect(socket)
-    new_player = Game.add_player("#{socket.assigns.nickname}", socket.id)
+    GameNew.join_game(socket.assigns.unique_id)
+    new_player = GameNew.player_state(socket.assigns.unique_id)
+    # name = elem(eh, 1)
 
-    broadcast(socket, "connect", %{new_player: new_player, players: Game.get_players()})
+    # new_player = Game.add_player("#{socket.assigns.nickname}", socket.id)
+
+    broadcast(socket, "connect", %{new_player: new_player, players: GameNew.get_players()})
+
+    push(socket, "initialize", %{
+      new_player: new_player
+    })
 
     # Disabled for now
     # StabbyFlies.Message.get_messages()
@@ -81,10 +93,6 @@ defmodule StabbyFliesWeb.RoomChannel do
     #     name: msg.name,
     #     message: msg.message,
     #   }) end)
-    push(socket, "initialize", %{
-      new_player: new_player
-    })
-
     {:noreply, socket}
   end
 end

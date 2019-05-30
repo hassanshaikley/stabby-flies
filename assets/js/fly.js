@@ -10,7 +10,7 @@ export default class Fly extends Player {
     this.serverY = props.y
     this.socket_id = props.socket_id
     this.hp = props.hp
-    this.maxHp = props.maxHp
+    this.maxHp = props.max_hp
     this.name = props.name
     this.speed = props.speed
     this.kill_count = props.kill_count
@@ -143,37 +143,41 @@ export default class Fly extends Player {
 
     const delta = now - (this.lastMovementUpdateTime || now)
 
-    const speed = this.speed / delta / 1.83
+    const speed = (this.speed / delta / 1.83) * 20
 
     // console.log(this.speed)
 
     // move 200 every second so
     // 200 / fps
-    if (this.y > this.serverY) {
-      this.y -= speed
-      if (this.y < this.serverY) {
-        this.y = this.serverY
-      }
-    } else if (this.y < this.serverY) {
-      this.y += speed
-      if (this.y > this.serverY) {
-        this.y = this.serverY
-      }
-    }
 
-    if (this.x > this.serverX) {
-      // console.log(`delta: ${delta}, this.speed: ${this.speed}`)
+    // if (this.y > this.serverY) {
+    //   this.y -= speed
+    //   if (this.y < this.serverY) {
+    //     this.y = this.serverY
+    //   }
+    // } else if (this.y < this.serverY) {
+    //   this.y += speed
+    //   if (this.y > this.serverY) {
+    //     this.y = this.serverY
+    //   }
+    // }
 
-      this.x -= speed
-      if (this.x < this.serverX) {
-        this.x = this.serverX
-      }
-    } else if (this.x < this.serverX) {
-      this.x += speed
-      if (this.x > this.serverX) {
-        this.x = this.serverX
-      }
-    }
+    // if (this.x > this.serverX) {
+    //   // console.log(`delta: ${delta}, this.speed: ${this.speed}`)
+
+    //   this.x -= speed
+    //   if (this.x < this.serverX) {
+    //     this.x = this.serverX
+    //   }
+    // } else if (this.x < this.serverX) {
+    //   this.x += speed
+    //   if (this.x > this.serverX) {
+    //     this.x = this.serverX
+    //   }
+    // }
+
+    this.y = this.serverY;
+    this.x = this.serverX;
 
     this.lastMovementUpdateTime = new Date().getTime()
   }

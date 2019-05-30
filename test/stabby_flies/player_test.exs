@@ -3,27 +3,70 @@ defmodule StabbyFlies.PlayerTest do
   alias StabbyFlies.Player
 
   setup do
-    player = %Player{name: "John", x: 15, y: 10, hp: 10, velx: 0, vely: 0}
+    player =
+      start_supervised!({Player, name: "Faa", x: 15, y: 10, hp: 1, max_hp: 1, sword_rotation: 0})
 
     %{player: player}
   end
 
   test "initialization", %{player: player} do
-    assert player.name == "John"
-    assert player.x == 15
-    assert player.y == 10
-    assert player.vely == 0
-    assert player.velx == 0
+    player_state = Player.state(player)
+    assert player_state.name == "Faa"
+    assert player_state.x != nil
+    assert player_state.y != nil
+    assert player_state.hp == 1
+    assert player_state.max_hp == 1
+    assert player_state.sword_rotation == 0
   end
 
-  test "alive? function", %{player: player} do
-    dead_player = %Player{name: "John", x: 15, y: 10, hp: 0}
-
-    assert Player.alive?(player) == true
-    assert Player.alive?(dead_player) == false
+  test "take damage", %{player: player} do
+    Player.take_damage(player, 999)
+    player_state = Player.state(player)
+    assert player_state.hp == 0
   end
 
-  test "decrease_hp function", %{player: player} do
-    assert Player.decrease_hp(player, 2).hp == 8
+  # test "updates position based on moving", %{player: player} do
+  #   %{x: x, y: y} = Player.state(player)
+
+  #   Player.update_position(player)
+  #   player_state = Player.state(player)
+  #   assert x != player_state.x
+  #   assert y != player_state.y
+  # end
+
+  test "can_stab", %{player: player} do
+    assert Player.can_stab(player) == true
+  end
+
+  test "reset stab cooldown", %{player: player} do
+    Player.reset_stab_cooldown(player)
+    assert Player.can_stab(player) == false
+  end
+
+  test "respawn", %{player: player} do
+    Player.take_damage(player, 999)
+    Player.respawn(player)
+    player_state = Player.state(player)
+    assert player_state.hp == player_state.max_hp
+  end
+
+  test "increment kill count", %{player: player} do
+    old_kill_count = Player.state(player).kill_count
+    Player.increment_kill_count(player)
+    player_state = Player.state(player)
+    assert old_kill_count + 1 == player_state.kill_count
+  end
+
+  test "update moving", %{player: player} do
+    new_moving = %{
+      left: true,
+      right: true,
+      up: false,
+      down: false
+    }
+
+    Player.update_moving(player, new_moving)
+    player_state = Player.state(player)
+    assert player_state.moving == new_moving
   end
 end
