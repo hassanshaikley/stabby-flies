@@ -72,6 +72,10 @@ export class Game {
         bottom: 400,
         top: -150
       })
+      .clampZoom({
+        maxWidth: 3000,
+        maxHeight: 1000
+      })
       // .zoomPercent(1.5)
       .decelerate()
 
