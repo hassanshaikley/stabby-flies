@@ -5,7 +5,7 @@ defmodule StabbyFliesWeb.RoomChannel do
   use StabbyFliesWeb, :channel
   require Logger
 
-  alias StabbyFlies.{Game, GameNew, Player}
+  alias StabbyFlies.{Game, Game, Player}
 
   def handle_in("connect", payload, socket) do
     {:noreply, socket}
@@ -33,7 +33,7 @@ defmodule StabbyFliesWeb.RoomChannel do
   end
 
   def handle_in("move", %{"moving" => moving}, socket) do
-    GameNew.set_player_moving(socket.assigns.unique_id, moving)
+    Game.set_player_moving(socket.assigns.unique_id, moving)
 
     {:noreply, socket}
   end
@@ -46,7 +46,7 @@ defmodule StabbyFliesWeb.RoomChannel do
     # {player, can_stab} = Game.player_can_stab(socket.assigns.unique_id)
 
     # if can_stab do
-    {stabbed?, hit_players} = GameNew.player_stabs(socket.assigns.unique_id)
+    {stabbed?, hit_players} = Game.player_stabs(socket.assigns.unique_id)
 
     #   hit_players_data =
     #     hit_players
@@ -71,17 +71,17 @@ defmodule StabbyFliesWeb.RoomChannel do
   end
 
   def terminate(reason, socket) do
-    GameNew.leave_game(socket.assigns.unique_id)
+    Game.leave_game(socket.assigns.unique_id)
   end
 
   def handle_info(:after_join, socket) do
-    GameNew.join_game(socket.assigns.unique_id)
-    new_player = GameNew.player_state(socket.assigns.unique_id)
+    Game.join_game(socket.assigns.unique_id)
+    new_player = Game.player_state(socket.assigns.unique_id)
     # name = elem(eh, 1)
 
     # new_player = Game.add_player("#{socket.assigns.nickname}", socket.id)
 
-    broadcast(socket, "connect", %{new_player: new_player, players: GameNew.get_players()})
+    broadcast(socket, "connect", %{new_player: new_player, players: Game.get_players()})
 
     push(socket, "initialize", %{
       new_player: new_player

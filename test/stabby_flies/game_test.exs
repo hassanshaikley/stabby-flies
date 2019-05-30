@@ -1,22 +1,22 @@
-defmodule StabbyFliesGameTest do
+defmodule StabbyFlies.GameTest do
   use ExUnit.Case, async: true
-  alias StabbyFliesGame
+  alias StabbyFlies.Game
 
   test "join_game" do
-    StabbyFliesGame.join_game("player1")
-    assert StabbyFliesGame.get_players() |> length == 1
+    StabbyFlies.Game.join_game("player1")
+    assert StabbyFlies.Game.get_players() |> length == 1
   end
 
   test "leave_game" do
-    StabbyFliesGame.join_game("player1")
-    StabbyFliesGame.leave_game("player1")
+    StabbyFlies.Game.join_game("player1")
+    StabbyFlies.Game.leave_game("player1")
 
-    assert StabbyFliesGame.get_players() |> length == 0
+    assert StabbyFlies.Game.get_players() |> length == 0
   end
 
   test "player_state" do
-    StabbyFliesGame.join_game("player1")
-    player = StabbyFliesGame.player_state("player1")
+    StabbyFlies.Game.join_game("player1")
+    player = StabbyFlies.Game.player_state("player1")
     assert player.name == "player1"
   end
 end
