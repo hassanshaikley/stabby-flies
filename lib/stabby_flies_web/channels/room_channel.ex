@@ -71,7 +71,9 @@ defmodule StabbyFliesWeb.RoomChannel do
   end
 
   def terminate(reason, socket) do
+    IO.puts("PLAYER TERMINATED")
     Game.leave_game(socket.assigns.unique_id)
+    broadcast(socket, "disconnect", %{socket_id: socket.assigns.unique_id})
   end
 
   def handle_info(:after_join, socket) do
