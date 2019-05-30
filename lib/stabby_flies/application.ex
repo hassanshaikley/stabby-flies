@@ -8,12 +8,12 @@ defmodule StabbyFlies.Application do
       StabbyFlies.Repo,
       StabbyFliesWeb.Endpoint,
       {Registry, [keys: :unique, name: Registry.PlayersServer]},
-      {StabbyFlies.PlayerSupervisor, []}
+      {StabbyFlies.PlayerSupervisor, []},
+      {StabbyFlies.GameSupervisor, []}
     ]
 
     opts = [strategy: :one_for_one, name: StabbyFlies.Supervisor]
     Supervisor.start_link(children, opts)
-    StabbyFlies.Game.loop()
     StabbyFlies.SocketIdGen.start_link()
   end
 

@@ -3,7 +3,20 @@ defmodule StabbyFlies.Game do
   Interface between the controller and the game
   """
 
+  use GenServer
+
   alias StabbyFlies.{PlayerSupervisor, Player}
+
+  def start_link(opts) do
+    IO.puts("Game.start_link")
+
+    GenServer.start_link(__MODULE__, :ok, opts)
+  end
+
+  def init(opts) do
+    loop()
+    {:ok, []}
+  end
 
   def loop do
     PlayerSupervisor.update_players()
