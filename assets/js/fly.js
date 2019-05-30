@@ -149,31 +149,35 @@ export default class Fly extends Player {
 
     // move 200 every second so
     // 200 / fps
-    if (this.y > this.serverY) {
-      this.y -= speed
-      if (this.y < this.serverY) {
-        this.y = this.serverY
-      }
-    } else if (this.y < this.serverY) {
-      this.y += speed
-      if (this.y > this.serverY) {
-        this.y = this.serverY
-      }
-    }
 
-    if (this.x > this.serverX) {
-      // console.log(`delta: ${delta}, this.speed: ${this.speed}`)
+    // if (this.y > this.serverY) {
+    //   this.y -= speed
+    //   if (this.y < this.serverY) {
+    //     this.y = this.serverY
+    //   }
+    // } else if (this.y < this.serverY) {
+    //   this.y += speed
+    //   if (this.y > this.serverY) {
+    //     this.y = this.serverY
+    //   }
+    // }
 
-      this.x -= speed
-      if (this.x < this.serverX) {
-        this.x = this.serverX
-      }
-    } else if (this.x < this.serverX) {
-      this.x += speed
-      if (this.x > this.serverX) {
-        this.x = this.serverX
-      }
-    }
+    // if (this.x > this.serverX) {
+    //   // console.log(`delta: ${delta}, this.speed: ${this.speed}`)
+
+    //   this.x -= speed
+    //   if (this.x < this.serverX) {
+    //     this.x = this.serverX
+    //   }
+    // } else if (this.x < this.serverX) {
+    //   this.x += speed
+    //   if (this.x > this.serverX) {
+    //     this.x = this.serverX
+    //   }
+    // }
+
+    this.y = this.serverY;
+    this.x = this.serverX;
 
     this.lastMovementUpdateTime = new Date().getTime()
   }

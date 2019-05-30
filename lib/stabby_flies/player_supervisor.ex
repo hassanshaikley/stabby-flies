@@ -24,6 +24,16 @@ defmodule StabbyFlies.PlayerSupervisor do
     end)
   end
 
+  def find_player_pid(name) do
+    index =
+      players
+      |> Enum.find_index(fn player ->
+        player.name == name
+      end)
+
+    Enum.at(player_pids, index)
+  end
+
   def player_state(name) do
     players
     |> Enum.find(fn player ->
@@ -46,13 +56,7 @@ defmodule StabbyFlies.PlayerSupervisor do
   end
 
   def delete_player(name) do
-    index =
-      players
-      |> Enum.find_index(fn player ->
-        player.name == name
-      end)
-
-    pid = Enum.at(player_pids, index)
+    pid = find_player_pid(name)
     DynamicSupervisor.terminate_child(__MODULE__, pid)
   end
 
@@ -128,7 +132,8 @@ defmodule StabbyFlies.PlayerSupervisor do
           rectangles_overlap(stab_data_first, player_hitbox) ||
             rectangles_overlap(stab_data_second, player_hitbox)
 
-        # if is_hit, do: do_damage_to_player(other_player.socket_id, damage), else: 0
+        if is_hit, do: Player.take_damage(find_player_pid(player.name), damage), else: 0
+
         is_hit
       end)
 
