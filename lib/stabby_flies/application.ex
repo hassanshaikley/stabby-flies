@@ -13,7 +13,7 @@ defmodule StabbyFlies.Application do
 
     opts = [strategy: :one_for_one, name: StabbyFlies.Supervisor]
     Supervisor.start_link(children, opts)
-    StabbyFlies.GameNew.loop()
+    StabbyFliesGame.loop()
     StabbyFlies.SocketIdGen.start_link()
   end
 

@@ -1,4 +1,4 @@
-defmodule StabbyFlies.GameNew do
+defmodule StabbyFliesGame do
   """
   Interface between the controller and the game
   """
