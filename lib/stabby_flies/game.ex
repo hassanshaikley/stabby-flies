@@ -28,10 +28,10 @@ defmodule StabbyFlies.Game do
     IO.puts("Socket #{id} Joined Lobby")
   end
 
-  def join_game(id) do
+  def join_game(id, nickname) do
     IO.puts("Socket #{id} Joined Game")
 
-    PlayerSupervisor.create_player(name: id, socket_id: id)
+    PlayerSupervisor.create_player(name: id, socket_id: id, nickname: nickname)
   end
 
   def get_players do

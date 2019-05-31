@@ -77,7 +77,7 @@ defmodule StabbyFliesWeb.RoomChannel do
   end
 
   def handle_info(:after_join, socket) do
-    Game.join_game(socket.assigns.unique_id)
+    Game.join_game(socket.assigns.unique_id, socket.assigns.nickname)
     new_player = Game.player_state(socket.assigns.unique_id)
     # name = elem(eh, 1)
 

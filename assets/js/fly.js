@@ -12,6 +12,7 @@ export default class Fly extends Player {
     this.hp = props.hp
     this.maxHp = props.max_hp
     this.name = props.name
+    this.nickname = props.nickname
     this.speed = props.speed
     this.kill_count = props.kill_count
 
@@ -69,7 +70,7 @@ export default class Fly extends Player {
       align: 'center',
       strokeThickness: 1
     }
-    this.nameText = new PIXI.Text(this.name, nameStyle)
+    this.nameText = new PIXI.Text(this.nickname, nameStyle)
     this.nameText.x -= this.nameText.width / 2
     this.nameText.y -= 55
     this.addChild(this.nameText)

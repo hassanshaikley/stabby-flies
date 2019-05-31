@@ -3,7 +3,7 @@ defmodule StabbyFlies.Player do
 
   defmodule State do
     @derive Jason.Encoder
-    defstruct ~w|socket_id name x y moving hp max_hp sword_rotation last_stab_time kill_count speed damage|a
+    defstruct ~w|nickname socket_id name x y moving hp max_hp sword_rotation last_stab_time kill_count speed damage|a
   end
 
   def start_link(opts) do
@@ -15,7 +15,8 @@ defmodule StabbyFlies.Player do
       vely: 0,
       hp: 10,
       max_hp: 10,
-      sword_rotation: 0
+      sword_rotation: 0,
+      nickname: "poggie"
     ]
 
     init_fly = Keyword.merge(defaults, opts)
@@ -28,6 +29,7 @@ defmodule StabbyFlies.Player do
     hp = Keyword.get(init_fly, :hp)
     max_hp = Keyword.get(init_fly, :max_hp)
     socket_id = Keyword.get(init_fly, :socket_id)
+    nickname = Keyword.get(init_fly, :nickname)
 
     # sword_rotation = Keyword.get(init_fly, :sword_rotation)
 
@@ -50,6 +52,7 @@ defmodule StabbyFlies.Player do
           up: false,
           down: false
         },
+        nickname: nickname,
         socket_id: socket_id
       },
       name: via_tuple(name)
