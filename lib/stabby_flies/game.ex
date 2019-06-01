@@ -21,7 +21,7 @@ defmodule StabbyFlies.Game do
   def loop do
     PlayerSupervisor.update_players()
 
-    :timer.apply_after(50, __MODULE__, :loop, [])
+    :timer.apply_after(25, __MODULE__, :loop, [])
   end
 
   def join_lobby(id) do

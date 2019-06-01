@@ -154,7 +154,7 @@ defmodule StabbyFlies.Player do
         _from,
         %State{x: x, y: y, moving: moving, speed: speed, sword_rotation: sword_rotation} = state
       ) do
-    speed = speed / 20
+    speed = speed / 40
     vel_x_ = velx(moving, speed)
     vel_y_ = vely(moving, speed)
 
