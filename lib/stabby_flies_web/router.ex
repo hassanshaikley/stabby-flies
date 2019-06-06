@@ -7,6 +7,7 @@ defmodule StabbyFliesWeb.Router do
     plug :fetch_flash
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug CORSPlug, origin: "https://lilsheep.itch.io/stabby-flies"
   end
 
   pipeline :api do
@@ -15,6 +16,7 @@ defmodule StabbyFliesWeb.Router do
 
   scope "/", StabbyFliesWeb do
     pipe_through :browser
+
     get "/", PageController, :index
   end
 end
