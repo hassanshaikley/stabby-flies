@@ -21,7 +21,6 @@ config :stabby_flies, StabbyFliesWeb.Endpoint,
     "//lilsheep.itch.io",
     "//*.ssl.hwcdn.net"
   ],
-  # check_origin: false,
   cache_static_manifest: "priv/static/cache_manifest.json",
   # render_errors: [view: StabbyFliesWeb.ErrorView, accepts: ~w(html json)],
   # Not certain we need this!

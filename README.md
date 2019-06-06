@@ -24,3 +24,11 @@ Multiplayer Browser Game in Elixir/Phoenix
   * Test with `MIX_ENV=test mix do coveralls.json`
 
 Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
+
+## Deploy to itch
+
+- Deploy gigalixir app
+- build front end, cd into /priv/ 
+  - rename itch_index.html to index.html
+  - zip
+  - upload zip to itch
