@@ -108,6 +108,7 @@ export default class Fly extends Player {
     this.serverX = obj.x
     this.serverY = obj.y
     this.hp = obj.hp
+    this.speed = obj.speed
 
     this.kill_count = obj.kill_count
     this.rotateSword(obj.sword_rotation)

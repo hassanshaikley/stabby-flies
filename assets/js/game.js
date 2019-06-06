@@ -284,7 +284,7 @@ export class Game {
     this.viewport.addChild(this.localPlayer)
   }
   updatePlayer(obj) {
-    const { socket_id, x, y, hp } = obj
+    const { socket_id, x, y, hp, speed } = obj
     let player = this.players.find(player => player.socket_id == socket_id)
     player && player.updateVariables(obj, this.viewport)
   }

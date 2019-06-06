@@ -100,7 +100,13 @@ defmodule StabbyFlies.Player do
   # end
 
   def handle_call(:increment_kill_count, _from, state) do
-    new_state = Map.merge(state, %{kill_count: state.kill_count + 1})
+    new_state =
+      Map.merge(state, %{
+        kill_count: state.kill_count + 1,
+        speed: state.speed + 30,
+        hp: state.max_hp
+      })
+
     {:reply, new_state, new_state}
   end
 
@@ -123,7 +129,8 @@ defmodule StabbyFlies.Player do
             x: start_x,
             y: start_y,
             last_stab_time: Time.add(Time.utc_now(), -1),
-            kill_count: 0
+            kill_count: 0,
+            speed: 20 * 10
           })
 
         StabbyFliesWeb.Endpoint.broadcast("room:game", "respawn", new_state)
