@@ -1,13 +1,13 @@
 import { Socket } from 'phoenix'
 import { Game } from './game'
 
-const keypresses = {
+window.keypresses = {
   a: false,
   d: false,
   w: false,
   s: false
 }
-window.last_keypresses = JSON.parse(JSON.stringify(keypresses))
+window.last_keypresses = JSON.parse(JSON.stringify(window.keypresses))
 
 
 let game = new Game()
@@ -130,74 +130,36 @@ const setupKeys = channel => {
 
     const { key } = event
 
-    if (keypresses[key]) return
-    keypresses[key] = true
+    if (window.keypresses[key]) return
+    window.keypresses[key] = true
     channel.push('move', {
       moving: {
-        left: keypresses["a"],
-        right: keypresses["d"],
-        up: keypresses["w"],
-        down: keypresses["s"]
+        left: window.keypresses["a"],
+        right: window.keypresses["d"],
+        up: window.keypresses["w"],
+        down: window.keypresses["s"]
       }
     })
-
-    // switch (key) {
-    //   case 'd':
-    //     keypresses['d'] = true
-
-    //     break
-    //   case 'a':
-    //     keypresses['a'] = true
-
-    //     break
-    //   case 'w':
-    //     keypresses['w'] = true
-    //     break
-    //   case 's':
-    //     keypresses['s'] = true
-
-    //     break
-    // }
-
-    // event.preventDefault()
-    // event.stopPropagation()
   })
 
   document.addEventListener('keyup', function (event) {
     const down = false
 
     const { key } = event
-    keypresses[key] = false
+    window.keypresses[key] = false
 
     channel.push('move', {
       moving: {
-        left: keypresses["a"],
-        right: keypresses["d"],
-        up: keypresses["w"],
-        down: keypresses["s"]
+        left: window.keypresses["a"],
+        right: window.keypresses["d"],
+        up: window.keypresses["w"],
+        down: window.keypresses["s"]
       }
     })
 
-    // switch (event.key) {
-    //   case 'd':
-    //     keypresses['d'] = false
-    //     break
-    //   case 'a':
-    //     keypresses['a'] = false
-    //     break
-    //   case 'w':
-    //     keypresses['w'] = false
-    //     break
-    //   case 's':
-    //     keypresses['s'] = false
-    //     break
-    // }
-
-    // event.preventDefault()
-    // event.stopPropagation()
   })
 
-  // "listen" for the [Enter] keypress event to send a message:
+  // "listen" for the [Enter] window.keypress event to send a message:
   document.addEventListener('keypress', function (event) {
     switch (event.key) {
       case 'Enter':
@@ -214,8 +176,6 @@ const setupKeys = channel => {
         break
     }
 
-    // event.preventDefault()
-    // event.stopPropagation()
   })
 
   document.oncontextmenu = event => {
@@ -224,19 +184,19 @@ const setupKeys = channel => {
   }
 
   setInterval(() => {
-    const refresh = window.last_keypresses.a != keypresses.a || window.last_keypresses.d != keypresses.d || window.last_keypresses.w != keypresses.w || window.last_keypresses.s != keypresses.s
+    const refresh = window.last_keypresses.a != window.keypresses.a || window.last_keypresses.d != window.keypresses.d || window.last_keypresses.w != window.keypresses.w || window.last_keypresses.s != window.keypresses.s
 
     if (refresh) {
       channel.push('move', {
         moving: {
-          left: keypresses["a"],
-          right: keypresses["d"],
-          up: keypresses["w"],
-          down: keypresses["s"]
+          left: window.keypresses["a"],
+          right: window.keypresses["d"],
+          up: window.keypresses["w"],
+          down: window.keypresses["s"]
         }
       })
     }
-    window.last_keypresses = JSON.parse(JSON.stringify(keypresses))
+    window.last_keypresses = JSON.parse(JSON.stringify(window.keypresses))
 
 
   }, 500)
@@ -252,8 +212,8 @@ const setupKeys = channel => {
     //   }
     // })
 
-    Object.keys(keypresses).forEach(key => {
-      if (keypresses[key]) {
+    Object.keys(window.keypresses).forEach(key => {
+      if (window.keypresses[key]) {
         let direction
         switch (key) {
           case 'd':
@@ -275,7 +235,7 @@ const setupKeys = channel => {
           direction
         })
 
-        keypresses[key] = false
+        window.keypresses[key] = false
       }
     })
   }

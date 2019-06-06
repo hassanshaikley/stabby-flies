@@ -112,10 +112,10 @@ export default class Fly extends Player {
     this.rotateSword(obj.sword_rotation)
     this.updateHealthBar()
 
-    if (Math.abs(Math.abs(this.serverX) - Math.abs(this.x)) > 100) {
-      this.x = this.serverX
-      this.y = this.serverY
-    }
+    // if (Math.abs(Math.abs(this.serverX) - Math.abs(this.x)) > 100) {
+    //   this.x = this.serverX
+    //   this.y = this.serverY
+    // }
   }
 
   wearCrown() {
@@ -139,48 +139,71 @@ export default class Fly extends Player {
     this.removeChild(this.crown)
   }
 
+  prediction(speed) {
+    let ySpeed = 0;
+    let xSpeed = 0;
+    if (window.keypresses.w) {
+      ySpeed -= speed
+    }
+    if (window.keypresses.s) {
+      ySpeed += speed
+    }
+    if (window.keypresses.a) {
+      xSpeed -= speed;
+    }
+    if (window.keypresses.d) {
+      xSpeed += speed;
+    }
+
+    this.x += xSpeed;
+    this.y += ySpeed;
+
+    return false;
+  }
   update() {
+    const { localPlayer, lastMovementUpdateTime, serverY, serverX } = this;
     const now = new Date().getTime()
 
-    const delta = now - (this.lastMovementUpdateTime || now)
-
+    const delta = now - (lastMovementUpdateTime || now)
     const speed = this.speed / delta / 1.83
 
-    // console.log(this.speed)
+    let predict = (this.x == this.serverX) || (this.y == this.serverY);
 
-    // move 200 every second so
-    // 200 / fps
-
-    if (this.y > this.serverY) {
+    if (this.y > serverY) {
       this.y -= speed
-      if (this.y < this.serverY) {
-        this.y = this.serverY
+      predict = false
+      if (this.y < serverY) {
+        this.y = serverY
       }
-    } else if (this.y < this.serverY) {
+    } else if (this.y < serverY) {
+      predict = false
+
       this.y += speed
-      if (this.y > this.serverY) {
-        this.y = this.serverY
+      if (this.y > serverY) {
+        this.y = serverY
       }
     }
 
-    if (this.x > this.serverX) {
-      // console.log(`delta: ${delta}, this.speed: ${this.speed}`)
+    if (this.x > serverX) {
+      predict = false
 
       this.x -= speed
-      if (this.x < this.serverX) {
-        this.x = this.serverX
+      if (this.x < serverX) {
+        this.x = serverX
       }
-    } else if (this.x < this.serverX) {
+    } else if (this.x < serverX) {
+      predict = false
+
       this.x += speed
-      if (this.x > this.serverX) {
-        this.x = this.serverX
+      if (this.x > serverX) {
+        this.x = serverX
       }
     }
 
-    // this.y = this.serverY;
-    // this.x = this.serverX;
-
+    predict && this.prediction(speed)
     this.lastMovementUpdateTime = new Date().getTime()
+
+
   }
 
   updateHealthBar() {
@@ -188,12 +211,8 @@ export default class Fly extends Player {
   }
 
   takeDamage(amt) {
-    // console.log(amt, this.hp, this.maxHp)
     this.hp -= amt
     this.updateHealthBar()
-
-    // this.healthGreen.x = -25 + ((1 / 50) * (this.hp / this.maxHp)) / 2
-    // this.healthGreen.x = (-25 * (this.hp / this.maxHp)) / 2
   }
 
   stab(players) {
