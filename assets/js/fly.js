@@ -108,14 +108,16 @@ export default class Fly extends Player {
     this.serverX = obj.x
     this.serverY = obj.y
     this.hp = obj.hp
+
     this.kill_count = obj.kill_count
     this.rotateSword(obj.sword_rotation)
     this.updateHealthBar()
 
-    // if (Math.abs(Math.abs(this.serverX) - Math.abs(this.x)) > 100) {
-    //   this.x = this.serverX
-    //   this.y = this.serverY
-    // }
+    // I guess this is good if it ever gets super laggy
+    if (Math.abs(Math.abs(this.serverX) - Math.abs(this.x)) > 200) {
+      this.x = this.serverX
+      this.y = this.serverY
+    }
   }
 
   wearCrown() {

@@ -128,11 +128,11 @@ defmodule StabbyFlies.Player do
 
         StabbyFliesWeb.Endpoint.broadcast("room:game", "respawn", new_state)
 
-        {:reply, new_state, new_state}
+        {:reply, true, new_state}
 
       x ->
         new_state = Map.merge(state, %{hp: new_hp})
-        {:reply, new_state, new_state}
+        {:reply, false, new_state}
     end
   end
 
