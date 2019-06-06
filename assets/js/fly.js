@@ -200,7 +200,7 @@ export default class Fly extends Player {
       }
     }
 
-    predict && this.prediction(speed)
+    predict && this.localPlayer && this.prediction(speed)
     this.lastMovementUpdateTime = new Date().getTime()
 
 
