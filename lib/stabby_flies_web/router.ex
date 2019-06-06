@@ -6,8 +6,7 @@ defmodule StabbyFliesWeb.Router do
     plug :fetch_session
     plug :fetch_flash
     plug :protect_from_forgery
-    plug :put_secure_browser_headers
-    plug CORSPlug, origin: "https://lilsheep.itch.io/stabby-flies"
+    # plug :put_secure_browser_headers
   end
 
   pipeline :api do

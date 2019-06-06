@@ -46,8 +46,7 @@ defmodule StabbyFlies.MixProject do
       {:plug_cowboy, "~> 2.0"},
       {:distillery, "~> 1.5", runtime: false},
       {:sobelow, "~> 0.7.2"},
-      {:dialyxir, "~> 1.0.0-rc.6", only: [:dev], runtime: false},
-      {:cors_plug, "~> 2.0"}
+      {:dialyxir, "~> 1.0.0-rc.6", only: [:dev], runtime: false}
     ]
   end
 
