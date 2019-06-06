@@ -126,6 +126,8 @@ defmodule StabbyFlies.Player do
             kill_count: 0
           })
 
+        StabbyFliesWeb.Endpoint.broadcast("room:game", "respawn", new_state)
+
         {:reply, new_state, new_state}
 
       x ->

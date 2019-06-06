@@ -288,6 +288,12 @@ export class Game {
     let player = this.players.find(player => player.socket_id == socket_id)
     player && player.updateVariables(obj, this.viewport)
   }
+  respawnPlayer(obj) {
+    const { socket_id, x, y, hp } = obj
+    let player = this.players.find(player => player.socket_id == socket_id)
+    player.x = x;
+    player.y = y;
+  }
 
   removePlayerById(socket_id) {
     const playerIndex = this.players.findIndex(

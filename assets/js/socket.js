@@ -68,13 +68,10 @@ const setupGameChannel = channel => {
 
   channel.on('stab', function (payload) {
     const { socket_id, hit_players_data } = payload
-    console.log("A palyer srtabs..", socket_id)
-    console.log("Hit players ", hit_players_data)
     game.playerStabs(socket_id)
     hit_players_data.forEach(obj => {
       game.playerIsHit(obj)
     })
-    // game.debugShape({ ...payload.stab_hitbox, shape: 'rectangle' })
   })
 
   channel.on('disconnect', function (payload) {
@@ -85,6 +82,11 @@ const setupGameChannel = channel => {
   channel.on('debug shape', function (payload) {
     game.debugShape(payload)
   })
+
+  channel.on('respawn', function (payload) {
+    game.respawnPlayer(payload)
+  })
+
 
   channel.on('initialize', function (payload) {
     console.log('Initialize ', payload)
