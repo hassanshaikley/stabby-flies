@@ -24,20 +24,20 @@ defmodule StabbyFlies.PlayerSupervisor do
     end)
   end
 
-  def find_player_pid(name) do
+  def find_player_pid(socket_id) do
     index =
       players
       |> Enum.find_index(fn player ->
-        player.name == name
+        player.socket_id == socket_id
       end)
 
     Enum.at(player_pids, index)
   end
 
-  def player_state(name) do
+  def player_state(socket_id) do
     players
     |> Enum.find(fn player ->
-      player.name == name
+      player.socket_id == socket_id
     end)
   end
 
@@ -45,18 +45,18 @@ defmodule StabbyFlies.PlayerSupervisor do
     spec = Player.child_spec(player_options)
 
     with {:ok, _} <- DynamicSupervisor.start_child(__MODULE__, spec) do
-      {:ok, player_options[:name]}
+      {:ok, player_options[:socket_id]}
     else
       {:error, {:already_started, pid}} ->
-        {:error, "player #{player_options[:name]} already exists}"}
+        {:error, "player #{player_options[:socket_id]} already exists}"}
 
       {:error, {%ArgumentError{message: error_message}}} ->
         {:error, error_message}
     end
   end
 
-  def delete_player(name) do
-    pid = find_player_pid(name)
+  def delete_player(socket_id) do
+    pid = find_player_pid(socket_id)
     DynamicSupervisor.terminate_child(__MODULE__, pid)
   end
 
@@ -67,11 +67,11 @@ defmodule StabbyFlies.PlayerSupervisor do
     end)
   end
 
-  def update_moving(name, moving) do
+  def update_moving(socket_id, moving) do
     index =
       players
       |> Enum.find_index(fn player ->
-        player.name == name
+        player.socket_id == socket_id
       end)
 
     pid = Enum.at(player_pids, index)
@@ -144,15 +144,15 @@ defmodule StabbyFlies.PlayerSupervisor do
 
         dead =
           if is_hit,
-            do: Player.take_damage(find_player_pid(other_player.name), damage),
+            do: Player.take_damage(find_player_pid(other_player.socket_id), damage),
             else: false
 
-        if dead, do: Player.increment_kill_count(find_player_pid(player.name))
+        if dead, do: Player.increment_kill_count(find_player_pid(player.socket_id))
 
         is_hit
       end)
 
-    this_players_pid = find_player_pid(player.name)
+    this_players_pid = find_player_pid(player.socket_id)
     Player.reset_stab_cooldown(this_players_pid)
     # update_last_stab_and_kill_count(player, hit_players, damage)
     # {hit_players, stab_data_second}

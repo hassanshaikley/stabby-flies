@@ -55,7 +55,7 @@ defmodule StabbyFlies.Player do
         nickname: nickname,
         socket_id: socket_id
       },
-      name: via_tuple(name)
+      name: via_tuple(socket_id)
     )
   end
 
@@ -218,7 +218,7 @@ defmodule StabbyFlies.Player do
     end
   end
 
-  defp via_tuple(player_name) do
-    {:via, Registry, {Registry.PlayersServer, player_name}}
+  defp via_tuple(socket_id) do
+    {:via, Registry, {Registry.PlayersServer, socket_id}}
   end
 end
