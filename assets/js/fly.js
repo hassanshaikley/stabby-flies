@@ -131,8 +131,8 @@ export default class Fly extends Player {
 
     this.crown.anchor.x = this.crown.anchor.y = 0.5
     this.crown.animationSpeed = 0.1
-    this.crown._currentTime = this.fly_animation._currentTime
     this.crown.play()
+    this.crown._currentTime = this.fly_animation._currentTime
 
     this.removeChild(this.sword)
     this.addChild(this.crown)
