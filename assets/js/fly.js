@@ -122,7 +122,7 @@ export default class Fly extends Player {
       this.shoutText.text = ""
       this.shoutText.x = - this.shoutText.width / 2
 
-    }, 1000)
+    }, 5000)
 
   }
 
