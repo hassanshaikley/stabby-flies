@@ -337,7 +337,7 @@ export class Game {
     this.topPlayer().wearCrown()
 
     const playerNamesAndKills = sortedByKills
-      .map(p => `${p.kill_count}: ${p.name || 'Unknown'}`)
+      .map(p => `${p.kill_count}: ${p.nickname || 'Unknown'}`)
       .join('\n')
 
     const scoresText = new PIXI.Text(playerNamesAndKills, {
