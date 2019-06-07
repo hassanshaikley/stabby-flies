@@ -160,17 +160,15 @@ export default class Fly extends Player {
 
     this.x += xSpeed;
     this.y += ySpeed;
-
-    return false;
   }
   update() {
     const { localPlayer, lastMovementUpdateTime, serverY, serverX } = this;
     const now = new Date().getTime()
 
     const delta = now - (lastMovementUpdateTime || now)
-    const speed = this.speed / delta / 1.83
+    const speed = this.speed / delta / 1.93
 
-    let predict = (this.x == this.serverX) || (this.y == this.serverY);
+    let predict = (this.x == this.serverX) && (this.y == this.serverY);
 
     if (this.y > serverY) {
       this.y -= speed
