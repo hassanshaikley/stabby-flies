@@ -173,14 +173,13 @@ export default class Fly extends Player {
     if (this.y > serverY) {
       this.y -= speed
       predict = false
-      if (this.y < serverY) {
+      if (this.y < serverY && !window.keypresses.s) {
         this.y = serverY
       }
     } else if (this.y < serverY) {
       predict = false
-
       this.y += speed
-      if (this.y > serverY) {
+      if (this.y > serverY && !window.keypresses.w) {
         this.y = serverY
       }
     }
@@ -189,22 +188,20 @@ export default class Fly extends Player {
       predict = false
 
       this.x -= speed
-      if (this.x < serverX) {
+      if (this.x < serverX && !window.keypresses.a) {
         this.x = serverX
       }
     } else if (this.x < serverX) {
       predict = false
 
       this.x += speed
-      if (this.x > serverX) {
+      if (this.x > serverX && !window.keypresses.d) {
         this.x = serverX
       }
     }
 
     predict && this.localPlayer && this.prediction(speed)
     this.lastMovementUpdateTime = new Date().getTime()
-
-
   }
 
   updateHealthBar() {
