@@ -60,3 +60,15 @@ canvas {
   position: absolute;
   top: 0px;
 }
+
+#message-wrapper {
+  position: absolute;
+  bottom: 10px;
+  z-index: 2;
+  left: 10px;
+  width: 200px;
+}
+
+#msg {
+  opacity: .1;
+}

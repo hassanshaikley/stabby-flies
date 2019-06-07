@@ -129,6 +129,13 @@ export class Game {
 
     player && player.stab(this.players)
   }
+  playerShouts(socket_id, message) {
+    const player = this.players.find(player => {
+      return player.socket_id == socket_id
+    })
+    player && player.shout(message)
+
+  }
 
   setLocalPlayer(socket_id) {
     const player = this.players.find(player => {

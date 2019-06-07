@@ -45,10 +45,9 @@ document.getElementById('join-game-form').onsubmit = function (event) {
 const setupGameChannel = channel => {
   channel.on('shout', function (payload) {
     // listen to the 'shout' event
-    var li = document.createElement('li') // creaet new list item DOM element
-    var { name, message } = payload // get name from payload or set default
-    li.innerHTML = '<b>' + name + '</b>: ' + message // set li contents
-    ul.appendChild(li) // append to list
+    var { socket_id, message } = payload // get name from payload or set default
+    game.playerShouts(socket_id, message)
+
   })
 
   channel.on('connect', function (payload) {
@@ -128,6 +127,8 @@ const setupKeys = channel => {
   var msg = document.getElementById('msg') // message input field
 
   document.addEventListener('keydown', function (event) {
+    if (document.activeElement.id == "msg") return;
+
     const down = true
 
     const { key } = event
@@ -145,6 +146,8 @@ const setupKeys = channel => {
   })
 
   document.addEventListener('keyup', function (event) {
+    if (document.activeElement.id == "msg") return;
+
     const down = false
 
     const { key } = event
@@ -173,11 +176,16 @@ const setupKeys = channel => {
             message: msg.value // get message text (value) from msg input field.
           })
           msg.value = '' // reset the message input field for next message.
+          msg.blur()
+          msg.style.opacity = .1
+        } else {
+          msg.focus()
+          msg.style.opacity = .9
+
         }
 
         break
     }
-
   })
 
   document.oncontextmenu = event => {
