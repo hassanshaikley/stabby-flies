@@ -61,30 +61,32 @@ export default class Fly extends Player {
     this.addChild(this.healthBar)
     this.updateHealthBar()
 
-    // this.wearCrown()
-
     var nameStyle = {
-      font: '10px monospace',
+      font: 'monospace',
       fill: '#ffffff',
       stroke: '#000000',
       align: 'center',
+      fontSize: 16,
       strokeThickness: 1
     }
     this.nameText = new PIXI.Text(this.nickname, nameStyle)
     this.nameText.x -= this.nameText.width / 2
     this.nameText.y -= 55
     this.addChild(this.nameText)
-    // this.swordHitBox = new PIXI.Graphics()
-    // this.swordHitBox.beginFill(0x888)
-    // this.swordHitBox.drawRect(-17, 3, 5, 5)
-    // this.swordHitBox.endFill()
-    // this.addChild(this.swordHitBox)
 
-    // this.swordHitBoxTwo = new PIXI.Graphics()
-    // this.swordHitBoxTwo.beginFill(0x222)
-    // this.swordHitBoxTwo.drawRect(0, 0, 5, 5)
-    // this.swordHitBoxTwo.endFill()
-    // this.addChild(this.swordHitBoxTwo)
+
+    var shoutTextStyle = {
+      font: 'monospace',
+      fontSize: 12,
+      fill: '#ffffff',
+      align: 'center'
+    }
+
+    this.shoutText = new PIXI.Text("", shoutTextStyle)
+    this.shoutText.x = - this.shoutText.width / 2
+    this.shoutText.y -= 65
+    this.addChild(this.shoutText)
+
     this.__DEBUG__updateSwordHitbox()
 
     window.last_added_fly = this
@@ -99,6 +101,29 @@ export default class Fly extends Player {
     if (this.stabbing) return
     this.sword.rotation = newRotation
     this.__DEBUG__updateSwordHitbox()
+  }
+
+  shout(message) {
+    console.log("Shouting ", message)
+
+    this.shoutText.text = message;
+    this.shoutText.x = - this.shoutText.width / 2
+
+
+    this.resetShoutTimer()
+  }
+
+  resetShoutTimer() {
+    if (this.shoutTimer) {
+      clearTimeout(this.shoutTimer)
+    }
+
+    this.shoutTimer = setTimeout(() => {
+      this.shoutText.text = ""
+      this.shoutText.x = - this.shoutText.width / 2
+
+    }, 1000)
+
   }
 
   updateVariables(obj, viewport) {

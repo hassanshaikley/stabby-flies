@@ -27,8 +27,9 @@ defmodule StabbyFliesWeb.RoomChannel do
 
   def handle_in("shout", payload, socket) do
     # Disabled until input is sanitized
-    # StabbyFlies.Message.changeset(%StabbyFlies.Message{}, payload) |> StabbyFlies.Repo.insert
-    # broadcast socket, "shout", payload
+    StabbyFlies.Message.changeset(%StabbyFlies.Message{}, payload) |> StabbyFlies.Repo.insert()
+    response = payload |> Map.put(:socket_id, socket.assigns.unique_id)
+    broadcast(socket, "shout", response)
     {:noreply, socket}
   end
 
