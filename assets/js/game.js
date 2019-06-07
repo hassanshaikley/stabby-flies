@@ -337,16 +337,18 @@ export class Game {
     this.topPlayer().wearCrown()
 
     const playerNamesAndKills = sortedByKills
-      .map(p => `${p.kill_count}: ${p.nickname || 'Unknown'}`)
+      .map(p => `${p.kill_count} | ${p.speed} | ${p.nickname || 'Unknown'}`)
       .join('\n')
 
-    const scoresText = new PIXI.Text(playerNamesAndKills, {
+    const scoreText = "K | S   | N\n" + playerNamesAndKills
+
+    const scoreContainer = new PIXI.Text(scoreText, {
       fontSize: 15,
       fontFamily: 'monospace'
     })
-    scoresText.y = 20
+    scoreContainer.y = 20
 
-    this.scoreBoard.addChild(scoresText)
+    this.scoreBoard.addChild(scoreContainer)
 
     this.scoreBoard.x = window.innerWidth - this.scoreBoard.width - 5
     this.scoreBoard.y = 5
