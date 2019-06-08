@@ -321,10 +321,13 @@ export class Game {
     this.viewport.addChild(player)
   }
 
-  topPlayer() {
+  topPlayers() {
     return this.players.sort((a, b) =>
       a.kill_count < b.kill_count ? 1 : -1
-    )[0]
+    )
+      .filter(a =>
+        a.kill_count == this.players[0].kill_count
+      )
   }
 
   updateScoreboard() {
@@ -346,7 +349,7 @@ export class Game {
     const sortedByKills = sortByKills(this.players, this.localPlayer)
 
     this.players.forEach(p => p.removeCrown())
-    this.topPlayer().wearCrown()
+    this.topPlayers().forEach(topPlayer => topPlayer.wearCrown())
 
     const playerNamesAndKills = sortedByKills
       .map(p => `${p.kill_count} | ${p.speed} | ${p.nickname || 'Unknown'}`)
