@@ -226,7 +226,23 @@ export default class Fly extends Player {
     }
 
     predict && this.localPlayer && this.prediction(speed)
+    this.correctLocation()
     this.lastMovementUpdateTime = new Date().getTime()
+  }
+
+  correctLocation() {
+    if (this.x > 3000) {
+      this.x = 3000;
+    }
+    if (this.x < 0) {
+      this.x = 0
+    }
+    if (this.y > 270) {
+      this.y = 270;
+    }
+    if (this.y < -100) {
+      this.y = -100;
+    }
   }
 
   updateHealthBar() {
