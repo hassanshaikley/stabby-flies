@@ -72,3 +72,5 @@ canvas {
 #msg {
   opacity: .1;
 }
+
+canvas { cursor:none !important; }
