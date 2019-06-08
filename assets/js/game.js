@@ -208,12 +208,17 @@ export class Game {
     f.padding = -1
     floor.filters = [f]
 
-    let rectangle = new PIXI.Graphics()
-    // rectangle.beginFill(0x66CC00);
-    rectangle.beginFill(0x303030)
-    rectangle.drawRect(0, 300, 5000, window.innerHeight)
-    rectangle.endFill()
-    this.viewport.addChild(rectangle)
+    let bottomRectangle = new PIXI.Graphics()
+    bottomRectangle.beginFill(0x303030)
+    bottomRectangle.drawRect(0, 300, 5000, window.innerHeight)
+    bottomRectangle.endFill()
+    this.viewport.addChild(bottomRectangle)
+
+    let topRectangle = new PIXI.Graphics()
+    topRectangle.beginFill(0x303030)
+    topRectangle.drawRect(0, -670, 5000, window.innerHeight)
+    topRectangle.endFill()
+    this.viewport.addChild(topRectangle)
 
     floor.y = 200
 
