@@ -2,10 +2,10 @@ import { Socket } from 'phoenix'
 import { Game } from './game'
 
 window.keypresses = {
-  a: false,
-  d: false,
-  w: false,
-  s: false
+  KeyA: false,
+  KeyD: false,
+  KeyW: false,
+  KeyS: false
 }
 window.last_keypresses = JSON.parse(JSON.stringify(window.keypresses))
 
@@ -38,8 +38,6 @@ document.getElementById('join-game-form').onsubmit = function (event) {
   })
 
   setupGameChannel(channel)
-
-  console.log(this.parentNode.parentNode.removeChild(this.parentNode))
 }
 
 const setupGameChannel = channel => {
@@ -131,16 +129,16 @@ const setupKeys = channel => {
 
     const down = true
 
-    const { key } = event
+    const { code } = event
 
-    if (window.keypresses[key]) return
-    window.keypresses[key] = true
+    if (window.keypresses[code]) return
+    window.keypresses[code] = true
     channel.push('move', {
       moving: {
-        left: window.keypresses["a"],
-        right: window.keypresses["d"],
-        up: window.keypresses["w"],
-        down: window.keypresses["s"]
+        left: window.keypresses["KeyA"],
+        right: window.keypresses["KeyD"],
+        up: window.keypresses["KeyW"],
+        down: window.keypresses["KeyS"]
       }
     })
   })
@@ -150,15 +148,15 @@ const setupKeys = channel => {
 
     const down = false
 
-    const { key } = event
-    window.keypresses[key] = false
+    const { code } = event
+    window.keypresses[code] = false
 
     channel.push('move', {
       moving: {
-        left: window.keypresses["a"],
-        right: window.keypresses["d"],
-        up: window.keypresses["w"],
-        down: window.keypresses["s"]
+        left: window.keypresses["KeyA"],
+        right: window.keypresses["KeyD"],
+        up: window.keypresses["KeyW"],
+        down: window.keypresses["KeyS"]
       }
     })
 
@@ -179,8 +177,15 @@ const setupKeys = channel => {
           msg.blur()
           msg.style.opacity = .1
         } else {
-          msg.focus()
-          msg.style.opacity = .9
+          if (document.activeElement.id == "msg") {
+            msg.blur()
+            msg.style.opacity = .1
+          } else {
+            msg.focus()
+            msg.style.opacity = .9
+          }
+
+
 
         }
 
@@ -199,10 +204,10 @@ const setupKeys = channel => {
     if (refresh) {
       channel.push('move', {
         moving: {
-          left: window.keypresses["a"],
-          right: window.keypresses["d"],
-          up: window.keypresses["w"],
-          down: window.keypresses["s"]
+          left: window.keypresses["KeyA"],
+          right: window.keypresses["KeyD"],
+          up: window.keypresses["KeyW"],
+          down: window.keypresses["KeyS"]
         }
       })
     }
@@ -222,20 +227,20 @@ const setupKeys = channel => {
     //   }
     // })
 
-    Object.keys(window.keypresses).forEach(key => {
-      if (window.keypresses[key]) {
+    Object.keys(window.keypresses).forEach(code => {
+      if (window.keypresses[code]) {
         let direction
-        switch (key) {
-          case 'd':
+        switch (code) {
+          case 'KeyD':
             direction = 'right'
             break
-          case 'a':
+          case 'KeyA':
             direction = 'left'
             break
-          case 'w':
+          case 'KeyW':
             direction = 'up'
             break
-          case 's':
+          case 'KeyS':
             direction = 'down'
             break
         }
@@ -245,7 +250,7 @@ const setupKeys = channel => {
           direction
         })
 
-        window.keypresses[key] = false
+        window.keypresses[code] = false
       }
     })
   }
