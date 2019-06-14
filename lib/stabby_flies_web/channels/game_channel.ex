@@ -1,4 +1,4 @@
-defmodule StabbyFliesWeb.RoomChannel do
+defmodule StabbyFliesWeb.GameChannel do
   @moduledoc """
   Description about the use of this Module
   """
@@ -11,7 +11,7 @@ defmodule StabbyFliesWeb.RoomChannel do
     {:noreply, socket}
   end
 
-  def join("room:game", payload, socket) do
+  def join("game", payload, socket) do
     unique_id = "Fly-#{socket.id}"
 
     Logger.debug("Joined Lobby #{payload["nickname"]}")

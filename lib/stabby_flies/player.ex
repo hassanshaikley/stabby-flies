@@ -133,7 +133,7 @@ defmodule StabbyFlies.Player do
             speed: 20 * 10
           })
 
-        StabbyFliesWeb.Endpoint.broadcast("room:game", "respawn", new_state)
+        StabbyFliesWeb.Endpoint.broadcast("game", "respawn", new_state)
 
         {:reply, true, new_state}
 

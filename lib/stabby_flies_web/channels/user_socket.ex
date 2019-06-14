@@ -3,8 +3,7 @@ defmodule StabbyFliesWeb.UserSocket do
 
   require Logger
 
-  # Was: channel "room:*", StabbyFliesWeb.RoomChannel
-  channel "room:game", StabbyFliesWeb.RoomChannel
+  channel "game", StabbyFliesWeb.GameChannel
 
   def connect(_params, socket, _connect_info) do
     id = StabbyFlies.SocketIdGen.generate()

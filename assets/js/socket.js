@@ -33,7 +33,7 @@ document.getElementById('join-game-form').onsubmit = function (event) {
 
   const nickname = document.getElementById('nickname-form').value
 
-  channel = socket.channel('room:game', {
+  channel = socket.channel('game', {
     nickname
   })
 
