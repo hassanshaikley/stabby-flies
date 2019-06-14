@@ -30,7 +30,8 @@
 body {
   margin: 0px;
   overflow-y: hidden;
-  font-family: monospace;
+  font-family: monospace !important;
+  color: #DDD;
 }
 input {
   font-family: monospace;

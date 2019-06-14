@@ -9,7 +9,6 @@ import { CRTFilter } from '@pixi/filter-crt'
 
 import Explosion from './explosion'
 import Debug from './debug'
-import Text from './text'
 
 var Viewport = require('pixi-viewport')
 
@@ -225,8 +224,6 @@ export class Game {
     this.viewport.addChild(floor)
     this.loaded = true
 
-    this.introText()
-
     requestAnimationFrame(this.animate.bind(this))
   }
 
@@ -389,83 +386,4 @@ export class Game {
     }
   }
 
-  introText() {
-    if (localStorage.getItem('seen_tutorial') === 'true') {
-      return
-    }
-    setTimeout(() => {
-      const messageone = new Text({
-        message: 'Hello & Welcome to Stabby Flies',
-        duration: 2000,
-        fade: false
-      })
-      this.app.stage.addChild(messageone)
-      this.gameObjects.push(messageone)
-    }, 1000)
-
-    setTimeout(() => {
-      const messagetwo = new Text({
-        message: 'Your objective is to take down other players',
-        duration: 2000,
-        fade: false
-      })
-      this.app.stage.addChild(messagetwo)
-      this.gameObjects.push(messagetwo)
-    }, 3000)
-
-    setTimeout(() => {
-      const messageone = new Text({
-        message: 'Controls are:',
-        duration: 2000,
-        fade: false
-      })
-      this.app.stage.addChild(messageone)
-      this.gameObjects.push(messageone)
-    }, 5000)
-    setTimeout(() => {
-      const messagetwo = new Text({
-        message: 'move: w a s d\nstab: left click',
-        duration: 4000,
-        fade: false
-      })
-      this.app.stage.addChild(messagetwo)
-      this.gameObjects.push(messagetwo)
-    }, 7000)
-
-    setTimeout(() => {
-      const messagethree = new Text({
-        message: '& the tip of your sword does the damage',
-        duration: 3000,
-        fade: false
-      })
-      this.app.stage.addChild(messagethree)
-      this.gameObjects.push(messagethree)
-    }, 11000)
-
-    setTimeout(() => {
-      const messagethree = new Text({
-        message: 'If no one is on send them a link and fight them!',
-        duration: 5000,
-        fade: false
-      })
-      this.app.stage.addChild(messagethree)
-      this.gameObjects.push(messagethree)
-    }, 14000)
-
-    setTimeout(() => {
-      const messagethree = new Text({
-        message: 'Enjoy!',
-        duration: 3000,
-        fade: false
-      })
-      this.app.stage.addChild(messagethree)
-      this.gameObjects.push(messagethree)
-
-      localStorage.setItem('seen_tutorial', true)
-    }, 19000)
-
-    setTimeout(() => {
-      this.updatePlayerCount()
-    }, 22000)
-  }
 }

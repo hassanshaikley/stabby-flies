@@ -62,7 +62,7 @@ export default class Fly extends Player {
     this.updateHealthBar()
 
     var nameStyle = {
-      font: 'monospace',
+      fontFamily: 'monospace',
       fill: '#ffffff',
       stroke: '#000000',
       align: 'center',
@@ -76,7 +76,7 @@ export default class Fly extends Player {
 
 
     var shoutTextStyle = {
-      font: 'monospace',
+      fontFamily: 'monospace',
       fontSize: 12,
       fill: '#ffffff',
       align: 'center'
