@@ -5,7 +5,11 @@ window.keypresses = {
   KeyA: false,
   KeyD: false,
   KeyW: false,
-  KeyS: false
+  KeyS: false,
+  ArrowLeft: false,
+  ArrowRight: false,
+  ArrowUp: false,
+  ArrowDown: false
 }
 window.last_keypresses = JSON.parse(JSON.stringify(window.keypresses))
 
@@ -137,10 +141,10 @@ const setupKeys = channel => {
     window.keypresses[code] = true
     channel.push('move', {
       moving: {
-        left: window.keypresses["KeyA"],
-        right: window.keypresses["KeyD"],
-        up: window.keypresses["KeyW"],
-        down: window.keypresses["KeyS"]
+        left: window.keypresses["KeyA"] || window.keypresses["ArrowLeft"],
+        right: window.keypresses["KeyD"] || window.keypresses["ArrowRight"],
+        up: window.keypresses["KeyW"] || window.keypresses["ArrowUp"],
+        down: window.keypresses["KeyS"] || window.keypresses["ArrowDown"]
       }
     })
   })
@@ -155,10 +159,10 @@ const setupKeys = channel => {
 
     channel.push('move', {
       moving: {
-        left: window.keypresses["KeyA"],
-        right: window.keypresses["KeyD"],
-        up: window.keypresses["KeyW"],
-        down: window.keypresses["KeyS"]
+        left: window.keypresses["KeyA"] || window.keypresses["ArrowLeft"],
+        right: window.keypresses["KeyD"] || window.keypresses["ArrowRight"],
+        up: window.keypresses["KeyW"] || window.keypresses["ArrowUp"],
+        down: window.keypresses["KeyS"] || window.keypresses["ArrowDown"]
       }
     })
 
@@ -206,10 +210,10 @@ const setupKeys = channel => {
     if (refresh) {
       channel.push('move', {
         moving: {
-          left: window.keypresses["KeyA"],
-          right: window.keypresses["KeyD"],
-          up: window.keypresses["KeyW"],
-          down: window.keypresses["KeyS"]
+          left: window.keypresses["KeyA"] || window.keypresses["ArrowLeft"],
+          right: window.keypresses["KeyD"] || window.keypresses["ArrowRight"],
+          up: window.keypresses["KeyW"] || window.keypresses["ArrowUp"],
+          down: window.keypresses["KeyS"] || window.keypresses["ArrowUp"]
         }
       })
     }
@@ -234,15 +238,22 @@ const setupKeys = channel => {
         let direction
         switch (code) {
           case 'KeyD':
+          case 'ArrowLeft':
             direction = 'right'
             break
           case 'KeyA':
+          case 'ArrowRight':
+
             direction = 'left'
             break
           case 'KeyW':
+          case 'ArrowUp':
+
             direction = 'up'
             break
           case 'KeyS':
+          case 'ArrowDown':
+
             direction = 'down'
             break
         }

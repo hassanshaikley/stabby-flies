@@ -215,7 +215,7 @@ export class Game {
 
     let topRectangle = new PIXI.Graphics()
     topRectangle.beginFill(0x303030)
-    topRectangle.drawRect(0, -1030, 5000, window.innerHeight)
+    topRectangle.drawRect(0, -1070, 5000, window.innerHeight)
     topRectangle.endFill()
     this.viewport.addChild(topRectangle)
 
