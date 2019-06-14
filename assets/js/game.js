@@ -252,7 +252,7 @@ export class Game {
 
     this.playerCountText = new PIXI.Text(
       `${this.players.length} ${playerCountText} online`,
-      { fontSize: 15, fontFamily: 'monospace' }
+      { fontSize: 15, fontFamily: 'monospace', fill: '#DDD' }
     )
     this.playerCountText.x = 2
     this.playerCountText.y = 2
@@ -340,7 +340,7 @@ export class Game {
     this.scoreBoard.addChild(bg)
 
     this.scoreBoard.addChild(
-      new PIXI.Text('High Score', { fontSize: 20, fontFamily: 'monospace' })
+      new PIXI.Text('\n High Score ', { fontSize: 16, fontFamily: 'monospace', fill: '#DDD', textAlign: 'center' })
     )
 
     const sortedByKills = sortByKills(this.players, this.localPlayer)
@@ -349,14 +349,15 @@ export class Game {
     this.topPlayers().forEach(topPlayer => topPlayer.wearCrown())
 
     const playerNamesAndKills = sortedByKills
-      .map(p => `${p.kill_count} | ${p.speed} | ${p.nickname || 'Unknown'}`)
+      .map(p => ` ${p.kill_count} | ${p.speed} | ${p.nickname || 'Unknown'} `)
       .join('\n')
 
-    const scoreText = "K | S   | N\n" + playerNamesAndKills
+    const scoreText = "\n\n K | S   | N \n" + playerNamesAndKills + "\n"
 
     const scoreContainer = new PIXI.Text(scoreText, {
       fontSize: 15,
-      fontFamily: 'monospace'
+      fontFamily: 'monospace',
+      fill: '#DDD'
     })
     scoreContainer.y = 20
 

@@ -63,7 +63,7 @@ export default class Fly extends Player {
 
     var nameStyle = {
       fontFamily: 'monospace',
-      fill: '#ffffff',
+      fill: '#DDD',
       stroke: '#000000',
       align: 'center',
       fontSize: 16,
@@ -78,8 +78,8 @@ export default class Fly extends Player {
     var shoutTextStyle = {
       fontFamily: 'monospace',
       fontSize: 12,
-      fill: '#ffffff',
-      align: 'center'
+      align: 'center',
+      fill: '#DDD',
     }
 
     this.shoutText = new PIXI.Text("", shoutTextStyle)
