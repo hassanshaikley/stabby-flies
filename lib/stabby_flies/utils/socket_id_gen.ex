@@ -1,3 +1,5 @@
+# Note: Migrate to PUID later. For now PUID is not being used
+# Because the ID is also used for analytics.
 defmodule StabbyFlies.SocketIdGen do
   @moduledoc """
   Description about this module
@@ -9,7 +11,7 @@ defmodule StabbyFlies.SocketIdGen do
     Agent.start_link(fn -> %{id: 0} end, name: __MODULE__)
   end
 
-  def gen_id do
+  def generate do
     x = Enum.random(0..200)
     id = get_id + 1
 

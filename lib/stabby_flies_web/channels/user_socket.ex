@@ -7,7 +7,7 @@ defmodule StabbyFliesWeb.UserSocket do
   channel "room:game", StabbyFliesWeb.RoomChannel
 
   def connect(_params, socket, _connect_info) do
-    id = StabbyFlies.SocketIdGen.gen_id()
+    id = StabbyFlies.SocketIdGen.generate()
     {:ok, assign(socket, :user_id, id)}
   end
 
