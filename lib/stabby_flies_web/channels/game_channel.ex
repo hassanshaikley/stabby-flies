@@ -5,21 +5,23 @@ defmodule StabbyFliesWeb.GameChannel do
   use StabbyFliesWeb, :channel
   require Logger
 
-  alias StabbyFlies.{Game, Game, Player}
+  alias StabbyFlies.{Game, Game, Player, Visitor}
 
   def handle_in("connect", payload, socket) do
     {:noreply, socket}
   end
 
   def join("game", payload, socket) do
-    unique_id = "Fly-#{socket.id}"
-
     Logger.debug("Joined Lobby #{payload["nickname"]}")
 
     socket =
       socket
-      |> assign(:unique_id, unique_id)
       |> assign(:nickname, payload["nickname"])
+
+    StabbyFlies.Repo.insert(%Visitor{
+      ip_address: "Unknown",
+      nickname: payload["nickname"] |> String.slice(0, 40)
+    })
 
     send(self(), :after_join)
     {:ok, socket}
@@ -28,13 +30,13 @@ defmodule StabbyFliesWeb.GameChannel do
   def handle_in("shout", payload, socket) do
     # Disabled until input is sanitized
     StabbyFlies.Message.changeset(%StabbyFlies.Message{}, payload) |> StabbyFlies.Repo.insert()
-    response = payload |> Map.put(:socket_id, socket.assigns.unique_id)
+    response = payload |> Map.put(:socket_id, socket.id)
     broadcast(socket, "shout", response)
     {:noreply, socket}
   end
 
   def handle_in("move", %{"moving" => moving}, socket) do
-    Game.set_player_moving(socket.assigns.unique_id, moving)
+    Game.set_player_moving(socket.id, moving)
 
     {:noreply, socket}
   end
@@ -44,12 +46,12 @@ defmodule StabbyFliesWeb.GameChannel do
   end
 
   def handle_in("stab", payload, socket) do
-    {stabbed?, hit_players} = Game.player_stabs(socket.assigns.unique_id)
+    {stabbed?, hit_players} = Game.player_stabs(socket.id)
 
     if stabbed? == true,
       do:
         broadcast(socket, "stab", %{
-          socket_id: socket.assigns.unique_id,
+          socket_id: socket.id,
           hit_players_data: hit_players
         })
 
@@ -58,13 +60,13 @@ defmodule StabbyFliesWeb.GameChannel do
 
   def terminate(reason, socket) do
     IO.puts("PLAYER TERMINATED")
-    Game.leave_game(socket.assigns.unique_id)
-    broadcast(socket, "disconnect", %{socket_id: socket.assigns.unique_id})
+    Game.leave_game(socket.id)
+    broadcast(socket, "disconnect", %{socket_id: socket.id})
   end
 
   def handle_info(:after_join, socket) do
-    Game.join_game(socket.assigns.unique_id, socket.assigns.nickname)
-    new_player = Game.player_state(socket.assigns.unique_id)
+    Game.join_game(socket.id, socket.assigns.nickname)
+    new_player = Game.player_state(socket.id)
     # name = elem(eh, 1)
 
     # new_player = Game.add_player("#{socket.assigns.nickname}", socket.id)
