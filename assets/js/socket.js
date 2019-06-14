@@ -38,6 +38,8 @@ document.getElementById('join-game-form').onsubmit = function (event) {
   })
 
   setupGameChannel(channel)
+
+  this.parentNode.parentNode.removeChild(this.parentNode)
 }
 
 const setupGameChannel = channel => {
