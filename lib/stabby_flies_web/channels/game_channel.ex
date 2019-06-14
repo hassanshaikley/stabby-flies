@@ -44,29 +44,14 @@ defmodule StabbyFliesWeb.GameChannel do
   end
 
   def handle_in("stab", payload, socket) do
-    # {player, can_stab} = Game.player_can_stab(socket.assigns.unique_id)
-
-    # if can_stab do
     {stabbed?, hit_players} = Game.player_stabs(socket.assigns.unique_id)
-
-    #   hit_players_data =
-    #     hit_players
-    #     |> Enum.map(fn hit_player ->
-    #       %{
-    #         socket_id: hit_player.socket_id,
-    #         damage: player.damage
-    #       }
-    #     end)
 
     if stabbed? == true,
       do:
         broadcast(socket, "stab", %{
           socket_id: socket.assigns.unique_id,
           hit_players_data: hit_players
-          # stab_hitbox: stab_hitbox
         })
-
-    # hit_players_data = []
 
     {:noreply, socket}
   end

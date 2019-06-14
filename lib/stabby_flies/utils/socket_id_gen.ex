@@ -2,12 +2,12 @@
 # Because the ID is also used for analytics.
 defmodule StabbyFlies.SocketIdGen do
   @moduledoc """
-  Description about this module
+  Literally just incrementing a number & Keeping track of a number.
+
   """
   require Logger
 
   def start_link do
-    # Agent.stop(__MODULE__)
     Agent.start_link(fn -> %{id: 0} end, name: __MODULE__)
   end
 
