@@ -4,7 +4,9 @@ defmodule StabbyFlies.PlayerTest do
 
   setup do
     player =
-      start_supervised!({Player, name: "Faa", x: 15, y: 10, hp: 1, max_hp: 1, sword_rotation: 0})
+      start_supervised!(
+        {Player, name: "Faa", x: 15, y: 10, hp: 10, max_hp: 10, sword_rotation: 0}
+      )
 
     %{player: player}
   end
@@ -14,25 +16,23 @@ defmodule StabbyFlies.PlayerTest do
     assert player_state.name == "Faa"
     assert player_state.x != nil
     assert player_state.y != nil
-    assert player_state.hp == 1
-    assert player_state.max_hp == 1
+    assert player_state.hp == 10
+    assert player_state.max_hp == 10
     assert player_state.sword_rotation == 0
   end
 
   test "take damage", %{player: player} do
-    Player.take_damage(player, 999)
+    Player.take_damage(player, 1)
+
     player_state = Player.state(player)
-    assert player_state.hp == 0
+
+    assert player_state.hp == 9
+    Player.take_damage(player, 999)
+
+    player_state = Player.state(player)
+
+    assert player_state.hp == player_state.max_hp
   end
-
-  # test "updates position based on moving", %{player: player} do
-  #   %{x: x, y: y} = Player.state(player)
-
-  #   Player.update_position(player)
-  #   player_state = Player.state(player)
-  #   assert x != player_state.x
-  #   assert y != player_state.y
-  # end
 
   test "can_stab", %{player: player} do
     assert Player.can_stab(player) == true
@@ -41,13 +41,6 @@ defmodule StabbyFlies.PlayerTest do
   test "reset stab cooldown", %{player: player} do
     Player.reset_stab_cooldown(player)
     assert Player.can_stab(player) == false
-  end
-
-  test "respawn", %{player: player} do
-    Player.take_damage(player, 999)
-    Player.respawn(player)
-    player_state = Player.state(player)
-    assert player_state.hp == player_state.max_hp
   end
 
   test "increment kill count", %{player: player} do
