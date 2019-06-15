@@ -65,7 +65,6 @@ defmodule StabbyFlies.Player do
   def update_position(pid), do: GenServer.call(pid, :update_position)
   def can_stab(pid), do: GenServer.call(pid, :can_stab)
   def reset_stab_cooldown(pid), do: GenServer.call(pid, :reset_stab_cooldown)
-  # def respawn(pid), do: GenServer.call(pid, :respawn)
   def increment_kill_count(pid), do: GenServer.call(pid, :increment_kill_count)
   def update_moving(pid, moving), do: GenServer.call(pid, {:update_moving, moving})
 
@@ -83,21 +82,6 @@ defmodule StabbyFlies.Player do
     new_state = Map.merge(state, %{last_stab_time: Time.utc_now()})
     {:reply, new_state, new_state}
   end
-
-  # def handle_call(:respawn, _from, state) do
-  #   max_hp = state.max_hp
-
-  #   new_state =
-  #     Map.merge(state, %{
-  #       hp: max_hp,
-  #       x: start_x,
-  #       y: start_y,
-  #       last_stab_time: Time.add(Time.utc_now(), -1),
-  #       kill_count: 0
-  #     })
-
-  #   {:reply, new_state, new_state}
-  # end
 
   def handle_call(:increment_kill_count, _from, state) do
     new_state =
@@ -117,9 +101,10 @@ defmodule StabbyFlies.Player do
   def handle_call(
         {:take_damage, amount},
         _from,
-        %State{hp: hp, max_hp: max_hp} = state
+        %State{hp: hp, max_hp: max_hp, x: x, y: y} = state
       ) do
     new_hp = if hp - amount < 0, do: 0, else: hp - amount
+    StabbyFliesWeb.Endpoint.broadcast("game", "explosion", %{x: x, y: y})
 
     case new_hp do
       x when x <= 0 ->
