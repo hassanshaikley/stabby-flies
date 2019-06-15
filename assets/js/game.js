@@ -108,10 +108,6 @@ export class Game {
       return player.socket_id == socket_id
     })
 
-    this.createExplosion({
-      x: player.x,
-      y: player.y
-    })
     player && player.takeDamage(damage)
   }
 

@@ -77,6 +77,13 @@ const setupGameChannel = channel => {
     })
   })
 
+  channel.on('explosion', function (playload) {
+    game.createExplosion({
+      x: playload.x,
+      y: playload.y
+    })
+  })
+
   channel.on('disconnect', function (payload) {
     console.log('disconnect', payload)
     game.removePlayerById(payload.socket_id)
