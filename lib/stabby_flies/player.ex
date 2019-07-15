@@ -31,8 +31,6 @@ defmodule StabbyFlies.Player do
     socket_id = Keyword.get(init_fly, :socket_id)
     nickname = Keyword.get(init_fly, :nickname)
 
-    # sword_rotation = Keyword.get(init_fly, :sword_rotation)
-
     GenServer.start_link(
       __MODULE__,
       %State{
@@ -128,21 +126,6 @@ defmodule StabbyFlies.Player do
     end
   end
 
-  # def handle_call(
-  #       :update_position,
-  #       _from,
-  #       %State{x: x, y: y, moving: moving, speed: speed} = state
-  #     ) do
-  #   new_x = if x + velx(moving, speed) < 0, do: 0, else: x + velx(moving, speed)
-  #   new_x = if new_x + velx(moving, speed) >= 3000, do: 3000, else: new_x + velx(moving, speed)
-
-  #   new_y = if y + vely(moving, speed) < -100, do: -100, else: y + vely(moving, speed)
-  #   new_y = if new_y + vely(moving, speed) >= 270, do: 270, else: new_y + vely(moving, speed)
-
-  #   new_state = Map.merge(state, %{x: new_x, y: new_y})
-  #   {:reply, new_state, new_state}
-  # end
-
   def handle_call(
         :update,
         _from,
@@ -171,8 +154,6 @@ defmodule StabbyFlies.Player do
   end
 
   def handle_call({:update_moving, moving}, _from, state) do
-    # new_rotation = get_rotation(state["moving"])
-
     new_state = Map.merge(state, %{moving: moving})
 
     {:reply, new_state, new_state}

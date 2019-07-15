@@ -52,10 +52,8 @@ defmodule StabbyFlies.PlayerTest do
 
   test "update moving", %{player: player} do
     new_moving = %{
-      left: true,
-      right: true,
-      up: false,
-      down: false
+      forward: true,
+      backward: true
     }
 
     Player.update_moving(player, new_moving)

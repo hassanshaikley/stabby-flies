@@ -28,7 +28,6 @@ defmodule StabbyFliesWeb.GameChannel do
   end
 
   def handle_in("shout", payload, socket) do
-    # Disabled until input is sanitized
     StabbyFlies.Message.changeset(%StabbyFlies.Message{}, payload) |> StabbyFlies.Repo.insert()
     response = payload |> Map.put(:socket_id, socket.id)
     broadcast(socket, "shout", response)
@@ -67,22 +66,12 @@ defmodule StabbyFliesWeb.GameChannel do
   def handle_info(:after_join, socket) do
     Game.join_game(socket.id, socket.assigns.nickname)
     new_player = Game.player_state(socket.id)
-    # name = elem(eh, 1)
-
-    # new_player = Game.add_player("#{socket.assigns.nickname}", socket.id)
-
     broadcast(socket, "connect", %{new_player: new_player, players: Game.get_players()})
 
     push(socket, "initialize", %{
       new_player: new_player
     })
 
-    # Disabled for now
-    # StabbyFlies.Message.get_messages()
-    # |> Enum.each(fn msg -> push(socket, "shout", %{
-    #     name: msg.name,
-    #     message: msg.message,
-    #   }) end)
     {:noreply, socket}
   end
 end

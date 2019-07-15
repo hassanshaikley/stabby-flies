@@ -154,8 +154,6 @@ defmodule StabbyFlies.PlayerSupervisor do
 
     this_players_pid = find_player_pid(player.socket_id)
     Player.reset_stab_cooldown(this_players_pid)
-    # update_last_stab_and_kill_count(player, hit_players, damage)
-    # {hit_players, stab_data_second}
     {true, hit_players}
   end
 

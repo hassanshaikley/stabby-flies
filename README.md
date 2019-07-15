@@ -1,6 +1,3 @@
-[![Build Status](https://api.cirrus-ci.com/github/hassanshaikley/stabby-flies.svg)](https://cirrus-ci.com/github/hassanshaikley/stabby-flies)
-
-
 # Stabby Flies
 
 Multiplayer Browser Game in Elixir/Phoenix
