@@ -1,5 +1,5 @@
 export default class Debug extends PIXI.Container {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.props = props
     const { x, y, width, height } = props
@@ -14,7 +14,7 @@ export default class Debug extends PIXI.Container {
     this.addChild(this.debugRect)
   }
 
-  update () {
+  update() {
     const percentDone = (new Date() - this.spawnTime) / 100
 
     this.alpha = 1 / percentDone
