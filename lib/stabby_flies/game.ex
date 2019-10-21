@@ -43,10 +43,6 @@ defmodule StabbyFlies.Game do
     PlayerSupervisor.delete_player(id)
   end
 
-  def stab(id) do
-    IO.puts("Socket #{id} Stabbing (Unimplemented)")
-  end
-
   def set_player_moving(id, moving) do
     IO.puts("Socket #{id} Moving:")
 
